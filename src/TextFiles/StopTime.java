@@ -4,13 +4,15 @@ import Enums.StopTime.DropOffType;
 import Enums.StopTime.PickupType;
 import Enums.StopTime.TimePoint;
 
-import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class StopTime
+public class StopTime implements IObject
 {
     private String trip_id;
-    private Time arrival_time;
-    private Time departure_time;
+    private Date arrival_time;
+    private Date departure_time;
     private String stop_id;
     private int stop_sequence;
     private String stop_headsign;
@@ -19,18 +21,80 @@ public class StopTime
     private float shape_dist_traveled;
     private TimePoint timepoint;
 
-    public StopTime(String trip_id, Time arrival_time, Time departure_time, String stop_id, int stop_sequence, String stop_headsign, PickupType pickup_type, DropOffType drop_off_type, float shape_dist_traveled, TimePoint timepoint)
+    public StopTime(){}
+
+    @Override
+    public void loadData(String[] attributes)
     {
-        this.trip_id = trip_id;
-        this.arrival_time = arrival_time;
-        this.departure_time = departure_time;
-        this.stop_id = stop_id;
-        this.stop_sequence = stop_sequence;
-        this.stop_headsign = stop_headsign;
-        this.pickup_type = pickup_type;
-        this.drop_off_type = drop_off_type;
-        this.shape_dist_traveled = shape_dist_traveled;
-        this.timepoint = timepoint;
+        this.trip_id = attributes[0];
+
+        if(attributes[1] != null && !attributes[1].equals(""))
+        {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.TimePattern);
+            try {
+                this.arrival_time = simpleDateFormat.parse(attributes[1]);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(attributes[2] != null && !attributes[2].equals(""))
+        {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.TimePattern);
+            try {
+                this.departure_time = simpleDateFormat.parse(attributes[2]);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        this.stop_id = attributes[3];
+
+        if(attributes[4] != null && !attributes[4].equals(""))
+        {
+            this.stop_sequence = Integer.parseInt(attributes[4]);
+        }
+
+        this.stop_headsign = attributes[5];
+
+        if(attributes[6] != null && !attributes[6].equals(""))
+        {
+            this.pickup_type = PickupType.getPickupType(Integer.parseInt(attributes[6]));
+        }
+
+        if(attributes[7] != null && !attributes[7].equals(""))
+        {
+            this.drop_off_type = DropOffType.getDropOffType(Integer.parseInt(attributes[7]));
+        }
+
+        if(attributes[8] != null && !attributes[8].equals(""))
+        {
+            this.shape_dist_traveled = Float.parseFloat(attributes[8]);
+        }
+
+        if(attributes[9] != null && !attributes[9].equals(""))
+        {
+            this.timepoint = TimePoint.getTimePoint(Integer.parseInt(attributes[9]));
+        }
+
+    }
+
+    @Override
+    public void getAllData()
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.TimePattern);
+        System.out.printf(
+                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
+                this.trip_id,
+                simpleDateFormat.format(this.arrival_time),
+                simpleDateFormat.format(this.departure_time),
+                this.stop_id,
+                this.stop_sequence,
+                this.stop_headsign,
+                this.pickup_type,
+                this.drop_off_type,
+                this.shape_dist_traveled,
+                this.timepoint);
     }
 
     public String getTrip_id() {
@@ -41,19 +105,19 @@ public class StopTime
         this.trip_id = trip_id;
     }
 
-    public Time getArrival_time() {
+    public Date getArrival_time() {
         return arrival_time;
     }
 
-    public void setArrival_time(Time arrival_time) {
+    public void setArrival_time(Date arrival_time) {
         this.arrival_time = arrival_time;
     }
 
-    public Time getDeparture_time() {
+    public Date getDeparture_time() {
         return departure_time;
     }
 
-    public void setDeparture_time(Time departure_time) {
+    public void setDeparture_time(Date departure_time) {
         this.departure_time = departure_time;
     }
 
@@ -112,4 +176,6 @@ public class StopTime
     public void setTimepoint(TimePoint timepoint) {
         this.timepoint = timepoint;
     }
+
+
 }

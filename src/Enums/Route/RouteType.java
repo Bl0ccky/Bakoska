@@ -13,7 +13,7 @@ public enum RouteType
     TROLLEYBUS,
     MONORAIL;
 
-    public RouteType getRouteType(int input)
+    public static RouteType getRouteType(int input)
     {
         return switch (input) {
             case 0 -> TRAM_OR_STREETCAR_OR_LIGHT_RAIL;

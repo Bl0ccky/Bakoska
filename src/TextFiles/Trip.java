@@ -3,7 +3,7 @@ package TextFiles;
 import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
 
-public class Trip
+public class Trip implements IObject
 {
     private String trip_id;
     private String route_id;
@@ -15,17 +15,47 @@ public class Trip
     private String shape_id;
     private TripWheelchairAccessible wheelchair_accessible;
 
-    public Trip(String trip_id, String route_id, String service_id, String trip_headsign, String trip_short_name, TripDirectionID direction_id, String block_id, String shape_id, TripWheelchairAccessible wheelchair_accessible)
+    public Trip(){}
+
+    @Override
+    public void loadData(String[] attributes)
     {
-        this.trip_id = trip_id;
-        this.route_id = route_id;
-        this.service_id = service_id;
-        this.trip_headsign = trip_headsign;
-        this.trip_short_name = trip_short_name;
-        this.direction_id = direction_id;
-        this.block_id = block_id;
-        this.shape_id = shape_id;
-        this.wheelchair_accessible = wheelchair_accessible;
+        this.trip_id = attributes[0];
+        this.route_id = attributes[1];
+        this.service_id = attributes[2];
+        this.trip_headsign = attributes[3];
+        this.trip_short_name = attributes[4];
+
+        if(attributes[5] != null && !attributes[5].equals(""))
+        {
+            this.direction_id = TripDirectionID.getTripDirectionID(Integer.parseInt(attributes[5]));
+        }
+
+        this.block_id = attributes[6];
+        this.shape_id = attributes[7];
+
+        if(attributes[8] != null && !attributes[8].equals(""))
+        {
+            this.wheelchair_accessible = TripWheelchairAccessible.getTripWheelchairAccessible(Integer.parseInt(attributes[8]));
+        }
+
+    }
+
+    @Override
+    public void getAllData()
+    {
+        System.out.printf(
+                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
+                this.trip_id,
+                this.route_id,
+                this.service_id,
+                this.trip_headsign,
+                this.trip_short_name,
+                this.direction_id,
+                this.block_id,
+                this.shape_id,
+                this.wheelchair_accessible);
+
     }
 
     public String getTrip_id() {
@@ -99,4 +129,6 @@ public class Trip
     public void setWheelchair_accessible(TripWheelchairAccessible wheelchair_accessible) {
         this.wheelchair_accessible = wheelchair_accessible;
     }
+
+
 }

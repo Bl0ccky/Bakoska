@@ -1,25 +1,42 @@
 package TextFiles;
 
-public class Agency
+public class Agency implements IObject
 {
     private String agency_id;
     private String agency_name;
     private String agency_url;
-    //TODO Zmenit string na timezone
     private String agency_timezone;
     private String agency_lang;
     private String agency_phone;
     private String agency_fare_url;
 
-    public Agency(String agency_id, String agency_name, String agency_url, String agency_timezone, String agency_lang, String agency_phone, String agency_fare_url)
+    public Agency(){}
+
+    @Override
+    public void loadData(String[] attributes)
     {
-        this.agency_id = agency_id;
-        this.agency_name = agency_name;
-        this.agency_url = agency_url;
-        this.agency_timezone = agency_timezone;
-        this.agency_lang = agency_lang;
-        this.agency_phone = agency_phone;
-        this.agency_fare_url = agency_fare_url;
+        this.agency_id = attributes[0];
+        this.agency_name = attributes[1];
+        this.agency_url = attributes[2];
+        this.agency_timezone = attributes[3];
+        this.agency_lang = attributes[4];
+        this.agency_phone = attributes[5];
+        this.agency_fare_url = attributes[6];
+
+    }
+
+    @Override
+    public void getAllData()
+    {
+        System.out.printf(
+                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
+                this.agency_id,
+                this.agency_name,
+                this.agency_url,
+                this.agency_timezone,
+                this.agency_lang,
+                this.agency_phone,
+                this.agency_fare_url);
     }
 
     public String getAgency_id() {
@@ -77,5 +94,6 @@ public class Agency
     public void setAgency_fare_url(String agency_fare_url) {
         this.agency_fare_url = agency_fare_url;
     }
+
 
 }

@@ -2,7 +2,7 @@ package TextFiles;
 
 import Enums.Route.RouteType;
 
-public class Route
+public class Route implements IObject
 {
     private String route_id;
     private String agency_id;
@@ -14,16 +14,43 @@ public class Route
     private String route_color;
     private String route_text_color;
 
-    public Route(String route_id, String agency_id, String route_short_name, String route_long_name, String route_desc, RouteType route_type, String route_url, String route_color, String route_text_color) {
-        this.route_id = route_id;
-        this.agency_id = agency_id;
-        this.route_short_name = route_short_name;
-        this.route_long_name = route_long_name;
-        this.route_desc = route_desc;
-        this.route_type = route_type;
-        this.route_url = route_url;
-        this.route_color = route_color;
-        this.route_text_color = route_text_color;
+    public Route() {}
+
+    @Override
+    public void loadData(String[] attributes)
+    {
+        this.route_id = attributes[0];
+        this.agency_id = attributes[1];
+        this.route_short_name = attributes[2];
+        this.route_long_name = attributes[3];
+        this.route_desc = attributes[4];
+
+        if(attributes[5] != null && !attributes[5].equals(""))
+        {
+            this.route_type = RouteType.getRouteType(Integer.parseInt(attributes[5]));
+        }
+
+        this.route_url = attributes[6];
+        this.route_color = attributes[7];
+        this.route_text_color = attributes[8];
+
+    }
+
+    @Override
+    public void getAllData()
+    {
+        System.out.printf(
+                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
+                this.route_id,
+                this.agency_id,
+                this.route_short_name,
+                this.route_long_name,
+                this.route_desc,
+                this.route_type,
+                this.route_url,
+                this.route_color,
+                this.route_text_color);
+
     }
 
     public String getRoute_id() {
@@ -97,4 +124,6 @@ public class Route
     public void setRoute_text_color(String route_text_color) {
         this.route_text_color = route_text_color;
     }
+
+
 }

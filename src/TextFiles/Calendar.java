@@ -2,9 +2,11 @@ package TextFiles;
 
 import Enums.Calendar.DayServiceAvailability;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Calendar
+public class Calendar implements IObject
 {
     private String service_id;
     private DayServiceAvailability monday;
@@ -17,18 +19,85 @@ public class Calendar
     private Date start_date;
     private Date end_date;
 
-    public Calendar(String service_id, DayServiceAvailability monday, DayServiceAvailability tuesday, DayServiceAvailability wednesday, DayServiceAvailability thursday, DayServiceAvailability friday, DayServiceAvailability saturday, DayServiceAvailability sunday, Date start_date, Date end_date)
+    public Calendar(){}
+
+    @Override
+    public void loadData(String[] attributes)
     {
-        this.service_id = service_id;
-        this.monday = monday;
-        this.tuesday = tuesday;
-        this.wednesday = wednesday;
-        this.thursday = thursday;
-        this.friday = friday;
-        this.saturday = saturday;
-        this.sunday = sunday;
-        this.start_date = start_date;
-        this.end_date = end_date;
+        this.service_id = attributes[0];
+        if(attributes[1] != null && !attributes[1].equals(""))
+        {
+            this.monday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[1]));
+        }
+
+        if(attributes[2] != null && !attributes[2].equals(""))
+        {
+            this.tuesday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[2]));
+        }
+
+        if(attributes[3] != null && !attributes[3].equals(""))
+        {
+            this.wednesday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[3]));
+        }
+
+        if(attributes[4] != null && !attributes[4].equals(""))
+        {
+            this.thursday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[4]));
+        }
+
+        if(attributes[5] != null && !attributes[5].equals(""))
+        {
+            this.friday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[5]));
+        }
+
+        if(attributes[6] != null && !attributes[6].equals(""))
+        {
+            this.saturday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[6]));
+        }
+
+        if(attributes[7] != null && !attributes[7].equals(""))
+        {
+            this.sunday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[7]));
+        }
+
+        if(attributes[8] != null && !attributes[8].equals(""))
+        {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.DatePattern);
+            try {
+                this.start_date = simpleDateFormat.parse(attributes[8]);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(attributes[9] != null && !attributes[9].equals(""))
+        {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.DatePattern);
+            try {
+                this.end_date = simpleDateFormat.parse(attributes[9]);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    @Override
+    public void getAllData()
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.DatePattern);
+        System.out.printf(
+                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
+                this.service_id,
+                this.monday,
+                this.tuesday,
+                this.wednesday,
+                this.thursday,
+                this.friday,
+                this.saturday,
+                this.sunday,
+                simpleDateFormat.format(this.start_date),
+                simpleDateFormat.format(this.end_date));
     }
 
     public String getService_id() {
@@ -110,4 +179,6 @@ public class Calendar
     public void setEnd_date(Date end_date) {
         this.end_date = end_date;
     }
+
+
 }

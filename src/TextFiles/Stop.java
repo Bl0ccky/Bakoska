@@ -3,8 +3,7 @@ package TextFiles;
 import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
 
-public class Stop
-{
+public class Stop implements IObject {
     private String stop_id;
     private String stop_code;
     private String stop_name;
@@ -18,60 +17,63 @@ public class Stop
     private String stop_timezone;
     private StopWheelchairBoarding wheelchair_boarding;
 
-    public Stop(String stop_id, String stop_code, String stop_name, String stop_desc, double stop_lat, double stop_lon, String zone_id, String stop_url, StopLocationType location_type, String parent_station, String stop_timezone, StopWheelchairBoarding wheelchair_boarding)
-    {
-        this.stop_id = stop_id;
-        this.stop_code = stop_code;
-        this.stop_name = stop_name;
-        this.stop_desc = stop_desc;
-        this.stop_lat = stop_lat;
-        this.stop_lon = stop_lon;
-        this.zone_id = zone_id;
-        this.stop_url = stop_url;
-        this.location_type = location_type;
-        this.parent_station = parent_station;
-        this.stop_timezone = stop_timezone;
-        this.wheelchair_boarding = wheelchair_boarding;
-    }
+    public Stop() {}
 
-    public static Stop createStop(String[] attributes)
+    @Override
+    public void loadData(String[] attributes)
     {
-        String stop_id = attributes[0];
-        String stop_code = attributes[1];
-        String stop_name = attributes[2];
-        String stop_desc = attributes[3];
+        this.stop_id = attributes[0];
+        this.stop_code = attributes[1];
+        this.stop_name = attributes[2];
+        this.stop_desc = attributes[3];
 
-        double stop_lat = 0;
         if(attributes[4] != null && !attributes[4].equals(""))
         {
-            stop_lat = Double.parseDouble(attributes[4]);
+            this.stop_lat = Double.parseDouble(attributes[4]);
         }
 
-        double stop_lon = 0;
+        stop_lon = 0;
         if(attributes[5] != null && !attributes[5].equals(""))
         {
-            stop_lon = Double.parseDouble(attributes[5]);
+            this.stop_lon = Double.parseDouble(attributes[5]);
         }
 
-        String zone_id = attributes[6];
-        String stop_url = attributes[7];
+        this.zone_id = attributes[6];
+        this.stop_url = attributes[7];
 
-        StopLocationType location_type = null;
         if(attributes[8] != null && !attributes[8].equals(""))
         {
-            location_type = StopLocationType.getStopLocationType(Integer.parseInt(attributes[8]));
+            this.location_type = StopLocationType.getStopLocationType(Integer.parseInt(attributes[8]));
         }
 
-        String parent_station = attributes[9];
-        String stop_timezone = attributes[10];
+        this.parent_station = attributes[9];
+        this.stop_timezone = attributes[10];
 
-        StopWheelchairBoarding wheelchair_boarding = null;
         if(attributes[11] != null && !attributes[11].equals(""))
         {
-            wheelchair_boarding = StopWheelchairBoarding.getStopWheelchairBoarding(Integer.parseInt(attributes[11]));
+            this.wheelchair_boarding = StopWheelchairBoarding.getStopWheelchairBoarding(Integer.parseInt(attributes[11]));
         }
 
-        return new Stop(stop_id, stop_code, stop_name, stop_desc, stop_lat, stop_lon, zone_id, stop_url, location_type, parent_station, stop_timezone, wheelchair_boarding);
+    }
+
+    @Override
+    public void getAllData()
+    {
+        System.out.printf(
+                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
+                this.stop_id,
+                this.stop_code,
+                this.stop_name,
+                this.stop_desc,
+                this.stop_lat,
+                this.stop_lon,
+                this.zone_id,
+                this.stop_url,
+                this.location_type,
+                this.parent_station,
+                this.stop_timezone,
+                this.wheelchair_boarding);
+
     }
 
     public String getStop_id() {
@@ -169,4 +171,5 @@ public class Stop
     public void setWheelchair_boarding(StopWheelchairBoarding wheelchair_boarding) {
         this.wheelchair_boarding = wheelchair_boarding;
     }
+
 }
