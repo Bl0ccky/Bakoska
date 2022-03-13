@@ -1,45 +1,24 @@
+package GUI;
+
+import App.DataLoader;
+
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class MenuView extends JFrame implements ActionListener {
-    JPanel mainPanel;
-    //JSplitPane splitPane;
-    JButton btnSelectFile;
-    JButton btnExit;
-    JLabel lblSelectFile;
-    JMenuBar menuBar;
-    JMenu fileMenu;
-    JMenuItem importItem;
-    JMenuItem exitItem;
+public class MenuPanel extends JPanel implements ActionListener{
+    private final JPanel contentPanel;
+    private final JButton btnSelectFile;
+    private final JButton btnExit;
 
-    public MenuView() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(500,500));
-        this.setLayout(new BorderLayout());
-        this.setTitle("GTFS-Adminer");
-/*
-        this.menuBar = new JMenuBar();
+    public MenuPanel(JPanel panel) {
 
-        this.fileMenu = new JMenu("File");
-
-        this.importItem = new JMenuItem("Import GTFS");
-        this.exitItem = new JMenuItem("Exit");
-
-        this.fileMenu.add(this.importItem);
-        this.fileMenu.add(this.exitItem);
-
-        this.menuBar.add(this.fileMenu);
-
-        this.setJMenuBar(this.menuBar);
-
- */
-        this.lblSelectFile = new JLabel("Vyber cestu k GTFS súborom");
-        this.lblSelectFile.setFont(new Font("Sans Sheriff", Font.PLAIN,20));
+        this.contentPanel = panel;
+        JLabel lblSelectFile = new JLabel("Vyber cestu k GTFS súborom");
+        lblSelectFile.setFont(new Font("Sans Sheriff", Font.PLAIN,20));
 
         this.btnSelectFile = new JButton("Vyber cestu");
         this.btnSelectFile.setFocusable(false);
@@ -49,13 +28,12 @@ public class MenuView extends JFrame implements ActionListener {
         this.btnExit.setFocusable(false);
         this.btnExit.addActionListener(this);
 
-        this.mainPanel = new JPanel();
-        this.mainPanel.setBorder(new EmptyBorder(10,10,10,10));
-        this.mainPanel.setLayout(new GridBagLayout());
+        this.setBorder(new EmptyBorder(10,10,10,10));
+        this.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.anchor = GridBagConstraints.WEST;
-        this.mainPanel.add(this.lblSelectFile, gbc);
+        this.add(lblSelectFile, gbc);
 
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -66,15 +44,10 @@ public class MenuView extends JFrame implements ActionListener {
         buttons.add(this.btnExit, gbc);
 
         gbc.weighty = 1;
-        this.mainPanel.add(buttons, gbc);
+        this.add(buttons, gbc);
 
         //this.btnPanel = new JPanel(new BorderLayout());
         //this.splitPane = new JSplitPane();
-
-
-
-
-
 
 
         //this.mainPanel.add(this.lblSelectFile, Component.CENTER_ALIGNMENT);
@@ -91,31 +64,35 @@ public class MenuView extends JFrame implements ActionListener {
         this.splitPane.setTopComponent(this.labelPanel);
         this.splitPane.setBottomComponent(this.btnPanel);
 */
-        this.add(this.mainPanel);
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        /*if (e.getSource() == this.btnSelectFile) {
+        if (e.getSource() == this.btnSelectFile) {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Ahoj svet");
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             fileChooser.setAcceptAllFileFilterUsed(false);
-            if (fileChooser.showOpenDialog(mainPanel) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 DataLoader dataLoader = new DataLoader(filePath);
+                dataLoader.writeAllAgency();
                 System.out.println("Vyborne podarilo sa nacitat vsetky data");
+                String changeToPanel = "tablePanel";
+                CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
+                cardLayout.show(this.contentPanel, changeToPanel);
+
             } else {
                 JLabel wrongPath = new JLabel();
                 wrongPath.setText("Vybral si zlý priečinok!");
             }
 
-        }*/
+        }
+        else if(e.getSource() == this.btnExit)
+        {
+            System.exit(0);
+        }
 
     }
 }
