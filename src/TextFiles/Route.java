@@ -53,6 +53,11 @@ public class Route implements IObject
 
     }
 
+    @Override
+    public String getKey() {
+        return this.route_id;
+    }
+
     public String getRoute_id() {
         return route_id;
     }

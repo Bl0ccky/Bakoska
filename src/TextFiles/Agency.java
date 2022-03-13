@@ -39,6 +39,12 @@ public class Agency implements IObject
                 this.agency_fare_url);
     }
 
+    @Override
+    public String getKey()
+    {
+        return this.agency_id;
+    }
+
     public String getAgency_id() {
         return agency_id;
     }

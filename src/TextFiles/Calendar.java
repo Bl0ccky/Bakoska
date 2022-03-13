@@ -100,6 +100,11 @@ public class Calendar implements IObject
                 simpleDateFormat.format(this.end_date));
     }
 
+    @Override
+    public String getKey() {
+        return this.service_id;
+    }
+
     public String getService_id() {
         return service_id;
     }

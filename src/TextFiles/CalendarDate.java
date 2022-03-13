@@ -46,6 +46,11 @@ public class CalendarDate implements IObject
                 this.exception_type);
     }
 
+    @Override
+    public String getKey() {
+        return this.service_id + "-" + this.date + "-" + this.exception_type;
+    }
+
     public String getService_id() {
         return service_id;
     }

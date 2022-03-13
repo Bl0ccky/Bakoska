@@ -58,6 +58,11 @@ public class Trip implements IObject
 
     }
 
+    @Override
+    public String getKey() {
+        return this.trip_id;
+    }
+
     public String getTrip_id() {
         return trip_id;
     }

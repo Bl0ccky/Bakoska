@@ -2,31 +2,32 @@ import TextFiles.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Scanner;
+import java.util.Set;
 
 public class DataLoader
 {
     private String filePath;
-    private final ArrayList<IObject> agency;
-    private final ArrayList<IObject> stops;
-    private final ArrayList<IObject> routes;
-    private final ArrayList<IObject> trips;
-    private final ArrayList<IObject> stopTimes;
-    private final ArrayList<IObject> calendars;
-    private final ArrayList<IObject> calendarDates;
+    private final Hashtable<String, IObject> agency;
+    private final Hashtable<String, IObject> stops;
+    private final Hashtable<String, IObject> routes;
+    private final Hashtable<String, IObject> trips;
+    private final Hashtable<String, IObject> stopTimes;
+    private final Hashtable<String, IObject> calendars;
+    private final Hashtable<String, IObject> calendarDates;
 
 
     DataLoader(String filePath)
     {
         this.filePath = filePath;
-        this.agency = new ArrayList<>();
-        this.stops = new ArrayList<>();
-        this.routes = new ArrayList<>();
-        this.trips = new ArrayList<>();
-        this.stopTimes = new ArrayList<>();
-        this.calendars = new ArrayList<>();
-        this.calendarDates = new ArrayList<>();
+        this.agency = new Hashtable<>();
+        this.stops = new Hashtable<>();
+        this.routes = new Hashtable<>();
+        this.trips = new Hashtable<>();
+        this.stopTimes = new Hashtable<>();
+        this.calendars = new Hashtable<>();
+        this.calendarDates = new Hashtable<>();
         this.loadAgency();
         this.loadStops();
         this.loadRoutes();
@@ -71,7 +72,7 @@ public class DataLoader
         this.loadGTFS("calendar_dates.txt", 3, ObjectType.CALENDAR_DATE, this.calendarDates);
     }
 
-    private void loadGTFS(String fileName, int delimiterLimit, ObjectType objectType, ArrayList<IObject> arrayList)
+    private void loadGTFS(String fileName, int delimiterLimit, ObjectType objectType, Hashtable<String, IObject> hashtable)
     {
         Scanner scanner;
         try
@@ -84,7 +85,7 @@ public class DataLoader
                 String[] attributes = line.split(",",delimiterLimit);
                 IObject object = ObjectFactory.getObject(objectType);
                 object.loadData(attributes);
-                arrayList.add(object);
+                hashtable.put(object.getKey(), object);
             }
             scanner.close();
 
@@ -93,59 +94,48 @@ public class DataLoader
         }
 
     }
+    private void getAllObjects(Hashtable<String, IObject> hashtable)
+    {
+        Set<String> keys = hashtable.keySet();
+        for (String key: keys)
+        {
+            hashtable.get(key).getAllData();
+        }
+    }
+
     public void getAllAgency()
     {
-        for (IObject object: this.agency)
-        {
-            object.getAllData();
-        }
+        this.getAllObjects(this.agency);
     }
 
     public void getAllCalendars()
     {
-        for (IObject object: this.calendars)
-        {
-            object.getAllData();
-        }
+        this.getAllObjects(this.calendars);
     }
+
     public void getAllCalendarDates()
     {
-        for (IObject object: this.calendarDates)
-        {
-            object.getAllData();
-        }
+        this.getAllObjects(this.calendarDates);
     }
 
     public void getAllRoutes()
     {
-        for (IObject object: this.routes)
-        {
-            object.getAllData();
-        }
+        this.getAllObjects(this.routes);
     }
 
     public void getAllStops()
     {
-        for (IObject object: this.stops)
-        {
-            object.getAllData();
-        }
+        this.getAllObjects(this.stops);
     }
 
     public void getAllStopTimes()
     {
-        for (IObject object: this.stopTimes)
-        {
-            object.getAllData();
-        }
+        this.getAllObjects(this.stopTimes);
     }
 
     public void getAllTrips()
     {
-        for (IObject object: this.trips)
-        {
-            object.getAllData();
-        }
+        this.getAllObjects(this.trips);
     }
 
     public String getFilePath() {

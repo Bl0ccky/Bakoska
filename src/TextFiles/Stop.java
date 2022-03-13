@@ -76,6 +76,11 @@ public class Stop implements IObject {
 
     }
 
+    @Override
+    public String getKey() {
+        return this.stop_id;
+    }
+
     public String getStop_id() {
         return stop_id;
     }

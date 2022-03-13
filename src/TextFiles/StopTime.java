@@ -97,6 +97,11 @@ public class StopTime implements IObject
                 this.timepoint);
     }
 
+    @Override
+    public String getKey() {
+        return this.trip_id + "-" + this.stop_id;
+    }
+
     public String getTrip_id() {
         return trip_id;
     }
