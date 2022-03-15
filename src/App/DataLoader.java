@@ -173,23 +173,23 @@ public class DataLoader
     }
     public Hashtable<String, IObject> getAllCalendarDates()
     {
-        return this.agency;
+        return this.calendarDates;
     }
     public Hashtable<String, IObject> getAllRoutes()
     {
-        return this.agency;
+        return this.routes;
     }
     public Hashtable<String, IObject> getAllStops()
     {
-        return this.agency;
+        return this.stops;
     }
     public Hashtable<String, IObject> getAllStopTimes()
     {
-        return this.agency;
+        return this.stopTimes;
     }
     public Hashtable<String, IObject> getAllTrips()
     {
-        return this.agency;
+        return this.trips;
     }
 
     public String[] getHashTableColumns(ObjectType objectType)

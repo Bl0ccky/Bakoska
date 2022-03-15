@@ -41,8 +41,10 @@ public abstract class TablePanel extends JPanel implements ActionListener {
         //{
         //    dtm.addRow(new Object[] {entry.getKey(), entry.getValue()});
         //}
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        JScrollPane pane = new JScrollPane(table);
 
-        this.add(table);
+        this.add(pane);
     }
 
     @Override
