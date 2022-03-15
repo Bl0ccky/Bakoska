@@ -1,10 +1,15 @@
 package GUI;
 
+import App.DataLoader;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame
 {
+    private DataLoader dataLoader;
+    private AdminPanel adminPanel;
+    private JPanel panelContent;
 
     public MainFrame()
     {
@@ -15,11 +20,11 @@ public class MainFrame extends JFrame
 
         CardLayout cardLayout = new CardLayout();
 
-        JPanel panelContent = new JPanel();
+        this.panelContent = new JPanel();
         panelContent.setLayout(cardLayout);
 
-        MenuPanel menuPanel = new MenuPanel(panelContent);
-        //TablePanel tablePanel = new TablePanel(panelContent, this);
+        MenuPanel menuPanel = new MenuPanel(panelContent, this);
+
 
         JMenuBar menuBar = new JMenuBar();
 
@@ -37,9 +42,7 @@ public class MainFrame extends JFrame
 
         this.setJMenuBar(menuBar);
 
-
-        panelContent.add(menuPanel, "menuPanel");
-        //panelContent.add(tablePanel, "tablePanel");
+        this.panelContent.add(menuPanel, "menuPanel");
 
         this.add(panelContent);
         this.pack();
@@ -49,4 +52,21 @@ public class MainFrame extends JFrame
     }
 
 
+    public DataLoader getDataLoader() {
+        return dataLoader;
+    }
+
+    public void setDataLoader(DataLoader dataLoader) {
+        this.dataLoader = dataLoader;
+    }
+
+    public void createAdminPanel()
+    {
+        this.adminPanel = new AdminPanel(this.panelContent, this);
+        this.panelContent.add(adminPanel, "adminPanel");
+        this.add(panelContent);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+    }
 }

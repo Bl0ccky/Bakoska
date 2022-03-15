@@ -13,10 +13,12 @@ public class MenuPanel extends JPanel implements ActionListener{
     private final JPanel contentPanel;
     private final JButton btnSelectFile;
     private final JButton btnExit;
+    private final MainFrame mainFrame;
 
-    public MenuPanel(JPanel panel) {
+    public MenuPanel(JPanel panel, MainFrame mainFrame) {
 
         this.contentPanel = panel;
+        this.mainFrame = mainFrame;
         JLabel lblSelectFile = new JLabel("Vyber cestu k GTFS súborom");
         lblSelectFile.setFont(new Font("Sans Sheriff", Font.PLAIN,20));
 
@@ -77,9 +79,12 @@ public class MenuPanel extends JPanel implements ActionListener{
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 DataLoader dataLoader = new DataLoader(filePath);
+                dataLoader.loadAllData();
+                this.mainFrame.setDataLoader(dataLoader);
+                this.mainFrame.createAdminPanel();
                 dataLoader.writeAllAgency();
                 System.out.println("Vyborne podarilo sa nacitat vsetky data");
-                String changeToPanel = "tablePanel";
+                String changeToPanel = "adminPanel";
                 CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
                 cardLayout.show(this.contentPanel, changeToPanel);
 

@@ -4,7 +4,6 @@ import TextFiles.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.Set;
@@ -19,7 +18,7 @@ public class DataLoader
     private final Hashtable<String, IObject> stopTimes;
     private final Hashtable<String, IObject> calendars;
     private final Hashtable<String, IObject> calendarDates;
-    private final String[][] hashTablesColumns;
+    private final Hashtable<ObjectType, String[]> hashTablesColumns;
 
     public DataLoader(String filePath)
     {
@@ -31,7 +30,12 @@ public class DataLoader
         this.stopTimes = new Hashtable<>();
         this.calendars = new Hashtable<>();
         this.calendarDates = new Hashtable<>();
-        this.hashTablesColumns = new String[7][12];
+        this.hashTablesColumns = new Hashtable<>();
+
+    }
+
+    public void loadAllData()
+    {
         this.loadAgency();
         this.loadStops();
         this.loadRoutes();
@@ -103,22 +107,8 @@ public class DataLoader
 
     private void getColumnNames(String columnNames, ObjectType objectType)
     {
-        int objectIndex;
-         switch (objectType) {
-            case CALENDAR -> objectIndex = 1;
-            case CALENDAR_DATE -> objectIndex = 2;
-            case ROUTE -> objectIndex = 3;
-            case STOP -> objectIndex = 4;
-            case STOP_TIME -> objectIndex = 5;
-            case TRIP -> objectIndex = 6;
-             default -> objectIndex = 0;
-        }
         String[] columns = columnNames.split(",");
-        for (int i = 0; i < columns.length; i++)
-        {
-            this.hashTablesColumns[objectIndex][i] = columns[i];
-        }
-
+        this.hashTablesColumns.put(objectType, columns);
     }
 
     private void getAllObjects(Hashtable<String, IObject> hashtable)
@@ -202,8 +192,9 @@ public class DataLoader
         return this.agency;
     }
 
-    public String[][] getHashTablesColumns() {
-        return hashTablesColumns;
+    public String[] getHashTableColumns(ObjectType objectType)
+    {
+        return this.hashTablesColumns.get(objectType);
     }
 
 }
