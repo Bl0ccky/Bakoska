@@ -8,8 +8,7 @@ import java.awt.*;
 public class MainFrame extends JFrame
 {
     private DataLoader dataLoader;
-    private AdminPanel adminPanel;
-    private JPanel panelContent;
+    private final JPanel panelContent;
 
     public MainFrame()
     {
@@ -62,7 +61,7 @@ public class MainFrame extends JFrame
 
     public void createAdminPanel()
     {
-        this.adminPanel = new AdminPanel(this.panelContent, this);
+        AdminPanel adminPanel = new AdminPanel(this.panelContent, this);
         this.panelContent.add(adminPanel, "adminPanel");
         this.add(panelContent);
         this.pack();

@@ -37,14 +37,18 @@ public abstract class TablePanel extends JPanel implements ActionListener {
         }
 
         JTable table = new JTable(myTableItemModel);
-        //for(Map.Entry<String, IObject> entry: hashtable.entrySet())
-        //{
-        //    dtm.addRow(new Object[] {entry.getKey(), entry.getValue()});
-        //}
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        JScrollPane pane = new JScrollPane(table);
+        JScrollPane scrollPane = new JScrollPane(table);
 
-        this.add(pane);
+        JButton addButton = new JButton("Add");
+        JButton editButton = new JButton("Edit");
+        JButton removeButton = new JButton("Remove");
+
+
+        this.add(scrollPane);
+        this.add(addButton);
+        this.add(editButton);
+        this.add(removeButton);
     }
 
     @Override

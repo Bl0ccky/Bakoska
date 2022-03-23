@@ -85,7 +85,6 @@ public class Calendar implements IObject
     @Override
     public void getAllData()
     {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.DatePattern);
         System.out.printf(
                 "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
                 this.service_id,
@@ -96,8 +95,8 @@ public class Calendar implements IObject
                 this.friday,
                 this.saturday,
                 this.sunday,
-                simpleDateFormat.format(this.start_date),
-                simpleDateFormat.format(this.end_date));
+                this.start_date,
+                this.end_date);
     }
 
     @Override

@@ -2,7 +2,7 @@ package TextFiles;
 
 public final class ObjectFactory
 {
-    public static String DatePattern = "YYYYMMDD";
+    public static String DatePattern = "yyyyMMdd";
     public static String TimePattern = "kk:mm:ss";
     private ObjectFactory(){}
 

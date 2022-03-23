@@ -38,11 +38,10 @@ public class CalendarDate implements IObject
     @Override
     public void getAllData()
     {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.DatePattern);
         System.out.printf(
                 "%5s\t%5s\t%5s\n",
                 this.service_id,
-                simpleDateFormat.format(this.date),
+                this.date,
                 this.exception_type);
     }
 

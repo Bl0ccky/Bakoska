@@ -15,6 +15,8 @@ public class AdminPanel extends JPanel implements ActionListener
     public AdminPanel(JPanel panel, MainFrame mainFrame)
     {
         this.contentPanel = panel;
+
+        JTabbedPane tablePanels = new JTabbedPane();
         TablePanel agencyTablePanel = new AgencyTablePanel(this.contentPanel, mainFrame, mainFrame.getDataLoader().getAllAgency(), ObjectType.AGENCY);
         TablePanel calendarDateTablePanel = new CalendarDateTablePanel(this.contentPanel, mainFrame, mainFrame.getDataLoader().getAllCalendarDates(), ObjectType.CALENDAR_DATE);
         TablePanel calendarTablePanel = new CalendarTablePanel(this.contentPanel, mainFrame, mainFrame.getDataLoader().getAllCalendars(), ObjectType.CALENDAR);
@@ -23,13 +25,15 @@ public class AdminPanel extends JPanel implements ActionListener
         TablePanel stopTimeTablePanel = new StopTimeTablePanel(this.contentPanel, mainFrame, mainFrame.getDataLoader().getAllStopTimes(), ObjectType.STOP_TIME);
         TablePanel tripTablePanel = new TripTablePanel(this.contentPanel, mainFrame, mainFrame.getDataLoader().getAllTrips(), ObjectType.TRIP);
 
-        this.add(agencyTablePanel);
-        this.add(calendarDateTablePanel);
-        this.add(calendarTablePanel);
-        this.add(routeTablePanel);
-        this.add(stopTablePanel);
-        this.add(stopTimeTablePanel);
-        this.add(tripTablePanel);
+        tablePanels.add("Agency", agencyTablePanel);
+        tablePanels.add("Calendar Date", calendarDateTablePanel);
+        tablePanels.add("Calendar", calendarTablePanel);
+        tablePanels.add("Route", routeTablePanel);
+        tablePanels.add("Stop", stopTablePanel);
+        tablePanels.add("Stop Time", stopTimeTablePanel);
+        tablePanels.add("Trip", tripTablePanel);
+
+        this.add(tablePanels);
     }
 
     @Override

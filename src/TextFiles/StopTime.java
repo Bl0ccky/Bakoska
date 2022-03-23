@@ -82,12 +82,11 @@ public class StopTime implements IObject
     @Override
     public void getAllData()
     {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.TimePattern);
         System.out.printf(
                 "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
                 this.trip_id,
-                simpleDateFormat.format(this.arrival_time),
-                simpleDateFormat.format(this.departure_time),
+                this.arrival_time,
+                this.departure_time,
                 this.stop_id,
                 this.stop_sequence,
                 this.stop_headsign,

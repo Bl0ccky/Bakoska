@@ -29,5 +29,9 @@ public abstract class MyTableItemModel extends AbstractTableModel {
         return this.columnNames.length;
     }
 
+    @Override
+    public String getColumnName(int col) {
+        return this.columnNames[col];
+    }
 
 }

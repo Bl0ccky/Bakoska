@@ -82,8 +82,6 @@ public class MenuPanel extends JPanel implements ActionListener{
                 dataLoader.loadAllData();
                 this.mainFrame.setDataLoader(dataLoader);
                 this.mainFrame.createAdminPanel();
-                dataLoader.writeAllAgency();
-                System.out.println("Vyborne podarilo sa nacitat vsetky data");
                 String changeToPanel = "adminPanel";
                 CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
                 cardLayout.show(this.contentPanel, changeToPanel);
