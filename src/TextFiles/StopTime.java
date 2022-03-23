@@ -83,7 +83,7 @@ public class StopTime implements IObject
     public void getAllData()
     {
         System.out.printf(
-                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
+                "%5s\t%5s\t%5s\t%5s\t%5d\t%5s\t%5s\t%5s\t%5s\t%5s\n",
                 this.trip_id,
                 this.arrival_time,
                 this.departure_time,

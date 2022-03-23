@@ -15,6 +15,7 @@ public class AdminPanel extends JPanel implements ActionListener
     public AdminPanel(JPanel panel, MainFrame mainFrame)
     {
         this.contentPanel = panel;
+        //this.setLayout(new BorderLayout());
 
         JTabbedPane tablePanels = new JTabbedPane();
         TablePanel agencyTablePanel = new AgencyTablePanel(this.contentPanel, mainFrame, mainFrame.getDataLoader().getAllAgency(), ObjectType.AGENCY);
@@ -33,15 +34,17 @@ public class AdminPanel extends JPanel implements ActionListener
         tablePanels.add("Stop Time", stopTimeTablePanel);
         tablePanels.add("Trip", tripTablePanel);
 
+        //this.setBackground(Color.BLUE);
+        //this.setAlignmentX(CENTER_ALIGNMENT);
         this.add(tablePanels);
     }
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        String changeToPanel = "adminPanel";
-        CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
-        cardLayout.show(this.contentPanel, changeToPanel);
+        //String changeToPanel = "adminPanel";
+        //CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
+        //cardLayout.show(this.contentPanel, changeToPanel);
 
     }
 
