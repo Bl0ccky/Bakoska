@@ -15,7 +15,7 @@ public class AdminPanel extends JPanel implements ActionListener
     public AdminPanel(JPanel panel, MainFrame mainFrame)
     {
         this.contentPanel = panel;
-        //this.setLayout(new BorderLayout());
+        this.setLayout(null);
 
         JTabbedPane tablePanels = new JTabbedPane();
         TablePanel agencyTablePanel = new AgencyTablePanel(this.contentPanel, mainFrame, mainFrame.getDataLoader().getAllAgency(), ObjectType.AGENCY);
@@ -34,8 +34,7 @@ public class AdminPanel extends JPanel implements ActionListener
         tablePanels.add("Stop Time", stopTimeTablePanel);
         tablePanels.add("Trip", tripTablePanel);
 
-        //this.setBackground(Color.BLUE);
-        //this.setAlignmentX(CENTER_ALIGNMENT);
+        tablePanels.setBounds(50,25,1450,850);
         this.add(tablePanels);
     }
 

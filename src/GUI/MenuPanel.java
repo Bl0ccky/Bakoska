@@ -82,9 +82,8 @@ public class MenuPanel extends JPanel implements ActionListener{
                 dataLoader.loadAllData();
                 this.mainFrame.setDataLoader(dataLoader);
                 this.mainFrame.createAdminPanel();
-                String changeToPanel = "adminPanel";
                 CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
-                cardLayout.show(this.contentPanel, changeToPanel);
+                cardLayout.show(this.contentPanel, "adminPanel");
 
             } else {
                 JLabel wrongPath = new JLabel();

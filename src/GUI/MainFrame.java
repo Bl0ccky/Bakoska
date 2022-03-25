@@ -13,9 +13,10 @@ public class MainFrame extends JFrame
     public MainFrame()
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(500,500));
+        this.setPreferredSize(new Dimension(1550,950));
         this.setLayout(new BorderLayout());
         this.setTitle("GTFS-Adminer");
+
 
         CardLayout cardLayout = new CardLayout();
 
@@ -63,9 +64,17 @@ public class MainFrame extends JFrame
     {
         AdminPanel adminPanel = new AdminPanel(this.panelContent, this);
         this.panelContent.add(adminPanel, "adminPanel");
-        this.add(panelContent);
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
+        //this.add(panelContent);
+        //this.pack();
+        //this.setLocationRelativeTo(null);
+        //this.setVisible(true);
+    }
+
+    public void createDetailPanel()
+    {
+        DetailPanel detailPanel = new DetailPanel();
+        this.panelContent.add(detailPanel, "detailPanel");
+        //this.add(panelContent);
+
     }
 }
