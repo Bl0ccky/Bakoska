@@ -31,6 +31,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
     private JButton removeButton;
     private JButton detailButton;
     private JCheckBox[] searchCheckBoxes;
+    protected JTextField[] addTextFields;
 
     public TablePanel(JPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
         this.keys = new ArrayList<>(hashtable.keySet());
@@ -67,6 +68,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         }
         else if(e.getSource() == this.addButton)
         {
+            this.addNewObject();
 
         }
         else if(e.getSource() == this.editButton)
@@ -175,29 +177,29 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         int y1 = 350;
         int y2 = 350;
         JLabel[] addLabels = new JLabel[this.columnNames.length];
-        JTextField[] addTextFields = new JTextField[this.columnNames.length];
+        this.addTextFields = new JTextField[this.columnNames.length];
         for (int i = 0; i < this.columnNames.length; i++)
         {
             addLabels[i] = new JLabel(this.columnNames[i]);
-            addTextFields[i] = new JTextField();
+            this.addTextFields[i] = new JTextField();
             if(i >= this.columnNames.length/2)
             {
                 x = 1270;
                 addLabels[i].setBounds(x, y2, 150, 30);
                 y2 += 30;
-                addTextFields[i].setBounds(x, y2, 150, 30);
+                this.addTextFields[i].setBounds(x, y2, 150, 30);
                 y2 += 30;
             }
             else
             {
                 addLabels[i].setBounds(x, y1, 150, 30);
                 y1 += 30;
-                addTextFields[i].setBounds(x, y1, 150, 30);
+                this.addTextFields[i].setBounds(x, y1, 150, 30);
                 y1 += 30;
             }
 
             this.add(addLabels[i]);
-            this.add(addTextFields[i]);
+            this.add(this.addTextFields[i]);
         }
 
         this.addButton = new JButton("Add");
@@ -206,5 +208,8 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         this.add(addButton);
 
     }
+
+    abstract boolean checkAddInputs();
+    abstract void addNewObject();
 
 }

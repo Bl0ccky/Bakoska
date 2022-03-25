@@ -12,4 +12,18 @@ public class CalendarDateTablePanel extends TablePanel{
         super(panel, mainFrame, hashtable, objectType);
     }
 
+    @Override
+    boolean checkAddInputs()
+    {
+        return !this.addTextFields[0].getText().equals("")
+                && !this.addTextFields[1].getText().equals("")
+                && !this.addTextFields[2].getText().equals("")
+                && !this.hashtable.containsKey(this.addTextFields[0].getText());
+    }
+
+    @Override
+    void addNewObject() {
+
+    }
+
 }

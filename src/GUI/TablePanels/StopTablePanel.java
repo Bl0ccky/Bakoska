@@ -12,4 +12,14 @@ public class StopTablePanel extends TablePanel{
         super(panel, mainFrame, hashtable, objectType);
     }
 
+    @Override
+    boolean checkAddInputs() {
+        return false;
+    }
+
+    @Override
+    void addNewObject() {
+
+    }
+
 }
