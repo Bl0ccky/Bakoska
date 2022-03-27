@@ -3,7 +3,7 @@ package TextFiles;
 public final class ObjectFactory
 {
     public static String DatePattern = "yyyyMMdd";
-    public static String TimePattern = "kk:mm:ss";
+    public static String TimePattern = "H:mm:ss";
     private ObjectFactory(){}
 
     public static IObject getObject(ObjectType objectType)

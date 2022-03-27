@@ -18,7 +18,8 @@ public class DataLoader
     private final Hashtable<String, IObject> stopTimes;
     private final Hashtable<String, IObject> calendars;
     private final Hashtable<String, IObject> calendarDates;
-    private final Hashtable<ObjectType, String[]> hashTablesColumns;
+    private final Hashtable<ObjectType, String[]> hashTableColumnNames;
+    private final Hashtable<ObjectType, Object[]> hashTableColumnTypes;
 
     public DataLoader(String filePath)
     {
@@ -30,7 +31,8 @@ public class DataLoader
         this.stopTimes = new Hashtable<>();
         this.calendars = new Hashtable<>();
         this.calendarDates = new Hashtable<>();
-        this.hashTablesColumns = new Hashtable<>();
+        this.hashTableColumnNames = new Hashtable<>();
+        this.hashTableColumnTypes = new Hashtable<>();
 
     }
 
@@ -83,6 +85,7 @@ public class DataLoader
     private void loadGTFS(String fileName, int delimiterLimit, ObjectType objectType, Hashtable<String, IObject> hashtable)
     {
         Scanner scanner;
+        int columnTypesCounter = 0;
         try
         {
             scanner = new Scanner(new File(this.filePath+ "\\"+fileName));
@@ -95,7 +98,13 @@ public class DataLoader
                 String[] attributes = line.split(",",delimiterLimit);
                 IObject object = ObjectFactory.getObject(objectType);
                 object.loadData(attributes);
+                if(columnTypesCounter == 0)
+                {
+                    this.hashTableColumnTypes.put(objectType, object.getColumnTypes(attributes));
+                    columnTypesCounter++;
+                }
                 hashtable.put(object.getKey(), object);
+
             }
             scanner.close();
 
@@ -108,7 +117,7 @@ public class DataLoader
     private void getColumnNames(String columnNames, ObjectType objectType)
     {
         String[] columns = columnNames.split(",");
-        this.hashTablesColumns.put(objectType, columns);
+        this.hashTableColumnNames.put(objectType, columns);
     }
 
     private void getAllObjects(Hashtable<String, IObject> hashtable)
@@ -192,9 +201,14 @@ public class DataLoader
         return this.trips;
     }
 
-    public String[] getHashTableColumns(ObjectType objectType)
+    public String[] getHashTableColumnNames(ObjectType objectType)
     {
-        return this.hashTablesColumns.get(objectType);
+        return this.hashTableColumnNames.get(objectType);
+    }
+
+    public Object[] getHashTableColumnTypes(ObjectType objectType)
+    {
+        return this.hashTableColumnTypes.get(objectType);
     }
 
 }

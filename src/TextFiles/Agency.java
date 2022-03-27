@@ -22,7 +22,6 @@ public class Agency implements IObject
         this.agency_lang = attributes[4];
         this.agency_phone = attributes[5];
         this.agency_fare_url = attributes[6];
-
     }
 
     @Override
@@ -37,6 +36,21 @@ public class Agency implements IObject
                 this.agency_lang,
                 this.agency_phone,
                 this.agency_fare_url);
+    }
+
+    @Override
+    public Object[] getColumnTypes(String[] attributes)
+    {
+        Object[] columnTypes = new Object[attributes.length];
+        columnTypes[0] = this.agency_id;
+        columnTypes[1] = this.agency_name;
+        columnTypes[2] = this.agency_url;
+        columnTypes[3] = this.agency_timezone;
+        columnTypes[4] = this.agency_lang;
+        columnTypes[5] = this.agency_phone;
+        columnTypes[6] = this.agency_fare_url;
+
+        return columnTypes;
     }
 
     @Override

@@ -11,7 +11,8 @@ public enum RouteType
     AERIAL_LIFT,
     FUNICULAR,
     TROLLEYBUS,
-    MONORAIL;
+    MONORAIL,
+    NO_INFO;
 
     public static RouteType getRouteType(int input)
     {
@@ -26,7 +27,7 @@ public enum RouteType
             case 7 -> FUNICULAR;
             case 11 -> TROLLEYBUS;
             case 12 -> MONORAIL;
-            default -> null;
+            default -> NO_INFO;
         };
     }
 }

@@ -1,8 +1,11 @@
 package GUI.TablePanels;
 
+import Enums.CalendarDate.ExceptionType;
 import GUI.MainFrame;
+import TextFiles.CalendarDate;
 import TextFiles.IObject;
 import TextFiles.ObjectType;
+import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
 import java.util.Hashtable;
@@ -15,14 +18,27 @@ public class CalendarDateTablePanel extends TablePanel{
     @Override
     boolean checkAddInputs()
     {
-        return !this.addTextFields[0].getText().equals("")
-                && !this.addTextFields[1].getText().equals("")
-                && !this.addTextFields[2].getText().equals("")
-                && !this.hashtable.containsKey(this.addTextFields[0].getText());
+        return !((JTextField)this.addFormObjects.get(0)).getText().equals("")
+                && ((DatePicker) this.addFormObjects.get(1)).getDate() != null
+                && ((JComboBox<?>) this.addFormObjects.get(2)).getSelectedItem() != null
+                && !this.hashtable.containsKey(((JTextField)this.addFormObjects.get(0)).getText()
+                + ((DatePicker) this.addFormObjects.get(1)).getDate()
+                + ((JComboBox<?>) this.addFormObjects.get(2)).getSelectedItem());
     }
 
     @Override
-    void addNewObject() {
+    void addNewObject()
+    {
+        if(this.checkAddInputs())
+        {
+            CalendarDate newCalendarDate = new CalendarDate();
+            newCalendarDate.setService_id(((JTextField) this.addFormObjects.get(0)).getText());
+            newCalendarDate.setDate(((DatePicker) this.addFormObjects.get(1)).getDate());
+            newCalendarDate.setException_type((ExceptionType) ((JComboBox<?>) this.addFormObjects.get(2)).getSelectedItem());
+            this.hashtable.put(newCalendarDate.getKey(), newCalendarDate);
+            this.keys.add(newCalendarDate.getKey());
+            this.myTableItemModel.fireTableDataChanged();
+        }
 
     }
 

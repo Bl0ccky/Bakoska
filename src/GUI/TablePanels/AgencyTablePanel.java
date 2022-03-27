@@ -18,11 +18,11 @@ public class AgencyTablePanel extends TablePanel
     @Override
     boolean checkAddInputs()
     {
-        return !this.addTextFields[0].getText().equals("")
-                && !this.addTextFields[1].getText().equals("")
-                && !this.addTextFields[2].getText().equals("")
-                && !this.addTextFields[3].getText().equals("")
-                && !this.hashtable.containsKey(this.addTextFields[0].getText());
+        return !((JTextField)this.addFormObjects.get(0)).getText().equals("")
+                && !((JTextField)this.addFormObjects.get(1)).getText().equals("")
+                && !((JTextField)this.addFormObjects.get(2)).getText().equals("")
+                && !((JTextField)this.addFormObjects.get(3)).getText().equals("")
+                && !this.hashtable.containsKey(((JTextField)this.addFormObjects.get(0)).getText());
     }
 
     @Override
@@ -31,13 +31,13 @@ public class AgencyTablePanel extends TablePanel
         if(this.checkAddInputs())
         {
             Agency newAgency = new Agency();
-            newAgency.setAgency_id(this.addTextFields[0].getText());
-            newAgency.setAgency_name(this.addTextFields[1].getText());
-            newAgency.setAgency_url(this.addTextFields[2].getText());
-            newAgency.setAgency_timezone(this.addTextFields[3].getText());
-            newAgency.setAgency_lang(this.addTextFields[4].getText());
-            newAgency.setAgency_phone(this.addTextFields[5].getText());
-            newAgency.setAgency_fare_url(this.addTextFields[6].getText());
+            newAgency.setAgency_id(((JTextField)this.addFormObjects.get(0)).getText());
+            newAgency.setAgency_name(((JTextField)this.addFormObjects.get(1)).getText());
+            newAgency.setAgency_url(((JTextField)this.addFormObjects.get(2)).getText());
+            newAgency.setAgency_timezone(((JTextField)this.addFormObjects.get(3)).getText());
+            newAgency.setAgency_lang(((JTextField)this.addFormObjects.get(4)).getText());
+            newAgency.setAgency_phone(((JTextField)this.addFormObjects.get(5)).getText());
+            newAgency.setAgency_fare_url(((JTextField)this.addFormObjects.get(6)).getText());
             this.hashtable.put(newAgency.getKey(), newAgency);
             this.keys.add(newAgency.getKey());
             this.myTableItemModel.fireTableDataChanged();

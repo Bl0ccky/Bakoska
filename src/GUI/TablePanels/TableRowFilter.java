@@ -17,10 +17,12 @@ public class TableRowFilter extends RowFilter <MyTableItemModel, Object>
     @Override
     public boolean include(Entry entry)
     {
+        int numOfSelected = 0;
         for (int i = 0; i < this.searchCheckBoxes.length; i++)
         {
             if(this.searchCheckBoxes[i].isSelected())
             {
+                numOfSelected++;
                 if(entry.getStringValue(i).contains(this.searchText))
                 {
                     return true;
@@ -28,6 +30,6 @@ public class TableRowFilter extends RowFilter <MyTableItemModel, Object>
             }
 
         }
-        return false;
+        return numOfSelected == 0;
     }
 }

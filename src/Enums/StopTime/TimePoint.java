@@ -7,13 +7,13 @@ public enum TimePoint
 
     public static TimePoint getTimePoint(int input)
     {
-        if(input == 1)
+        if(input == 0)
         {
-            return EXACT_TIMES;
+            return APPROXIMATE_TIMES;
         }
         else
         {
-            return APPROXIMATE_TIMES;
+            return EXACT_TIMES;
         }
     }
 }

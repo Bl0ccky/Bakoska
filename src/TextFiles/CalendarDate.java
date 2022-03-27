@@ -1,15 +1,15 @@
 package TextFiles;
 
 import Enums.CalendarDate.ExceptionType;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class CalendarDate implements IObject
 {
     private String service_id;
-    private Date date;
+    private LocalDate date;
     private ExceptionType exception_type;
 
     public CalendarDate(){}
@@ -17,20 +17,20 @@ public class CalendarDate implements IObject
     @Override
     public void loadData(String[] attributes)
     {
+        DateTimeFormatter dateFormat = new DateTimeFormatterBuilder().appendPattern(ObjectFactory.DatePattern).toFormatter();
         this.service_id = attributes[0];
         if(attributes[1] != null && !attributes[1].equals(""))
         {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.DatePattern);
-            try {
-                this.date = simpleDateFormat.parse(attributes[1]);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            this.date = LocalDate.parse(attributes[1], dateFormat);
         }
 
         if(attributes[2] != null && !attributes[2].equals(""))
         {
             this.exception_type = ExceptionType.getExceptionType(Integer.parseInt(attributes[2]));
+        }
+        else
+        {
+            this.exception_type = ExceptionType.NO_INFO;
         }
 
     }
@@ -46,6 +46,16 @@ public class CalendarDate implements IObject
     }
 
     @Override
+    public Object[] getColumnTypes(String[] attributes)
+    {
+        Object[] columnTypes = new Object[attributes.length];
+        columnTypes[0] = this.service_id;
+        columnTypes[1] = this.date;
+        columnTypes[2] = this.exception_type;
+        return columnTypes;
+    }
+
+    @Override
     public String getKey() {
         return this.service_id + "-" + this.date + "-" + this.exception_type;
     }
@@ -58,11 +68,12 @@ public class CalendarDate implements IObject
         this.service_id = service_id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date)
+    {
         this.date = date;
     }
 

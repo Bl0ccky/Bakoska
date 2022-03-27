@@ -45,6 +45,10 @@ public class Stop implements IObject {
         {
             this.location_type = StopLocationType.getStopLocationType(Integer.parseInt(attributes[8]));
         }
+        else
+        {
+            this.location_type = StopLocationType.STOP;
+        }
 
         this.parent_station = attributes[9];
         this.stop_timezone = attributes[10];
@@ -52,6 +56,10 @@ public class Stop implements IObject {
         if(attributes[11] != null && !attributes[11].equals(""))
         {
             this.wheelchair_boarding = StopWheelchairBoarding.getStopWheelchairBoarding(Integer.parseInt(attributes[11]));
+        }
+        else
+        {
+            this.wheelchair_boarding = StopWheelchairBoarding.NO_INFO;
         }
 
     }
@@ -74,6 +82,24 @@ public class Stop implements IObject {
                 this.stop_timezone,
                 this.wheelchair_boarding);
 
+    }
+
+    @Override
+    public Object[] getColumnTypes(String[] attributes) {
+        Object[] columnTypes = new Object[attributes.length];
+        columnTypes[0] = this.stop_id;
+        columnTypes[1] = this.stop_code;
+        columnTypes[2] = this.stop_name;
+        columnTypes[3] = this.stop_desc;
+        columnTypes[4] = this.stop_lat;
+        columnTypes[5] = this.stop_lon;
+        columnTypes[6] = this.zone_id;
+        columnTypes[7] = this.stop_url;
+        columnTypes[8] = this.location_type;
+        columnTypes[9] = this.parent_station;
+        columnTypes[10] = this.stop_timezone;
+        columnTypes[11] = this.wheelchair_boarding;
+        return columnTypes;
     }
 
     @Override

@@ -29,6 +29,10 @@ public class Route implements IObject
         {
             this.route_type = RouteType.getRouteType(Integer.parseInt(attributes[5]));
         }
+        else
+        {
+            this.route_type = RouteType.NO_INFO;
+        }
 
         this.route_url = attributes[6];
         this.route_color = attributes[7];
@@ -51,6 +55,22 @@ public class Route implements IObject
                 this.route_color,
                 this.route_text_color);
 
+    }
+
+    @Override
+    public Object[] getColumnTypes(String[] attributes)
+    {
+        Object[] columnTypes = new Object[attributes.length];
+        columnTypes[0] = this.route_id;
+        columnTypes[1] = this.agency_id;
+        columnTypes[2] = this.route_short_name;
+        columnTypes[3] = this.route_long_name;
+        columnTypes[4] = this.route_desc;
+        columnTypes[5] = this.route_type;
+        columnTypes[6] = this.route_url;
+        columnTypes[7] = this.route_color;
+        columnTypes[8] = this.route_text_color;
+        return columnTypes;
     }
 
     @Override

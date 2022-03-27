@@ -5,14 +5,19 @@ import Enums.StopTime.PickupType;
 import Enums.StopTime.TimePoint;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoUnit;
 
 public class StopTime implements IObject
 {
     private String trip_id;
-    private Date arrival_time;
-    private Date departure_time;
+    private LocalTime arrival_time;
+    private LocalTime departure_time;
     private String stop_id;
     private int stop_sequence;
     private String stop_headsign;
@@ -27,25 +32,39 @@ public class StopTime implements IObject
     public void loadData(String[] attributes)
     {
         this.trip_id = attributes[0];
-
+        DateTimeFormatter timeFormat = new DateTimeFormatterBuilder().appendPattern(ObjectFactory.TimePattern).toFormatter();
         if(attributes[1] != null && !attributes[1].equals(""))
         {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.TimePattern);
-            try {
-                this.arrival_time = simpleDateFormat.parse(attributes[1]);
-            } catch (ParseException e) {
-                e.printStackTrace();
+            String[] time = attributes[1].split(":",3);
+            int hours = Integer.parseInt(time[0]);
+            if(hours > 23)
+            {
+                hours -= 24;
+                String newTime = hours+":"+time[1]+":"+time[2];
+                this.arrival_time = LocalTime.parse(newTime, timeFormat);
             }
+            else
+            {
+                this.arrival_time = LocalTime.parse(attributes[2], timeFormat);
+            }
+
         }
 
         if(attributes[2] != null && !attributes[2].equals(""))
         {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ObjectFactory.TimePattern);
-            try {
-                this.departure_time = simpleDateFormat.parse(attributes[2]);
-            } catch (ParseException e) {
-                e.printStackTrace();
+            String[] time = attributes[2].split(":",3);
+            int hours = Integer.parseInt(time[0]);
+            if(hours > 23)
+            {
+                hours -= 24;
+                String newTime = hours+":"+time[1]+":"+time[2];
+                this.departure_time = LocalTime.parse(newTime, timeFormat);
             }
+            else
+            {
+                this.departure_time = LocalTime.parse(attributes[2], timeFormat);
+            }
+
         }
 
         this.stop_id = attributes[3];
@@ -61,10 +80,18 @@ public class StopTime implements IObject
         {
             this.pickup_type = PickupType.getPickupType(Integer.parseInt(attributes[6]));
         }
+        else
+        {
+            this.pickup_type = PickupType.REGULARLY_SCHEDULED_PICKUP;
+        }
 
         if(attributes[7] != null && !attributes[7].equals(""))
         {
             this.drop_off_type = DropOffType.getDropOffType(Integer.parseInt(attributes[7]));
+        }
+        else
+        {
+            this.drop_off_type = DropOffType.REGULARLY_SCHEDULED_DROP_OFF;
         }
 
         if(attributes[8] != null && !attributes[8].equals(""))
@@ -75,6 +102,10 @@ public class StopTime implements IObject
         if(attributes[9] != null && !attributes[9].equals(""))
         {
             this.timepoint = TimePoint.getTimePoint(Integer.parseInt(attributes[9]));
+        }
+        else
+        {
+            this.timepoint = TimePoint.EXACT_TIMES;
         }
 
     }
@@ -97,6 +128,23 @@ public class StopTime implements IObject
     }
 
     @Override
+    public Object[] getColumnTypes(String[] attributes)
+    {
+        Object[] columnTypes = new Object[attributes.length];
+        columnTypes[0] = this.trip_id;
+        columnTypes[1] = this.arrival_time;
+        columnTypes[2] = this.departure_time;
+        columnTypes[3] = this.stop_id;
+        columnTypes[4] = this.stop_sequence;
+        columnTypes[5] = this.stop_headsign;
+        columnTypes[6] = this.pickup_type;
+        columnTypes[7] = this.drop_off_type;
+        columnTypes[8] = this.shape_dist_traveled;
+        columnTypes[9] = this.timepoint;
+        return columnTypes;
+    }
+
+    @Override
     public String getKey() {
         return this.trip_id + "-" + this.stop_id;
     }
@@ -109,19 +157,19 @@ public class StopTime implements IObject
         this.trip_id = trip_id;
     }
 
-    public Date getArrival_time() {
+    public LocalTime getArrival_time() {
         return arrival_time;
     }
 
-    public void setArrival_time(Date arrival_time) {
+    public void setArrival_time(LocalTime arrival_time) {
         this.arrival_time = arrival_time;
     }
 
-    public Date getDeparture_time() {
+    public LocalTime getDeparture_time() {
         return departure_time;
     }
 
-    public void setDeparture_time(Date departure_time) {
+    public void setDeparture_time(LocalTime departure_time) {
         this.departure_time = departure_time;
     }
 

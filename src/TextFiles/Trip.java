@@ -38,6 +38,10 @@ public class Trip implements IObject
         {
             this.wheelchair_accessible = TripWheelchairAccessible.getTripWheelchairAccessible(Integer.parseInt(attributes[8]));
         }
+        else
+        {
+            this.wheelchair_accessible = TripWheelchairAccessible.NO_INFO;
+        }
 
     }
 
@@ -56,6 +60,22 @@ public class Trip implements IObject
                 this.shape_id,
                 this.wheelchair_accessible);
 
+    }
+
+    @Override
+    public Object[] getColumnTypes(String[] attributes)
+    {
+        Object[] columnTypes = new Object[attributes.length];
+        columnTypes[0] = this.trip_id;
+        columnTypes[1] = this.route_id;
+        columnTypes[2] = this.service_id;
+        columnTypes[3] = this.trip_headsign;
+        columnTypes[4] = this.trip_short_name;
+        columnTypes[5] = this.direction_id;
+        columnTypes[6] = this.block_id;
+        columnTypes[7] = this.shape_id;
+        columnTypes[8] = this.wheelchair_accessible;
+        return columnTypes;
     }
 
     @Override
