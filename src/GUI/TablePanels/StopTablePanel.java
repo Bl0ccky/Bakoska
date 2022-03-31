@@ -2,6 +2,7 @@ package GUI.TablePanels;
 
 import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
+import GUI.AdminPanel;
 import GUI.MainFrame;
 import TextFiles.IObject;
 import TextFiles.ObjectType;
@@ -11,8 +12,14 @@ import javax.swing.*;
 import java.util.Hashtable;
 
 public class StopTablePanel extends TablePanel{
-    public StopTablePanel(JPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
+    public StopTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
         super(panel, mainFrame, hashtable, objectType);
+    }
+
+    @Override
+    boolean checkRemoveAction(int keyIndex) {
+        String findingIDValue = ((Stop)this.hashtable.get(this.keys.get(keyIndex))).getStop_id();
+        return !this.contentPanel.getTablePanel(ObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 3);
     }
 
     @Override
@@ -47,9 +54,16 @@ public class StopTablePanel extends TablePanel{
             newStop.setWheelchair_boarding((StopWheelchairBoarding) ((JComboBox<?>) this.addFormObjects.get(11)).getSelectedItem());
             this.hashtable.put(newStop.getKey(), newStop);
             this.keys.add(newStop.getKey());
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.STOP);
             this.myTableItemModel.fireTableDataChanged();
         }
 
+    }
+
+    @Override
+    void updateTable()
+    {
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.STOP);
     }
 
 }

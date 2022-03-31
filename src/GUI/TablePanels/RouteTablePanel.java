@@ -1,6 +1,7 @@
 package GUI.TablePanels;
 
 import Enums.Route.RouteType;
+import GUI.AdminPanel;
 import GUI.MainFrame;
 import TextFiles.IObject;
 import TextFiles.ObjectType;
@@ -9,8 +10,14 @@ import javax.swing.*;
 import java.util.Hashtable;
 
 public class RouteTablePanel extends TablePanel{
-    public RouteTablePanel(JPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
+    public RouteTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
         super(panel, mainFrame, hashtable, objectType);
+    }
+
+    @Override
+    boolean checkRemoveAction(int keyIndex) {
+        String findingIDValue = ((Route)this.hashtable.get(this.keys.get(keyIndex))).getRoute_id();
+        return !this.contentPanel.getTablePanel(ObjectType.TRIP).tableContainsValueAt(findingIDValue, 1);
     }
 
     @Override
@@ -41,9 +48,16 @@ public class RouteTablePanel extends TablePanel{
             newRoute.setRoute_text_color(((JTextField) this.addFormObjects.get(8)).getText());
             this.hashtable.put(newRoute.getKey(), newRoute);
             this.keys.add(newRoute.getKey());
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.ROUTE);
             this.myTableItemModel.fireTableDataChanged();
         }
 
+    }
+
+    @Override
+    void updateTable()
+    {
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.ROUTE);
     }
 
 }

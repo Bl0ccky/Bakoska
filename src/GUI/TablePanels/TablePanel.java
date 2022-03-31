@@ -10,15 +10,19 @@ import Enums.StopTime.PickupType;
 import Enums.StopTime.TimePoint;
 import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
+import GUI.AdminPanel;
 import GUI.MainFrame;
 import GUI.TableModels.*;
 import TextFiles.*;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.tableeditors.DateTableEditor;
+import com.github.lgooddatepicker.tableeditors.TimeTableEditor;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -30,24 +34,25 @@ import java.util.Hashtable;
 
 public abstract class TablePanel extends JPanel implements ActionListener, ListSelectionListener
 {
-    protected final JPanel contentPanel;
+    protected final AdminPanel contentPanel;
     protected final MainFrame mainFrame;
     protected final Hashtable<String, IObject> hashtable;
     protected final String[] columnNames;
     protected final Object[] columnTypes;
     protected final ArrayList<String> keys;
     protected final MyTableItemModel myTableItemModel;
+    private JTable table;
     private JTextField searchField;
     private JButton searchButton;
     private TableRowSorter<MyTableItemModel> tableRowSorter;
     private JButton addButton;
-    private JButton editButton;
+    //private JButton editButton;
     private JButton removeButton;
     private JButton detailButton;
     private JCheckBox[] searchCheckBoxes;
     protected ArrayList<JComponent> addFormObjects;
 
-    public TablePanel(JPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
+    public TablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
         this.keys = new ArrayList<>(hashtable.keySet());
         this.contentPanel = panel;
         this.mainFrame = mainFrame;
@@ -79,26 +84,74 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
 
         if(e.getSource() == this.searchButton)
         {
-            this.tableRowSorter.setRowFilter(new TableRowFilter(this.searchField.getText(), this.searchCheckBoxes));
+            this.tableRowSorter.setRowFilter(new SearchTableFilter(this.searchField.getText(), this.searchCheckBoxes));
         }
         else if(e.getSource() == this.addButton)
         {
             this.addNewObject();
 
         }
-        else if(e.getSource() == this.editButton)
-        {
+        //else if(e.getSource() == this.editButton)
+       // {
 
-        }
+        //}
         else if(e.getSource() == this.removeButton)
         {
+            int confirmRemove = JOptionPane.showConfirmDialog(null, "Are you sure to delete this item?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
+            if(confirmRemove == 0)
+            {
+                int[] selectedRows = this.table.getSelectedRows();
+                ArrayList<String> selectedKeys = new ArrayList<>();
+                for (int selectedRow : selectedRows)
+                {
+                    selectedKeys.add(this.keys.get(this.table.convertRowIndexToModel(selectedRow)));
+                }
+                boolean allRowsAreAbleToRemove = true;
+                for (int selectedRow : selectedRows)
+                {
+                    if (!this.checkRemoveAction(this.table.convertRowIndexToModel(selectedRow)))
+                    {
+                        allRowsAreAbleToRemove = false;
+                    }
+                }
+                if(allRowsAreAbleToRemove)
+                {
+                    for (int selectedRow : selectedRows)
+                    {
+                        this.removeObject(this.table.convertRowIndexToModel(selectedRow));
+                    }
+
+
+                    int numOfDeletedRows = 0;
+                    for (int i = 0; i < this.keys.size(); i++)
+                    {
+                        if(numOfDeletedRows == selectedKeys.size())
+                        {
+                            break;
+                        }
+                        for (String selectedKey : selectedKeys) {
+                            if (this.keys.get(i).equals(selectedKey)) {
+                                this.keys.remove(i);
+                                numOfDeletedRows++;
+                            }
+                        }
+                    }
+                    this.updateTable();
+                    this.myTableItemModel.fireTableRowsDeleted(this.table.convertRowIndexToModel(selectedRows[0]), this.table.convertRowIndexToModel(selectedRows[selectedRows.length-1]));
+                    System.out.println("Úspešné vymazanie všetkých označených záznamov");
+                }
+                else
+                {
+                    System.out.println("Označené záznamy nemožno kvôli contrainom odstrániť, skontroluj najskôr tie!");
+                }
+            }
 
         }
         else if(e.getSource() == this.detailButton)
         {
             this.mainFrame.createDetailPanel();
-            CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
-            cardLayout.show(this.contentPanel, "detailPanel");
+            CardLayout cardLayout = (CardLayout) this.contentPanel.getContentPanel().getLayout();
+            cardLayout.show(this.contentPanel.getContentPanel(), "detailPanel");
         }
 
     }
@@ -106,18 +159,22 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
     @Override
     public void valueChanged(ListSelectionEvent e)
     {
-        this.detailButton.setVisible(true);
-        this.editButton.setVisible(true);
+        if(this instanceof TripTablePanel || this instanceof StopTablePanel || this instanceof RouteTablePanel)
+        {
+            this.detailButton.setVisible(true);
+        }
+        //this.editButton.setVisible(true);
         this.removeButton.setVisible(true);
     }
 
     private void createTableSection()
     {
         this.tableRowSorter = new TableRowSorter<>(this.myTableItemModel);
-        JTable table = new JTable(myTableItemModel);
-        table.setRowSorter(tableRowSorter);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        table.getSelectionModel().addListSelectionListener(this);
+        this.table = new JTable(myTableItemModel);
+        this.table.setRowSorter(tableRowSorter);
+        this.table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        this.table.setRowHeight(20);
+        this.table.getSelectionModel().addListSelectionListener(this);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(10,10, 900,800);
 
@@ -167,27 +224,34 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
 
     private void createButtonsSection()
     {
-        this.detailButton = new JButton("Detail");
-        this.detailButton.setFocusable(false);
-        this.detailButton.setVisible(false);
-        this.detailButton.addActionListener(this);
-        this.detailButton.setBounds(1000,150,100,30);
-
-        this.editButton = new JButton("Edit");
-        this.editButton.setFocusable(false);
-        this.editButton.setVisible(false);
-        this.editButton.addActionListener(this);
-        this.editButton.setBounds(1000,190,100,30);
-
         this.removeButton = new JButton("Remove");
         this.removeButton.setFocusable(false);
         this.removeButton.setVisible(false);
         this.removeButton.addActionListener(this);
-        this.removeButton.setBounds(1000,230,100,30);
+        this.removeButton.setBounds(1000,150,100,30);
 
-        this.add(detailButton);
-        this.add(editButton);
         this.add(removeButton);
+
+        if(this instanceof TripTablePanel || this instanceof StopTablePanel || this instanceof RouteTablePanel)
+        {
+            this.detailButton = new JButton("Detail");
+            this.detailButton.setFocusable(false);
+            this.detailButton.setVisible(false);
+            this.detailButton.addActionListener(this);
+            this.detailButton.setBounds(1000,190,100,30);
+            this.add(detailButton);
+        }
+
+        //this.editButton = new JButton("Edit");
+        //this.editButton.setFocusable(false);
+        //this.editButton.setVisible(false);
+        //this.editButton.addActionListener(this);
+        //this.editButton.setBounds(1000,190,100,30);
+
+
+
+        //this.add(editButton);
+
 
     }
 
@@ -204,63 +268,105 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
 
         for (int i = 0; i < this.columnNames.length; i++)
         {
+            TableColumn column = this.table.getColumnModel().getColumn(i);
             if(this.columnTypes[i] instanceof String || this.columnTypes[i] instanceof Integer || this.columnTypes[i] instanceof Double || this.columnTypes[i] instanceof Float)
             {
                 this.addFormObjects.add(new JTextField());
+                column.setCellEditor(new DefaultCellEditor(new JTextField()));
             }
             else if(this.columnTypes[i] instanceof LocalDate)
             {
                 this.addFormObjects.add(new DatePicker());
+                DateTableEditor dateTableEditor = new DateTableEditor(false, true, true);
+                dateTableEditor.clickCountToEdit = 2;
+                dateTableEditor.getDatePicker().getComponentToggleCalendarButton().setPreferredSize(new Dimension(20,15));
+                dateTableEditor.getDatePicker().getComponentDateTextField().setPreferredSize(new Dimension(2,15));
+                column.setCellEditor(dateTableEditor);
             }
             else if(this.columnTypes[i] instanceof LocalTime)
             {
                 this.addFormObjects.add(new TimePicker());
+                TimeTableEditor timeTableEditor = new TimeTableEditor(false, true, true);
+                timeTableEditor.clickCountToEdit = 2;
+                timeTableEditor.getTimePicker().getComponentToggleTimeMenuButton().setPreferredSize(new Dimension(20,15));
+                timeTableEditor.getTimePicker().getComponentTimeTextField().setPreferredSize(new Dimension(2,15));
+                column.setCellEditor(timeTableEditor);
             }
             else
             {
                 if(this.columnTypes[i] instanceof DayServiceAvailability)
                 {
                     this.addFormObjects.add(new JComboBox<>(DayServiceAvailability.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(DayServiceAvailability.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
                 else if(this.columnTypes[i] instanceof ExceptionType)
                 {
                     this.addFormObjects.add(new JComboBox<>(ExceptionType.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(ExceptionType.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
                 else if(this.columnTypes[i] instanceof RouteType)
                 {
                     this.addFormObjects.add(new JComboBox<>(RouteType.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(RouteType.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
                 else if(this.columnTypes[i] instanceof StopLocationType)
                 {
                     this.addFormObjects.add(new JComboBox<>(StopLocationType.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(StopLocationType.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
                 else if(this.columnTypes[i] instanceof StopWheelchairBoarding)
                 {
                     this.addFormObjects.add(new JComboBox<>(StopWheelchairBoarding.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(StopWheelchairBoarding.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
                 else if(this.columnTypes[i] instanceof DropOffType)
                 {
                     this.addFormObjects.add(new JComboBox<>(DropOffType.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(DropOffType.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
                 else if(this.columnTypes[i] instanceof PickupType)
                 {
                     this.addFormObjects.add(new JComboBox<>(PickupType.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(PickupType.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
                 else if(this.columnTypes[i] instanceof TimePoint)
                 {
                     this.addFormObjects.add(new JComboBox<>(TimePoint.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(TimePoint.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
                 else if(this.columnTypes[i] instanceof TripDirectionID)
                 {
                     this.addFormObjects.add(new JComboBox<>(TripDirectionID.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(TripDirectionID.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
                 else if(this.columnTypes[i] instanceof TripWheelchairAccessible)
                 {
                     this.addFormObjects.add(new JComboBox<>(TripWheelchairAccessible.values()));
+                    DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(TripWheelchairAccessible.values()));
+                    defaultCellEditor.setClickCountToStart(2);
+                    column.setCellEditor(defaultCellEditor);
                 }
             }
 
-            this.addFormObjects.get(i).setFocusable(false);
+            //this.addFormObjects.get(i).setFocusable(false);
 
             addLabels[i] = new JLabel(this.columnNames[i]);
 
@@ -293,7 +399,28 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
 
     }
 
+    protected boolean tableContainsValueAt(String findingIdValue, int columnIndex)
+    {
+        for (int i = 0; i < this.table.getRowCount(); i++)
+        {
+            if(this.table.getValueAt(i, columnIndex).equals(findingIdValue))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected void removeObject(int keyIndex)
+    {
+        if(this.checkRemoveAction(keyIndex))
+        {
+            String key = this.keys.get(keyIndex);
+            this.hashtable.remove(key);
+        }
+    }
+    abstract boolean checkRemoveAction(int keyIndex);
     abstract boolean checkAddInputs();
     abstract void addNewObject();
-
+    abstract void updateTable();
 }

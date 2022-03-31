@@ -4,14 +4,10 @@ import Enums.StopTime.DropOffType;
 import Enums.StopTime.PickupType;
 import Enums.StopTime.TimePoint;
 
-import java.text.ParseException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoUnit;
+
 
 public class StopTime implements IObject
 {

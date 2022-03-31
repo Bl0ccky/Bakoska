@@ -3,6 +3,7 @@ package GUI.TablePanels;
 import Enums.StopTime.DropOffType;
 import Enums.StopTime.PickupType;
 import Enums.StopTime.TimePoint;
+import GUI.AdminPanel;
 import GUI.MainFrame;
 import TextFiles.IObject;
 import TextFiles.ObjectType;
@@ -13,8 +14,14 @@ import javax.swing.*;
 import java.util.Hashtable;
 
 public class StopTimeTablePanel extends TablePanel {
-    public StopTimeTablePanel(JPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
+    public StopTimeTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
         super(panel, mainFrame, hashtable, objectType);
+    }
+
+    @Override
+    boolean checkRemoveAction(int keyIndex)
+    {
+        return true;
     }
 
     @Override
@@ -49,9 +56,16 @@ public class StopTimeTablePanel extends TablePanel {
             newStopTime.setTimepoint((TimePoint) ((JComboBox<?>) this.addFormObjects.get(9)).getSelectedItem());
             this.hashtable.put(newStopTime.getKey(), newStopTime);
             this.keys.add(newStopTime.getKey());
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.STOP_TIME);
             this.myTableItemModel.fireTableDataChanged();
         }
 
+    }
+
+    @Override
+    void updateTable()
+    {
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.STOP_TIME);
     }
 
 }

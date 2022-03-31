@@ -30,4 +30,11 @@ public class AgencyTableModel extends MyTableItemModel {
 
         return value;
     }
+
+    @Override
+    public Class<?> getColumnClass(int column)
+    {
+        return String.class;
+    }
+
 }

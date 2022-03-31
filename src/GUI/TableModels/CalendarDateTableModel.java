@@ -1,8 +1,10 @@
 package GUI.TableModels;
 
+import Enums.CalendarDate.ExceptionType;
 import TextFiles.CalendarDate;
 import TextFiles.IObject;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -26,5 +28,15 @@ public class CalendarDateTableModel extends MyTableItemModel
         }
 
         return value;
+    }
+
+    @Override
+    public Class<?> getColumnClass(int column)
+    {
+        return switch (column) {
+            case 1 -> LocalDate.class;
+            case 2 -> ExceptionType.class;
+            default -> String.class;
+        };
     }
 }

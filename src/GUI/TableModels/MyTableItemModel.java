@@ -34,4 +34,10 @@ public abstract class MyTableItemModel extends AbstractTableModel {
         return this.columnNames[col];
     }
 
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex)
+    {
+        return true;
+    }
+
 }

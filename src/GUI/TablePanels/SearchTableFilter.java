@@ -4,12 +4,12 @@ import GUI.TableModels.MyTableItemModel;
 
 import javax.swing.*;
 
-public class TableRowFilter extends RowFilter <MyTableItemModel, Object>
+public class SearchTableFilter extends RowFilter <MyTableItemModel, Object>
 {
     private final String searchText;
     private final JCheckBox[] searchCheckBoxes;
 
-    public TableRowFilter(String searchText, JCheckBox[] searchCheckBoxes)
+    public SearchTableFilter(String searchText, JCheckBox[] searchCheckBoxes)
     {
         this.searchText = searchText;
         this.searchCheckBoxes = searchCheckBoxes;

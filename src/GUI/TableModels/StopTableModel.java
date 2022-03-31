@@ -1,8 +1,12 @@
 package GUI.TableModels;
 
+import Enums.Calendar.DayServiceAvailability;
+import Enums.Stop.StopLocationType;
+import Enums.Stop.StopWheelchairBoarding;
 import TextFiles.IObject;
 import TextFiles.Stop;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -32,5 +36,16 @@ public class StopTableModel extends MyTableItemModel{
         }
 
         return value;
+    }
+
+    @Override
+    public Class<?> getColumnClass(int column)
+    {
+        return switch (column) {
+            case 4, 5 -> Double.class;
+            case 8 -> StopLocationType.class;
+            case 11 -> StopWheelchairBoarding.class;
+            default -> String.class;
+        };
     }
 }

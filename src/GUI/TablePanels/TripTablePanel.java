@@ -2,6 +2,7 @@ package GUI.TablePanels;
 
 import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
+import GUI.AdminPanel;
 import GUI.MainFrame;
 import TextFiles.IObject;
 import TextFiles.ObjectType;
@@ -14,8 +15,14 @@ import java.util.Hashtable;
 public class TripTablePanel extends TablePanel
 {
 
-    public TripTablePanel(JPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
+    public TripTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
         super(panel, mainFrame, hashtable, objectType);
+    }
+
+    @Override
+    boolean checkRemoveAction(int keyIndex) {
+        String findingIDValue = ((Trip)this.hashtable.get(this.keys.get(keyIndex))).getTrip_id();
+        return !this.contentPanel.getTablePanel(ObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 0);
     }
 
     @Override
@@ -44,9 +51,16 @@ public class TripTablePanel extends TablePanel
             newTrip.setWheelchair_accessible((TripWheelchairAccessible) ((JComboBox<?>) this.addFormObjects.get(8)).getSelectedItem());
             this.hashtable.put(newTrip.getKey(), newTrip);
             this.keys.add(newTrip.getKey());
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.TRIP);
             this.myTableItemModel.fireTableDataChanged();
         }
 
+    }
+
+    @Override
+    void updateTable()
+    {
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.TRIP);
     }
 
 }

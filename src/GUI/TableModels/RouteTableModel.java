@@ -1,8 +1,11 @@
 package GUI.TableModels;
 
+import Enums.Calendar.DayServiceAvailability;
+import Enums.Route.RouteType;
 import TextFiles.IObject;
 import TextFiles.Route;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -29,5 +32,18 @@ public class RouteTableModel extends MyTableItemModel{
         }
 
         return value;
+    }
+
+    @Override
+    public Class<?> getColumnClass(int column)
+    {
+        if(column == 5)
+        {
+            return RouteType.class;
+        }
+        else
+        {
+            return String.class;
+        }
     }
 }

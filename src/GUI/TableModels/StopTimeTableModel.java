@@ -1,8 +1,14 @@
 package GUI.TableModels;
 
+import Enums.Stop.StopLocationType;
+import Enums.Stop.StopWheelchairBoarding;
+import Enums.StopTime.DropOffType;
+import Enums.StopTime.PickupType;
+import Enums.StopTime.TimePoint;
 import TextFiles.IObject;
 import TextFiles.StopTime;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -30,5 +36,19 @@ public class StopTimeTableModel extends MyTableItemModel{
         }
 
         return value;
+    }
+
+    @Override
+    public Class<?> getColumnClass(int column)
+    {
+        return switch (column) {
+            case 1, 2 -> LocalTime.class;
+            case 4 -> Integer.class;
+            case 6 -> PickupType.class;
+            case 7 -> DropOffType.class;
+            case 8 -> Float.class;
+            case 9 -> TimePoint.class;
+            default -> String.class;
+        };
     }
 }

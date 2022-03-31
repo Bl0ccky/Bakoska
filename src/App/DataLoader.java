@@ -11,13 +11,13 @@ import java.util.Set;
 public class DataLoader
 {
     private String filePath;
-    private final Hashtable<String, IObject> agency;
-    private final Hashtable<String, IObject> stops;
-    private final Hashtable<String, IObject> routes;
-    private final Hashtable<String, IObject> trips;
-    private final Hashtable<String, IObject> stopTimes;
-    private final Hashtable<String, IObject> calendars;
-    private final Hashtable<String, IObject> calendarDates;
+    private Hashtable<String, IObject> agency;
+    private Hashtable<String, IObject> stops;
+    private Hashtable<String, IObject> routes;
+    private Hashtable<String, IObject> trips;
+    private Hashtable<String, IObject> stopTimes;
+    private Hashtable<String, IObject> calendars;
+    private Hashtable<String, IObject> calendarDates;
     private final Hashtable<ObjectType, String[]> hashTableColumnNames;
     private final Hashtable<ObjectType, Object[]> hashTableColumnTypes;
 
@@ -209,6 +209,20 @@ public class DataLoader
     public Object[] getHashTableColumnTypes(ObjectType objectType)
     {
         return this.hashTableColumnTypes.get(objectType);
+    }
+
+    public void updateHashTable(Hashtable<String, IObject> hashtable, ObjectType objectType)
+    {
+        switch (objectType)
+        {
+            case AGENCY -> this.agency = hashtable;
+            case CALENDAR -> this.calendars = hashtable;
+            case CALENDAR_DATE -> this.calendarDates = hashtable;
+            case ROUTE -> this.routes = hashtable;
+            case STOP -> this.stops = hashtable;
+            case STOP_TIME -> this.stopTimes = hashtable;
+            case TRIP -> this.trips = hashtable;
+        }
     }
 
 }

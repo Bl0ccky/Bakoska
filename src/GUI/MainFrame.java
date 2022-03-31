@@ -8,7 +8,7 @@ import java.awt.*;
 public class MainFrame extends JFrame
 {
     private DataLoader dataLoader;
-    private final JPanel panelContent;
+    private final JPanel contentPanel;
 
     public MainFrame()
     {
@@ -20,10 +20,10 @@ public class MainFrame extends JFrame
 
         CardLayout cardLayout = new CardLayout();
 
-        this.panelContent = new JPanel();
-        panelContent.setLayout(cardLayout);
+        this.contentPanel = new JPanel();
+        contentPanel.setLayout(cardLayout);
 
-        MenuPanel menuPanel = new MenuPanel(panelContent, this);
+        MenuPanel menuPanel = new MenuPanel(contentPanel, this);
 
 
         JMenuBar menuBar = new JMenuBar();
@@ -42,9 +42,9 @@ public class MainFrame extends JFrame
 
         this.setJMenuBar(menuBar);
 
-        this.panelContent.add(menuPanel, "menuPanel");
+        this.contentPanel.add(menuPanel, "menuPanel");
 
-        this.add(panelContent);
+        this.add(contentPanel);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -62,8 +62,8 @@ public class MainFrame extends JFrame
 
     public void createAdminPanel()
     {
-        AdminPanel adminPanel = new AdminPanel(this.panelContent, this);
-        this.panelContent.add(adminPanel, "adminPanel");
+        AdminPanel adminPanel = new AdminPanel(this.contentPanel, this);
+        this.contentPanel.add(adminPanel, "adminPanel");
         //this.add(panelContent);
         //this.pack();
         //this.setLocationRelativeTo(null);
@@ -72,8 +72,8 @@ public class MainFrame extends JFrame
 
     public void createDetailPanel()
     {
-        DetailPanel detailPanel = new DetailPanel();
-        this.panelContent.add(detailPanel, "detailPanel");
+        DetailPanel detailPanel = new DetailPanel(this.contentPanel, this);
+        this.contentPanel.add(detailPanel, "detailPanel");
         //this.add(panelContent);
 
     }

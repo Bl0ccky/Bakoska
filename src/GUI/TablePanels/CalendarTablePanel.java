@@ -1,6 +1,7 @@
 package GUI.TablePanels;
 
 import Enums.Calendar.DayServiceAvailability;
+import GUI.AdminPanel;
 import GUI.MainFrame;
 import TextFiles.Calendar;
 import TextFiles.IObject;
@@ -14,8 +15,14 @@ import java.util.Hashtable;
 public class CalendarTablePanel extends TablePanel
 {
 
-    public CalendarTablePanel(JPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
+    public CalendarTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
         super(panel, mainFrame, hashtable, objectType);
+    }
+
+    @Override
+    boolean checkRemoveAction(int keyIndex) {
+        String findingIDValue = ((Calendar)this.hashtable.get(this.keys.get(keyIndex))).getService_id();
+        return !this.contentPanel.getTablePanel(ObjectType.CALENDAR_DATE).tableContainsValueAt(findingIDValue, 0);
     }
 
     @Override
@@ -52,10 +59,17 @@ public class CalendarTablePanel extends TablePanel
             newCalendar.setEnd_date(((DatePicker)this.addFormObjects.get(9)).getDate());
             this.hashtable.put(newCalendar.getKey(), newCalendar);
             this.keys.add(newCalendar.getKey());
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.CALENDAR);
             this.myTableItemModel.fireTableDataChanged();
         }
 
 
+    }
+
+    @Override
+    void updateTable()
+    {
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.CALENDAR);
     }
 
 

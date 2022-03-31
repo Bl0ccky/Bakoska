@@ -1,6 +1,7 @@
 package GUI.TablePanels;
 
 import Enums.CalendarDate.ExceptionType;
+import GUI.AdminPanel;
 import GUI.MainFrame;
 import TextFiles.CalendarDate;
 import TextFiles.IObject;
@@ -11,8 +12,14 @@ import javax.swing.*;
 import java.util.Hashtable;
 
 public class CalendarDateTablePanel extends TablePanel{
-    public CalendarDateTablePanel(JPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
+    public CalendarDateTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
         super(panel, mainFrame, hashtable, objectType);
+    }
+
+    @Override
+    boolean checkRemoveAction(int keyIndex)
+    {
+       return true;
     }
 
     @Override
@@ -37,9 +44,16 @@ public class CalendarDateTablePanel extends TablePanel{
             newCalendarDate.setException_type((ExceptionType) ((JComboBox<?>) this.addFormObjects.get(2)).getSelectedItem());
             this.hashtable.put(newCalendarDate.getKey(), newCalendarDate);
             this.keys.add(newCalendarDate.getKey());
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.CALENDAR_DATE);
             this.myTableItemModel.fireTableDataChanged();
         }
 
+    }
+
+    @Override
+    void updateTable()
+    {
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.CALENDAR_DATE);
     }
 
 }

@@ -1,8 +1,14 @@
 package GUI.TableModels;
 
+import Enums.StopTime.DropOffType;
+import Enums.StopTime.PickupType;
+import Enums.StopTime.TimePoint;
+import Enums.Trip.TripDirectionID;
+import Enums.Trip.TripWheelchairAccessible;
 import TextFiles.IObject;
 import TextFiles.Trip;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -29,5 +35,15 @@ public class TripTableModel extends MyTableItemModel{
         }
 
         return value;
+    }
+
+    @Override
+    public Class<?> getColumnClass(int column)
+    {
+        return switch (column) {
+            case 5 -> TripDirectionID.class;
+            case 8 -> TripWheelchairAccessible.class;
+            default -> String.class;
+        };
     }
 }
