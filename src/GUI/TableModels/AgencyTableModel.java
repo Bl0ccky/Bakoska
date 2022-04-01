@@ -1,14 +1,14 @@
 package GUI.TableModels;
 
 import TextFiles.Agency;
-import TextFiles.IObject;
+import TextFiles.IGTFSObject;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class AgencyTableModel extends MyTableItemModel {
 
-    public AgencyTableModel(Hashtable<String, IObject> hashtable, ArrayList<String> keys, String[] columnNames) {
+    public AgencyTableModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
         super(hashtable, keys, columnNames);
     }
 

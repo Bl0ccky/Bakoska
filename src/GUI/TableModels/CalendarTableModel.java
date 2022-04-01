@@ -1,16 +1,15 @@
 package GUI.TableModels;
 
 import Enums.Calendar.DayServiceAvailability;
-import Enums.CalendarDate.ExceptionType;
 import TextFiles.Calendar;
-import TextFiles.IObject;
+import TextFiles.IGTFSObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class CalendarTableModel extends MyTableItemModel{
-    public CalendarTableModel(Hashtable<String, IObject> hashtable, ArrayList<String> keys, String[] columnNames) {
+    public CalendarTableModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
         super(hashtable, keys, columnNames);
     }
 

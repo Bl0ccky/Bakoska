@@ -2,7 +2,7 @@ package GUI.TableModels;
 
 import Enums.CalendarDate.ExceptionType;
 import TextFiles.CalendarDate;
-import TextFiles.IObject;
+import TextFiles.IGTFSObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.Hashtable;
 public class CalendarDateTableModel extends MyTableItemModel
 {
 
-    public CalendarDateTableModel(Hashtable<String, IObject> hashtable, ArrayList<String> keys, String[] columnNames) {
+    public CalendarDateTableModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
         super(hashtable, keys, columnNames);
     }
 

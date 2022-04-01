@@ -1,17 +1,15 @@
 package GUI.TableModels;
 
-import Enums.Calendar.DayServiceAvailability;
 import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
-import TextFiles.IObject;
+import TextFiles.IGTFSObject;
 import TextFiles.Stop;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class StopTableModel extends MyTableItemModel{
-    public StopTableModel(Hashtable<String, IObject> hashtable, ArrayList<String> keys, String[] columnNames) {
+    public StopTableModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
         super(hashtable, keys, columnNames);
     }
 

@@ -2,7 +2,7 @@ package TextFiles;
 
 import Enums.Route.RouteType;
 
-public class Route implements IObject
+public class Route implements IGTFSObject
 {
     private String route_id;
     private String agency_id;

@@ -3,7 +3,7 @@ package TextFiles;
 import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
 
-public class Stop implements IObject {
+public class Stop implements IGTFSObject {
     private String stop_id;
     private String stop_code;
     private String stop_name;

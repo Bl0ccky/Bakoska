@@ -1,14 +1,14 @@
 package TextFiles;
 
-public final class ObjectFactory
+public final class GTFSObjectFactory
 {
     public static String DatePattern = "yyyyMMdd";
     public static String TimePattern = "H:mm:ss";
-    private ObjectFactory(){}
+    private GTFSObjectFactory(){}
 
-    public static IObject getObject(ObjectType objectType)
+    public static IGTFSObject getGtfsObject(GTFSObjectType gtfsObjectType)
     {
-        return switch (objectType) {
+        return switch (gtfsObjectType) {
             case AGENCY -> new Agency();
             case CALENDAR -> new Calendar();
             case CALENDAR_DATE -> new CalendarDate();

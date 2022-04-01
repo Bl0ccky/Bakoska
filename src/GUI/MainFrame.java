@@ -1,19 +1,28 @@
 package GUI;
 
 import App.DataLoader;
+import GUI.DetailPanels.DetailPanel;
+import GUI.DetailPanels.RouteDetailPanel;
+import GUI.DetailPanels.StopDetailPanel;
+import GUI.DetailPanels.TripDetailPanel;
+import GUI.TableModels.*;
+import TextFiles.GTFSObjectType;
+import TextFiles.IGTFSObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Hashtable;
 
 public class MainFrame extends JFrame
 {
     private DataLoader dataLoader;
     private final JPanel contentPanel;
+    private AdminPanel adminPanel;
 
     public MainFrame()
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(1550,950));
+        this.setPreferredSize(new Dimension(1700,950));
         this.setLayout(new BorderLayout());
         this.setTitle("GTFS-Adminer");
 
@@ -62,17 +71,24 @@ public class MainFrame extends JFrame
 
     public void createAdminPanel()
     {
-        AdminPanel adminPanel = new AdminPanel(this.contentPanel, this);
-        this.contentPanel.add(adminPanel, "adminPanel");
+        this.adminPanel = new AdminPanel(this.contentPanel, this);
+        this.contentPanel.add(this.adminPanel, "adminPanel");
         //this.add(panelContent);
         //this.pack();
         //this.setLocationRelativeTo(null);
         //this.setVisible(true);
     }
 
-    public void createDetailPanel()
+    public void createDetailPanel(Hashtable<String, IGTFSObject> hashtable, GTFSObjectType gtfsObjectType)
     {
-        DetailPanel detailPanel = new DetailPanel(this.contentPanel, this);
+        DetailPanel detailPanel;
+        switch (gtfsObjectType)
+        {
+            case TRIP -> detailPanel = new TripDetailPanel(this.adminPanel.getTablePanel(gtfsObjectType), this, hashtable, gtfsObjectType);
+            case ROUTE -> detailPanel = new RouteDetailPanel(this.adminPanel.getTablePanel(gtfsObjectType), this, hashtable, gtfsObjectType);
+            default -> detailPanel = new StopDetailPanel(this.adminPanel.getTablePanel(gtfsObjectType), this, hashtable, gtfsObjectType);
+        }
+
         this.contentPanel.add(detailPanel, "detailPanel");
         //this.add(panelContent);
 

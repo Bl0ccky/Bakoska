@@ -1,6 +1,6 @@
 package TextFiles;
 
-public class Agency implements IObject
+public class Agency implements IGTFSObject
 {
     private String agency_id;
     private String agency_name;

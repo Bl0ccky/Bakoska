@@ -11,15 +11,15 @@ import java.util.Set;
 public class DataLoader
 {
     private String filePath;
-    private Hashtable<String, IObject> agency;
-    private Hashtable<String, IObject> stops;
-    private Hashtable<String, IObject> routes;
-    private Hashtable<String, IObject> trips;
-    private Hashtable<String, IObject> stopTimes;
-    private Hashtable<String, IObject> calendars;
-    private Hashtable<String, IObject> calendarDates;
-    private final Hashtable<ObjectType, String[]> hashTableColumnNames;
-    private final Hashtable<ObjectType, Object[]> hashTableColumnTypes;
+    private Hashtable<String, IGTFSObject> agency;
+    private Hashtable<String, IGTFSObject> stops;
+    private Hashtable<String, IGTFSObject> routes;
+    private Hashtable<String, IGTFSObject> trips;
+    private Hashtable<String, IGTFSObject> stopTimes;
+    private Hashtable<String, IGTFSObject> calendars;
+    private Hashtable<String, IGTFSObject> calendarDates;
+    private final Hashtable<GTFSObjectType, String[]> hashTableColumnNames;
+    private final Hashtable<GTFSObjectType, Object[]> hashTableColumnTypes;
 
     public DataLoader(String filePath)
     {
@@ -49,40 +49,40 @@ public class DataLoader
 
     private void loadAgency()
     {
-        this.loadGTFS("agency.txt", 7, ObjectType.AGENCY, this.agency);
+        this.loadGTFS("agency.txt", 7, GTFSObjectType.AGENCY, this.agency);
     }
 
     private void loadStops()
     {
-        this.loadGTFS("stops.txt", 12, ObjectType.STOP, this.stops);
+        this.loadGTFS("stops.txt", 12, GTFSObjectType.STOP, this.stops);
     }
 
     private void loadRoutes()
     {
-        this.loadGTFS("routes.txt", 9, ObjectType.ROUTE, this.routes);
+        this.loadGTFS("routes.txt", 9, GTFSObjectType.ROUTE, this.routes);
     }
 
     private void loadTrips()
     {
-        this.loadGTFS("trips.txt", 9, ObjectType.TRIP, this.trips);
+        this.loadGTFS("trips.txt", 9, GTFSObjectType.TRIP, this.trips);
     }
 
     private void loadStopTimes()
     {
-        this.loadGTFS("stop_times.txt", 10, ObjectType.STOP_TIME, this.stopTimes);
+        this.loadGTFS("stop_times.txt", 10, GTFSObjectType.STOP_TIME, this.stopTimes);
     }
 
     private void loadCalendars()
     {
-        this.loadGTFS("calendar.txt", 10, ObjectType.CALENDAR, this.calendars);
+        this.loadGTFS("calendar.txt", 10, GTFSObjectType.CALENDAR, this.calendars);
     }
 
     private void loadCalendarDates()
     {
-        this.loadGTFS("calendar_dates.txt", 3, ObjectType.CALENDAR_DATE, this.calendarDates);
+        this.loadGTFS("calendar_dates.txt", 3, GTFSObjectType.CALENDAR_DATE, this.calendarDates);
     }
 
-    private void loadGTFS(String fileName, int delimiterLimit, ObjectType objectType, Hashtable<String, IObject> hashtable)
+    private void loadGTFS(String fileName, int delimiterLimit, GTFSObjectType gtfsObjectType, Hashtable<String, IGTFSObject> hashtable)
     {
         Scanner scanner;
         int columnTypesCounter = 0;
@@ -90,17 +90,17 @@ public class DataLoader
         {
             scanner = new Scanner(new File(this.filePath+ "\\"+fileName));
             String columnNames = scanner.nextLine();
-            this.getColumnNames(columnNames, objectType);
+            this.getColumnNames(columnNames, gtfsObjectType);
             String line;
             while (scanner.hasNextLine())
             {
                 line = scanner.nextLine();
                 String[] attributes = line.split(",",delimiterLimit);
-                IObject object = ObjectFactory.getObject(objectType);
+                IGTFSObject object = GTFSObjectFactory.getGtfsObject(gtfsObjectType);
                 object.loadData(attributes);
                 if(columnTypesCounter == 0)
                 {
-                    this.hashTableColumnTypes.put(objectType, object.getColumnTypes(attributes));
+                    this.hashTableColumnTypes.put(gtfsObjectType, object.getColumnTypes(attributes));
                     columnTypesCounter++;
                 }
                 hashtable.put(object.getKey(), object);
@@ -114,13 +114,13 @@ public class DataLoader
 
     }
 
-    private void getColumnNames(String columnNames, ObjectType objectType)
+    private void getColumnNames(String columnNames, GTFSObjectType gtfsObjectType)
     {
         String[] columns = columnNames.split(",");
-        this.hashTableColumnNames.put(objectType, columns);
+        this.hashTableColumnNames.put(gtfsObjectType, columns);
     }
 
-    private void getAllObjects(Hashtable<String, IObject> hashtable)
+    private void getAllObjects(Hashtable<String, IGTFSObject> hashtable)
     {
         Set<String> keys = hashtable.keySet();
         for (String key: keys)
@@ -172,48 +172,48 @@ public class DataLoader
         this.filePath = filePath;
     }
 
-    public Hashtable<String, IObject> getAllAgency()
+    public Hashtable<String, IGTFSObject> getAllAgency()
     {
         return this.agency;
     }
-    public Hashtable<String, IObject> getAllCalendars()
+    public Hashtable<String, IGTFSObject> getAllCalendars()
     {
         return this.calendars;
     }
-    public Hashtable<String, IObject> getAllCalendarDates()
+    public Hashtable<String, IGTFSObject> getAllCalendarDates()
     {
         return this.calendarDates;
     }
-    public Hashtable<String, IObject> getAllRoutes()
+    public Hashtable<String, IGTFSObject> getAllRoutes()
     {
         return this.routes;
     }
-    public Hashtable<String, IObject> getAllStops()
+    public Hashtable<String, IGTFSObject> getAllStops()
     {
         return this.stops;
     }
-    public Hashtable<String, IObject> getAllStopTimes()
+    public Hashtable<String, IGTFSObject> getAllStopTimes()
     {
         return this.stopTimes;
     }
-    public Hashtable<String, IObject> getAllTrips()
+    public Hashtable<String, IGTFSObject> getAllTrips()
     {
         return this.trips;
     }
 
-    public String[] getHashTableColumnNames(ObjectType objectType)
+    public String[] getHashTableColumnNames(GTFSObjectType gtfsObjectType)
     {
-        return this.hashTableColumnNames.get(objectType);
+        return this.hashTableColumnNames.get(gtfsObjectType);
     }
 
-    public Object[] getHashTableColumnTypes(ObjectType objectType)
+    public Object[] getHashTableColumnTypes(GTFSObjectType gtfsObjectType)
     {
-        return this.hashTableColumnTypes.get(objectType);
+        return this.hashTableColumnTypes.get(gtfsObjectType);
     }
 
-    public void updateHashTable(Hashtable<String, IObject> hashtable, ObjectType objectType)
+    public void updateHashTable(Hashtable<String, IGTFSObject> hashtable, GTFSObjectType gtfsObjectType)
     {
-        switch (objectType)
+        switch (gtfsObjectType)
         {
             case AGENCY -> this.agency = hashtable;
             case CALENDAR -> this.calendars = hashtable;

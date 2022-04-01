@@ -1,6 +1,6 @@
 package TextFiles;
 
-public enum ObjectType
+public enum GTFSObjectType
 {
     AGENCY,
     CALENDAR,

@@ -1,11 +1,9 @@
 package GUI.TableModels;
 
-import Enums.Stop.StopLocationType;
-import Enums.Stop.StopWheelchairBoarding;
 import Enums.StopTime.DropOffType;
 import Enums.StopTime.PickupType;
 import Enums.StopTime.TimePoint;
-import TextFiles.IObject;
+import TextFiles.IGTFSObject;
 import TextFiles.StopTime;
 
 import java.time.LocalTime;
@@ -13,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class StopTimeTableModel extends MyTableItemModel{
-    public StopTimeTableModel(Hashtable<String, IObject> hashtable, ArrayList<String> keys, String[] columnNames) {
+    public StopTimeTableModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
         super(hashtable, keys, columnNames);
     }
 

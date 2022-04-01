@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 
 
-public class CalendarDate implements IObject
+public class CalendarDate implements IGTFSObject
 {
     private String service_id;
     private LocalDate date;
@@ -17,7 +17,7 @@ public class CalendarDate implements IObject
     @Override
     public void loadData(String[] attributes)
     {
-        DateTimeFormatter dateFormat = new DateTimeFormatterBuilder().appendPattern(ObjectFactory.DatePattern).toFormatter();
+        DateTimeFormatter dateFormat = new DateTimeFormatterBuilder().appendPattern(GTFSObjectFactory.DatePattern).toFormatter();
         this.service_id = attributes[0];
         if(attributes[1] != null && !attributes[1].equals(""))
         {

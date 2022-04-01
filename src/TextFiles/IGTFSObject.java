@@ -1,6 +1,6 @@
 package TextFiles;
 
-public interface IObject
+public interface IGTFSObject
 {
     void loadData(String[] attributes);
     void getAllData();

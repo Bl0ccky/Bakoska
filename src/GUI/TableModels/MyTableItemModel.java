@@ -1,6 +1,6 @@
 package GUI.TableModels;
 
-import TextFiles.IObject;
+import TextFiles.IGTFSObject;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -8,11 +8,11 @@ import java.util.Hashtable;
 
 public abstract class MyTableItemModel extends AbstractTableModel {
 
-    protected final Hashtable<String, IObject> hashtable;
+    protected final Hashtable<String, IGTFSObject> hashtable;
     protected final ArrayList<String> keys;
     protected final String[] columnNames;
 
-    public MyTableItemModel(Hashtable<String, IObject> hashtable, ArrayList<String> keys, String[] columnNames)
+    public MyTableItemModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames)
     {
         this.hashtable = hashtable;
         this.keys = keys;

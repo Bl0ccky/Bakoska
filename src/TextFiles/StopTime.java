@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 
 
-public class StopTime implements IObject
+public class StopTime implements IGTFSObject
 {
     private String trip_id;
     private LocalTime arrival_time;
@@ -28,7 +28,7 @@ public class StopTime implements IObject
     public void loadData(String[] attributes)
     {
         this.trip_id = attributes[0];
-        DateTimeFormatter timeFormat = new DateTimeFormatterBuilder().appendPattern(ObjectFactory.TimePattern).toFormatter();
+        DateTimeFormatter timeFormat = new DateTimeFormatterBuilder().appendPattern(GTFSObjectFactory.TimePattern).toFormatter();
         if(attributes[1] != null && !attributes[1].equals(""))
         {
             String[] time = attributes[1].split(":",3);

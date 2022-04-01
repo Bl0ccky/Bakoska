@@ -3,7 +3,7 @@ package TextFiles;
 import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
 
-public class Trip implements IObject
+public class Trip implements IGTFSObject
 {
     private String trip_id;
     private String route_id;

@@ -3,7 +3,6 @@ import GUI.TablePanels.*;
 import TextFiles.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,13 +25,13 @@ public class AdminPanel extends JPanel implements ActionListener
         this.setLayout(null);
 
         JTabbedPane tablePanels = new JTabbedPane();
-        this.agencyTablePanel = new AgencyTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllAgency(), ObjectType.AGENCY);
-        this.calendarDateTablePanel = new CalendarDateTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllCalendarDates(), ObjectType.CALENDAR_DATE);
-        this.calendarTablePanel = new CalendarTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllCalendars(), ObjectType.CALENDAR);
-        this.routeTablePanel = new RouteTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllRoutes(), ObjectType.ROUTE);
-        this.stopTablePanel = new StopTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllStops(), ObjectType.STOP);
-        this.stopTimeTablePanel = new StopTimeTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllStopTimes(), ObjectType.STOP_TIME);
-        this.tripTablePanel = new TripTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllTrips(), ObjectType.TRIP);
+        this.agencyTablePanel = new AgencyTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllAgency(), GTFSObjectType.AGENCY);
+        this.calendarDateTablePanel = new CalendarDateTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllCalendarDates(), GTFSObjectType.CALENDAR_DATE);
+        this.calendarTablePanel = new CalendarTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllCalendars(), GTFSObjectType.CALENDAR);
+        this.routeTablePanel = new RouteTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllRoutes(), GTFSObjectType.ROUTE);
+        this.stopTablePanel = new StopTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllStops(), GTFSObjectType.STOP);
+        this.stopTimeTablePanel = new StopTimeTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllStopTimes(), GTFSObjectType.STOP_TIME);
+        this.tripTablePanel = new TripTablePanel(this, mainFrame, mainFrame.getDataLoader().getAllTrips(), GTFSObjectType.TRIP);
 
         tablePanels.add("Agency", this.agencyTablePanel);
         tablePanels.add("Calendar Date", this.calendarDateTablePanel);
@@ -55,9 +54,9 @@ public class AdminPanel extends JPanel implements ActionListener
 
     }
 
-    public TablePanel getTablePanel(ObjectType objectType)
+    public TablePanel getTablePanel(GTFSObjectType gtfsObjectType)
     {
-        return switch (objectType) {
+        return switch (gtfsObjectType) {
             case AGENCY -> this.agencyTablePanel;
             case CALENDAR -> this.calendarTablePanel;
             case CALENDAR_DATE -> this.calendarDateTablePanel;

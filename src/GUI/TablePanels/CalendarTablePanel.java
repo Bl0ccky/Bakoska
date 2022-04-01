@@ -4,8 +4,7 @@ import Enums.Calendar.DayServiceAvailability;
 import GUI.AdminPanel;
 import GUI.MainFrame;
 import TextFiles.Calendar;
-import TextFiles.IObject;
-import TextFiles.ObjectType;
+import TextFiles.IGTFSObject;
 import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
@@ -15,14 +14,14 @@ import java.util.Hashtable;
 public class CalendarTablePanel extends TablePanel
 {
 
-    public CalendarTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
-        super(panel, mainFrame, hashtable, objectType);
+    public CalendarTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, TextFiles.GTFSObjectType gtfsObjectType) {
+        super(panel, mainFrame, hashtable, gtfsObjectType);
     }
 
     @Override
     boolean checkRemoveAction(int keyIndex) {
         String findingIDValue = ((Calendar)this.hashtable.get(this.keys.get(keyIndex))).getService_id();
-        return !this.contentPanel.getTablePanel(ObjectType.CALENDAR_DATE).tableContainsValueAt(findingIDValue, 0);
+        return !this.contentPanel.getTablePanel(TextFiles.GTFSObjectType.CALENDAR_DATE).tableContainsValueAt(findingIDValue, 0);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class CalendarTablePanel extends TablePanel
             newCalendar.setEnd_date(((DatePicker)this.addFormObjects.get(9)).getDate());
             this.hashtable.put(newCalendar.getKey(), newCalendar);
             this.keys.add(newCalendar.getKey());
-            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.CALENDAR);
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.CALENDAR);
             this.myTableItemModel.fireTableDataChanged();
         }
 
@@ -69,7 +68,7 @@ public class CalendarTablePanel extends TablePanel
     @Override
     void updateTable()
     {
-        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.CALENDAR);
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.CALENDAR);
     }
 
 

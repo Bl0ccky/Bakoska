@@ -4,8 +4,7 @@ import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
 import GUI.AdminPanel;
 import GUI.MainFrame;
-import TextFiles.IObject;
-import TextFiles.ObjectType;
+import TextFiles.IGTFSObject;
 import TextFiles.Trip;
 
 
@@ -15,14 +14,14 @@ import java.util.Hashtable;
 public class TripTablePanel extends TablePanel
 {
 
-    public TripTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IObject> hashtable, ObjectType objectType) {
-        super(panel, mainFrame, hashtable, objectType);
+    public TripTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, TextFiles.GTFSObjectType gtfsObjectType) {
+        super(panel, mainFrame, hashtable, gtfsObjectType);
     }
 
     @Override
     boolean checkRemoveAction(int keyIndex) {
         String findingIDValue = ((Trip)this.hashtable.get(this.keys.get(keyIndex))).getTrip_id();
-        return !this.contentPanel.getTablePanel(ObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 0);
+        return !this.contentPanel.getTablePanel(TextFiles.GTFSObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 0);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class TripTablePanel extends TablePanel
             newTrip.setWheelchair_accessible((TripWheelchairAccessible) ((JComboBox<?>) this.addFormObjects.get(8)).getSelectedItem());
             this.hashtable.put(newTrip.getKey(), newTrip);
             this.keys.add(newTrip.getKey());
-            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.TRIP);
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.TRIP);
             this.myTableItemModel.fireTableDataChanged();
         }
 
@@ -60,7 +59,7 @@ public class TripTablePanel extends TablePanel
     @Override
     void updateTable()
     {
-        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, ObjectType.TRIP);
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.TRIP);
     }
 
 }
