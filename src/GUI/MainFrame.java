@@ -5,7 +5,6 @@ import GUI.DetailPanels.DetailPanel;
 import GUI.DetailPanels.RouteDetailPanel;
 import GUI.DetailPanels.StopDetailPanel;
 import GUI.DetailPanels.TripDetailPanel;
-import GUI.TableModels.*;
 import TextFiles.GTFSObjectType;
 import TextFiles.IGTFSObject;
 
@@ -22,7 +21,7 @@ public class MainFrame extends JFrame
     public MainFrame()
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(1700,950));
+        this.setPreferredSize(new Dimension(1550,950));
         this.setLayout(new BorderLayout());
         this.setTitle("GTFS-Adminer");
 
@@ -79,14 +78,14 @@ public class MainFrame extends JFrame
         //this.setVisible(true);
     }
 
-    public void createDetailPanel(Hashtable<String, IGTFSObject> hashtable, GTFSObjectType gtfsObjectType)
+    public void createDetailPanel(Hashtable<String, IGTFSObject> hashtable, Hashtable<String, IGTFSObject> secondHashtable, GTFSObjectType gtfsObjectType, IGTFSObject igtfsObject)
     {
         DetailPanel detailPanel;
         switch (gtfsObjectType)
         {
-            case TRIP -> detailPanel = new TripDetailPanel(this.adminPanel.getTablePanel(gtfsObjectType), this, hashtable, gtfsObjectType);
-            case ROUTE -> detailPanel = new RouteDetailPanel(this.adminPanel.getTablePanel(gtfsObjectType), this, hashtable, gtfsObjectType);
-            default -> detailPanel = new StopDetailPanel(this.adminPanel.getTablePanel(gtfsObjectType), this, hashtable, gtfsObjectType);
+            case TRIP -> detailPanel = new TripDetailPanel(this.adminPanel.getTablePanel(gtfsObjectType), this, hashtable, secondHashtable, gtfsObjectType, igtfsObject);
+            case ROUTE -> detailPanel = new RouteDetailPanel(this.adminPanel.getTablePanel(gtfsObjectType), this, hashtable, gtfsObjectType, igtfsObject);
+            default -> detailPanel = new StopDetailPanel(this.adminPanel.getTablePanel(gtfsObjectType), this, hashtable, gtfsObjectType, igtfsObject);
         }
 
         this.contentPanel.add(detailPanel, "detailPanel");

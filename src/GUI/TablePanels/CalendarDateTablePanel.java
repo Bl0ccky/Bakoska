@@ -44,7 +44,6 @@ public class CalendarDateTablePanel extends TablePanel{
             this.hashtable.put(newCalendarDate.getKey(), newCalendarDate);
             this.keys.add(newCalendarDate.getKey());
             this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.CALENDAR_DATE);
-            this.myTableItemModel.fireTableDataChanged();
         }
 
     }

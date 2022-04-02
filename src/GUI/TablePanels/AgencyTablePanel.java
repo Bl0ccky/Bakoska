@@ -48,7 +48,6 @@ public class AgencyTablePanel extends TablePanel
             this.hashtable.put(newAgency.getKey(), newAgency);
             this.keys.add(newAgency.getKey());
             this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.AGENCY);
-            this.myTableItemModel.fireTableDataChanged();
         }
     }
 

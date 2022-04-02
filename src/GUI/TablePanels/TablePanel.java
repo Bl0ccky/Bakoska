@@ -11,9 +11,6 @@ import Enums.StopTime.TimePoint;
 import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
 import GUI.AdminPanel;
-import GUI.DetailPanels.RouteDetailPanel;
-import GUI.DetailPanels.StopDetailPanel;
-import GUI.DetailPanels.TripDetailPanel;
 import GUI.MainFrame;
 import GUI.TableModels.*;
 import TextFiles.*;
@@ -89,12 +86,8 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
             this.tableRowSorter.setRowFilter(new SearchTableFilter(this.searchField.getText(), this.searchCheckBoxes));
         } else if (e.getSource() == this.addButton) {
             this.addNewObject();
-
+            this.myTableItemModel.fireTableDataChanged();
         }
-        //else if(e.getSource() == this.editButton)
-        // {
-
-        //}
         else if (e.getSource() == this.removeButton) {
             int confirmRemove = JOptionPane.showConfirmDialog(null, "Are you sure to delete this item?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
             if (confirmRemove == 0) {
@@ -128,7 +121,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                         }
                     }
                     this.updateTable();
-                    this.myTableItemModel.fireTableRowsDeleted(this.table.convertRowIndexToModel(selectedRows[0]), this.table.convertRowIndexToModel(selectedRows[selectedRows.length - 1]));
+                    this.myTableItemModel.fireTableDataChanged();
                     System.out.println("Úspešné vymazanie všetkých označených záznamov");
                 } else {
                     System.out.println("Označené záznamy nemožno kvôli contrainom odstrániť, skontroluj najskôr tie!");
@@ -137,6 +130,8 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
 
         } else if (e.getSource() == this.detailButton) {
             Hashtable<String, IGTFSObject> detailPanelHashTable = new Hashtable<>();
+            Hashtable<String, IGTFSObject> filteredStopTimeHashTable = new Hashtable<>();
+            IGTFSObject igtfsObject = this.hashtable.get(this.keys.get(this.table.convertRowIndexToModel(this.table.getSelectedRow())));
 
             switch (this.gtfsObjectType) {
                 case TRIP -> {
@@ -146,8 +141,8 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                     Hashtable<String, IGTFSObject> stopHashTable = this.mainFrame.getDataLoader().getAllStops();
                     ArrayList<String> stopKeys = new ArrayList<>(stopHashTable.keySet());
 
-                    //Index Column 0 = trip_id v tabulke trips
-                    String trip_tripId = (String) this.table.getValueAt(this.table.convertRowIndexToModel(this.table.getSelectedRow()), 0);
+                    String trip_tripId = ((Trip)igtfsObject).getTrip_id();
+
                     for (String stopTimeKey : stopTimeKeys) {
                         StopTime stopTime = (StopTime) stopTimeHashTable.get(stopTimeKey);
                         String stopTime_tripId = stopTime.getTrip_id();
@@ -158,6 +153,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                                 String stop_stopId = stop.getStop_id();
                                 if (stop_stopId.equals(stopTime.getStop_id())) {
                                     detailPanelHashTable.put(stop.getKey(), stop);
+                                    filteredStopTimeHashTable.put(stopTime.getKey(), stopTime);
                                 }
 
                             }
@@ -170,8 +166,8 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                     Hashtable<String, IGTFSObject> tripHashTable = this.mainFrame.getDataLoader().getAllTrips();
                     ArrayList<String> tripKeys = new ArrayList<>(tripHashTable.keySet());
 
-                    //Index Column 0 = route_id v tabulke route
-                    String route_routeId = (String) this.table.getValueAt(this.table.convertRowIndexToModel(this.table.getSelectedRow()), 0);
+                    String route_routeId = ((Route)igtfsObject).getRoute_id();
+
                     for (String tripKey : tripKeys) {
                         Trip trip = (Trip) tripHashTable.get(tripKey);
                         String trip_routeId = trip.getRoute_id();
@@ -190,8 +186,8 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                     Hashtable<String, IGTFSObject> tripHashTable = this.mainFrame.getDataLoader().getAllTrips();
                     ArrayList<String> tripKeys = new ArrayList<>(tripHashTable.keySet());
 
-                    //Index Column 0 = stop_id v tabulke stop
-                    String stop_stopId = (String) this.table.getValueAt(this.table.convertRowIndexToModel(this.table.getSelectedRow()), 0);
+                    String stop_stopId = ((Stop)igtfsObject).getStop_id();
+
                     for (String stopTimeKey : stopTimeKeys) {
                         StopTime stopTime = (StopTime) stopTimeHashTable.get(stopTimeKey);
                         String stopTime_stopId = stopTime.getStop_id();
@@ -212,7 +208,8 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                 }
             }
 
-            this.mainFrame.createDetailPanel(detailPanelHashTable, this.gtfsObjectType);
+
+            this.mainFrame.createDetailPanel(detailPanelHashTable, filteredStopTimeHashTable, this.gtfsObjectType, igtfsObject);
             CardLayout cardLayout = (CardLayout) this.contentPanel.getContentPanel().getLayout();
             cardLayout.show(this.contentPanel.getContentPanel(), "detailPanel");
         }
@@ -391,8 +388,6 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                 }
             }
 
-            //this.addFormObjects.get(i).setFocusable(false);
-
             addLabels[i] = new JLabel(this.columnNames[i]);
 
             if (i >= this.columnNames.length / 2) {
@@ -426,8 +421,8 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
     }
 
     protected boolean tableContainsValueAt(String findingIdValue, int columnIndex) {
-        for (int i = 0; i < this.table.getRowCount(); i++) {
-            if (this.table.getValueAt(i, columnIndex).equals(findingIdValue)) {
+        for (int i = 0; i < this.table.getModel().getRowCount(); i++) {
+            if (this.table.getModel().getValueAt(i, columnIndex).equals(findingIdValue)) {
                 return true;
             }
         }

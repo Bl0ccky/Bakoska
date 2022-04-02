@@ -54,7 +54,6 @@ public class StopTablePanel extends TablePanel{
             this.hashtable.put(newStop.getKey(), newStop);
             this.keys.add(newStop.getKey());
             this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.STOP);
-            this.myTableItemModel.fireTableDataChanged();
         }
 
     }

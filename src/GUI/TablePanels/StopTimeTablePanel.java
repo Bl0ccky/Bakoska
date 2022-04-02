@@ -56,7 +56,6 @@ public class StopTimeTablePanel extends TablePanel {
             this.hashtable.put(newStopTime.getKey(), newStopTime);
             this.keys.add(newStopTime.getKey());
             this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.STOP_TIME);
-            this.myTableItemModel.fireTableDataChanged();
         }
 
     }

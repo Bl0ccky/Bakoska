@@ -48,7 +48,6 @@ public class RouteTablePanel extends TablePanel{
             this.hashtable.put(newRoute.getKey(), newRoute);
             this.keys.add(newRoute.getKey());
             this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.ROUTE);
-            this.myTableItemModel.fireTableDataChanged();
         }
 
     }

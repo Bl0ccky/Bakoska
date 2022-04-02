@@ -51,7 +51,6 @@ public class TripTablePanel extends TablePanel
             this.hashtable.put(newTrip.getKey(), newTrip);
             this.keys.add(newTrip.getKey());
             this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.TRIP);
-            this.myTableItemModel.fireTableDataChanged();
         }
 
     }
