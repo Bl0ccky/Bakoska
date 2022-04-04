@@ -3,6 +3,8 @@ package TextFiles;
 import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
 
+import java.util.ArrayList;
+
 public class Trip implements IGTFSObject
 {
     private String trip_id;
@@ -15,7 +17,17 @@ public class Trip implements IGTFSObject
     private String shape_id;
     private TripWheelchairAccessible wheelchair_accessible;
 
-    public Trip(){}
+    public Trip() {
+        this.trip_id = "";
+        this.route_id = "";
+        this.service_id = "";
+        this.trip_headsign = "";
+        this.trip_short_name = "";
+        this.direction_id = TripDirectionID.NO_INFO;
+        this.block_id = "";
+        this.shape_id = "";
+        this.wheelchair_accessible = TripWheelchairAccessible.NO_INFO;
+    }
 
     @Override
     public void loadData(String[] attributes)
@@ -46,35 +58,19 @@ public class Trip implements IGTFSObject
     }
 
     @Override
-    public void getAllData()
+    public ArrayList<Object> getColumnTypes()
     {
-        System.out.printf(
-                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
-                this.trip_id,
-                this.route_id,
-                this.service_id,
-                this.trip_headsign,
-                this.trip_short_name,
-                this.direction_id,
-                this.block_id,
-                this.shape_id,
-                this.wheelchair_accessible);
+        ArrayList<Object> columnTypes = new ArrayList<>();
+        columnTypes.add(this.trip_id);
+        columnTypes.add(this.route_id);
+        columnTypes.add(this.service_id);
+        columnTypes.add(this.trip_headsign);
+        columnTypes.add(this.trip_short_name);
+        columnTypes.add(this.direction_id);
+        columnTypes.add(this.block_id);
+        columnTypes.add(this.shape_id);
+        columnTypes.add(this.wheelchair_accessible);
 
-    }
-
-    @Override
-    public Object[] getColumnTypes(String[] attributes)
-    {
-        Object[] columnTypes = new Object[attributes.length];
-        columnTypes[0] = this.trip_id;
-        columnTypes[1] = this.route_id;
-        columnTypes[2] = this.service_id;
-        columnTypes[3] = this.trip_headsign;
-        columnTypes[4] = this.trip_short_name;
-        columnTypes[5] = this.direction_id;
-        columnTypes[6] = this.block_id;
-        columnTypes[7] = this.shape_id;
-        columnTypes[8] = this.wheelchair_accessible;
         return columnTypes;
     }
 

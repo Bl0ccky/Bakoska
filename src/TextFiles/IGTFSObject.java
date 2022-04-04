@@ -1,11 +1,10 @@
 package TextFiles;
 
+import java.util.ArrayList;
+
 public interface IGTFSObject
 {
     void loadData(String[] attributes);
-    void getAllData();
-    Object[] getColumnTypes(String[] attributes);
+    ArrayList<Object> getColumnTypes();
     String getKey();
-
-
 }

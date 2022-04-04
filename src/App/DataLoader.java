@@ -4,9 +4,11 @@ import TextFiles.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
-import java.util.Set;
 
 public class DataLoader
 {
@@ -19,7 +21,7 @@ public class DataLoader
     private Hashtable<String, IGTFSObject> calendars;
     private Hashtable<String, IGTFSObject> calendarDates;
     private final Hashtable<GTFSObjectType, String[]> hashTableColumnNames;
-    private final Hashtable<GTFSObjectType, Object[]> hashTableColumnTypes;
+    private final Hashtable<GTFSObjectType, ArrayList<Object>> hashTableColumnTypes;
 
     public DataLoader(String filePath)
     {
@@ -90,8 +92,12 @@ public class DataLoader
         {
             scanner = new Scanner(new File(this.filePath+ "\\"+fileName));
             String columnNames = scanner.nextLine();
-            this.getColumnNames(columnNames, gtfsObjectType);
+            this.createColumnNames(columnNames, gtfsObjectType);
             String line;
+            if(!scanner.hasNextLine())
+            {
+                this.createColumnTypesForNewFile(gtfsObjectType);
+            }
             while (scanner.hasNextLine())
             {
                 line = scanner.nextLine();
@@ -100,7 +106,7 @@ public class DataLoader
                 object.loadData(attributes);
                 if(columnTypesCounter == 0)
                 {
-                    this.hashTableColumnTypes.put(gtfsObjectType, object.getColumnTypes(attributes));
+                    this.hashTableColumnTypes.put(gtfsObjectType, object.getColumnTypes());
                     columnTypesCounter++;
                 }
                 hashtable.put(object.getKey(), object);
@@ -114,54 +120,118 @@ public class DataLoader
 
     }
 
-    private void getColumnNames(String columnNames, GTFSObjectType gtfsObjectType)
+    public void writeAgency()
+    {
+        this.writeGTFS("agency.txt", GTFSObjectType.AGENCY, this.agency);
+    }
+
+    public void writeStops()
+    {
+        this.writeGTFS("stops.txt", GTFSObjectType.STOP, this.stops);
+    }
+
+    public void writeRoutes()
+    {
+        this.writeGTFS("routes.txt", GTFSObjectType.ROUTE, this.routes);
+    }
+
+    public void writeTrips()
+    {
+        this.writeGTFS("trips.txt", GTFSObjectType.TRIP, this.trips);
+    }
+
+    public void writeStopTimes()
+    {
+        this.writeGTFS("stop_times.txt", GTFSObjectType.STOP_TIME, this.stopTimes);
+    }
+
+    public void writeCalendars()
+    {
+        this.writeGTFS("calendar.txt", GTFSObjectType.CALENDAR, this.calendars);
+    }
+
+    public void writeCalendarDates()
+    {
+        this.writeGTFS("calendar_dates.txt", GTFSObjectType.CALENDAR_DATE, this.calendarDates);
+    }
+
+    private void writeGTFS(String fileName, GTFSObjectType gtfsObjectType, Hashtable<String, IGTFSObject> hashtable)
+    {
+        FileWriter fileWriter;
+        String[] columnNames = this.getHashTableColumnNames(gtfsObjectType);
+        try
+        {
+            fileWriter = new FileWriter(this.filePath+ "\\"+fileName);
+            for (int i = 0; i < columnNames.length; i++)
+            {
+                fileWriter.write(columnNames[i]);
+                if(i != columnNames.length-1)
+                {
+                    fileWriter.write(",");
+                }
+            }
+            fileWriter.write("\n");
+            if(!hashtable.isEmpty())
+            {
+                ArrayList<String> keys = new ArrayList<>(hashtable.keySet());
+                for (String key : keys)
+                {
+                    ArrayList<Object> attributes = hashtable.get(key).getColumnTypes();
+                    for (int i = 0; i < attributes.size(); i++)
+                    {
+                        fileWriter.write(String.valueOf(attributes.get(i)));
+                        if(i != attributes.size()-1)
+                        {
+                            fileWriter.write(",");
+                        }
+                    }
+                    fileWriter.write("\n");
+                }
+
+            }
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String[] createColumnNamesForNewFile(GTFSObjectType gtfsObjectType)
+    {
+        String[] columnNames = {};
+        switch (gtfsObjectType) {
+            case AGENCY -> columnNames = new String[]{"agency_id", "agency_name", "agency_url", "agency_timezone", "agency_lang", "agency_phone", "agency_fare_url"};
+            case CALENDAR -> columnNames = new String[]{"service_id", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "start_date", "end_date"};
+            case CALENDAR_DATE -> columnNames = new String[]{"service_id", "date", "exception_type"};
+            case ROUTE -> columnNames = new String[]{"route_id", "agency_id", "route_short_name", "route_long_name", "route_desc", "route_type", "route_url", "route_color", "route_text_color"};
+            case STOP -> columnNames = new String[]{"stop_id", "stop_code", "stop_name", "stop_desc", "stop_lat", "stop_lon", "zone_id", "stop_url", "location_type", "parent_station", "stop_timezone", "wheelchair_boarding"};
+            case STOP_TIME -> columnNames = new String[]{"trip_id", "arrival_time", "departure_time", "stop_id", "stop_sequence", "stop_headsign", "pickup_type", "drop_off_type", "shape_dist_traveled", "timepoint"};
+            case TRIP -> columnNames = new String[]{"trip_id", "route_id", "service_id", "trip_headsign", "trip_short_name", "direction_id", "block_id", "shape_id", "wheelchair_accessible"};
+        }
+        this.hashTableColumnNames.put(gtfsObjectType, columnNames);
+        return columnNames;
+    }
+
+    public void createColumnTypesForNewFile(GTFSObjectType gtfsObjectType)
+    {
+        ArrayList<Object> columnTypes = null;
+        switch (gtfsObjectType) {
+            case AGENCY -> columnTypes =  new Agency().getColumnTypes();
+            case CALENDAR -> columnTypes = new Calendar().getColumnTypes();
+            case CALENDAR_DATE -> columnTypes = new CalendarDate().getColumnTypes();
+            case ROUTE -> columnTypes = new Route().getColumnTypes();
+            case STOP -> columnTypes = new Stop().getColumnTypes();
+            case STOP_TIME -> columnTypes = new StopTime().getColumnTypes();
+            case TRIP -> columnTypes = new Trip().getColumnTypes();
+        }
+        this.hashTableColumnTypes.put(gtfsObjectType, columnTypes);
+    }
+
+    private void createColumnNames(String columnNames, GTFSObjectType gtfsObjectType)
     {
         String[] columns = columnNames.split(",");
         this.hashTableColumnNames.put(gtfsObjectType, columns);
-    }
-
-    private void getAllObjects(Hashtable<String, IGTFSObject> hashtable)
-    {
-        Set<String> keys = hashtable.keySet();
-        for (String key: keys)
-        {
-            hashtable.get(key).getAllData();
-        }
-    }
-
-    public void writeAllAgency()
-    {
-        this.getAllObjects(this.agency);
-    }
-
-    public void writeAllCalendars()
-    {
-        this.getAllObjects(this.calendars);
-    }
-
-    public void writeAllCalendarDates()
-    {
-        this.getAllObjects(this.calendarDates);
-    }
-
-    public void writeAllRoutes()
-    {
-        this.getAllObjects(this.routes);
-    }
-
-    public void writeAllStops()
-    {
-        this.getAllObjects(this.stops);
-    }
-
-    public void writeAllStopTimes()
-    {
-        this.getAllObjects(this.stopTimes);
-    }
-
-    public void writeAllTrips()
-    {
-        this.getAllObjects(this.trips);
     }
 
     public String getFilePath() {
@@ -206,7 +276,7 @@ public class DataLoader
         return this.hashTableColumnNames.get(gtfsObjectType);
     }
 
-    public Object[] getHashTableColumnTypes(GTFSObjectType gtfsObjectType)
+    public ArrayList<Object> getHashTableColumnTypes(GTFSObjectType gtfsObjectType)
     {
         return this.hashTableColumnTypes.get(gtfsObjectType);
     }

@@ -4,6 +4,7 @@ import Enums.CalendarDate.ExceptionType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.ArrayList;
 
 
 public class CalendarDate implements IGTFSObject
@@ -12,7 +13,11 @@ public class CalendarDate implements IGTFSObject
     private LocalDate date;
     private ExceptionType exception_type;
 
-    public CalendarDate(){}
+    public CalendarDate() {
+        this.service_id = "";
+        this.date = LocalDate.now();
+        this.exception_type = ExceptionType.NO_INFO;
+    }
 
     @Override
     public void loadData(String[] attributes)
@@ -36,22 +41,13 @@ public class CalendarDate implements IGTFSObject
     }
 
     @Override
-    public void getAllData()
+    public ArrayList<Object> getColumnTypes()
     {
-        System.out.printf(
-                "%5s\t%5s\t%5s\n",
-                this.service_id,
-                this.date,
-                this.exception_type);
-    }
+        ArrayList<Object> columnTypes = new ArrayList<>();
+        columnTypes.add(this.service_id);
+        columnTypes.add(this.date);
+        columnTypes.add(this.exception_type);
 
-    @Override
-    public Object[] getColumnTypes(String[] attributes)
-    {
-        Object[] columnTypes = new Object[attributes.length];
-        columnTypes[0] = this.service_id;
-        columnTypes[1] = this.date;
-        columnTypes[2] = this.exception_type;
         return columnTypes;
     }
 

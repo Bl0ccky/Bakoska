@@ -1,5 +1,7 @@
 package TextFiles;
 
+import java.util.ArrayList;
+
 public class Agency implements IGTFSObject
 {
     private String agency_id;
@@ -10,7 +12,15 @@ public class Agency implements IGTFSObject
     private String agency_phone;
     private String agency_fare_url;
 
-    public Agency(){}
+    public Agency() {
+        this.agency_id = "";
+        this.agency_name = "";
+        this.agency_url = "";
+        this.agency_timezone = "";
+        this.agency_lang = "";
+        this.agency_phone = "";
+        this.agency_fare_url = "";
+    }
 
     @Override
     public void loadData(String[] attributes)
@@ -25,31 +35,16 @@ public class Agency implements IGTFSObject
     }
 
     @Override
-    public void getAllData()
+    public ArrayList<Object> getColumnTypes()
     {
-        System.out.printf(
-                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
-                this.agency_id,
-                this.agency_name,
-                this.agency_url,
-                this.agency_timezone,
-                this.agency_lang,
-                this.agency_phone,
-                this.agency_fare_url);
-    }
-
-    @Override
-    public Object[] getColumnTypes(String[] attributes)
-    {
-        Object[] columnTypes = new Object[attributes.length];
-        columnTypes[0] = this.agency_id;
-        columnTypes[1] = this.agency_name;
-        columnTypes[2] = this.agency_url;
-        columnTypes[3] = this.agency_timezone;
-        columnTypes[4] = this.agency_lang;
-        columnTypes[5] = this.agency_phone;
-        columnTypes[6] = this.agency_fare_url;
-
+        ArrayList<Object> columnTypes = new ArrayList<>();
+        columnTypes.add(this.agency_id);
+        columnTypes.add(this.agency_name);
+        columnTypes.add(this.agency_url);
+        columnTypes.add(this.agency_timezone);
+        columnTypes.add(this.agency_lang);
+        columnTypes.add(this.agency_phone);
+        columnTypes.add(this.agency_fare_url);
         return columnTypes;
     }
 

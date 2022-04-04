@@ -7,6 +7,7 @@ import Enums.StopTime.TimePoint;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.ArrayList;
 
 
 public class StopTime implements IGTFSObject
@@ -22,7 +23,18 @@ public class StopTime implements IGTFSObject
     private float shape_dist_traveled;
     private TimePoint timepoint;
 
-    public StopTime(){}
+    public StopTime() {
+        this.trip_id = "";
+        this.arrival_time = LocalTime.now();
+        this.departure_time = LocalTime.now();
+        this.stop_id = "";
+        this.stop_sequence = 0;
+        this.stop_headsign = "";
+        this.pickup_type = PickupType.REGULARLY_SCHEDULED_PICKUP;
+        this.drop_off_type = DropOffType.REGULARLY_SCHEDULED_DROP_OFF;
+        this.shape_dist_traveled = 0;
+        this.timepoint = TimePoint.EXACT_TIMES;
+    }
 
     @Override
     public void loadData(String[] attributes)
@@ -106,37 +118,22 @@ public class StopTime implements IGTFSObject
 
     }
 
-    @Override
-    public void getAllData()
-    {
-        System.out.printf(
-                "%5s\t%5s\t%5s\t%5s\t%5d\t%5s\t%5s\t%5s\t%5s\t%5s\n",
-                this.trip_id,
-                this.arrival_time,
-                this.departure_time,
-                this.stop_id,
-                this.stop_sequence,
-                this.stop_headsign,
-                this.pickup_type,
-                this.drop_off_type,
-                this.shape_dist_traveled,
-                this.timepoint);
-    }
 
     @Override
-    public Object[] getColumnTypes(String[] attributes)
+    public ArrayList<Object> getColumnTypes()
     {
-        Object[] columnTypes = new Object[attributes.length];
-        columnTypes[0] = this.trip_id;
-        columnTypes[1] = this.arrival_time;
-        columnTypes[2] = this.departure_time;
-        columnTypes[3] = this.stop_id;
-        columnTypes[4] = this.stop_sequence;
-        columnTypes[5] = this.stop_headsign;
-        columnTypes[6] = this.pickup_type;
-        columnTypes[7] = this.drop_off_type;
-        columnTypes[8] = this.shape_dist_traveled;
-        columnTypes[9] = this.timepoint;
+        ArrayList<Object> columnTypes = new ArrayList<>();
+        columnTypes.add(this.trip_id);
+        columnTypes.add(this.arrival_time);
+        columnTypes.add(this.departure_time);
+        columnTypes.add(this.stop_id);
+        columnTypes.add(this.stop_sequence);
+        columnTypes.add(this.stop_headsign);
+        columnTypes.add(this.pickup_type);
+        columnTypes.add(this.drop_off_type);
+        columnTypes.add(this.shape_dist_traveled);
+        columnTypes.add(this.timepoint);
+
         return columnTypes;
     }
 

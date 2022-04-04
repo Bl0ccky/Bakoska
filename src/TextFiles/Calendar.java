@@ -5,6 +5,7 @@ import Enums.Calendar.DayServiceAvailability;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.ArrayList;
 
 public class Calendar implements IGTFSObject
 {
@@ -19,7 +20,18 @@ public class Calendar implements IGTFSObject
     private LocalDate start_date;
     private LocalDate end_date;
 
-    public Calendar(){}
+    public Calendar() {
+        this.service_id = "";
+        this.monday = DayServiceAvailability.NO_INFO;
+        this.tuesday = DayServiceAvailability.NO_INFO;
+        this.wednesday = DayServiceAvailability.NO_INFO;
+        this.thursday = DayServiceAvailability.NO_INFO;
+        this.friday = DayServiceAvailability.NO_INFO;
+        this.saturday = DayServiceAvailability.NO_INFO;
+        this.sunday = DayServiceAvailability.NO_INFO;
+        this.start_date = LocalDate.now();
+        this.end_date = LocalDate.now();
+    }
 
     @Override
     public void loadData(String[] attributes)
@@ -102,37 +114,22 @@ public class Calendar implements IGTFSObject
 
     }
 
-    @Override
-    public void getAllData()
-    {
-        System.out.printf(
-                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
-                this.service_id,
-                this.monday,
-                this.tuesday,
-                this.wednesday,
-                this.thursday,
-                this.friday,
-                this.saturday,
-                this.sunday,
-                this.start_date,
-                this.end_date);
-    }
+
 
     @Override
-    public Object[] getColumnTypes(String[] attributes)
+    public ArrayList<Object> getColumnTypes()
     {
-        Object[] columnTypes = new Object[attributes.length];
-        columnTypes[0] = this.service_id;
-        columnTypes[1] = this.monday;
-        columnTypes[2] = this.tuesday;
-        columnTypes[3] = this.wednesday;
-        columnTypes[4] = this.thursday;
-        columnTypes[5] = this.friday;
-        columnTypes[6] = this.saturday;
-        columnTypes[7] = this.sunday;
-        columnTypes[8] = this.start_date;
-        columnTypes[9] = this.end_date;
+        ArrayList<Object> columnTypes = new ArrayList<>();
+        columnTypes.add(this.service_id);
+        columnTypes.add(this.monday);
+        columnTypes.add(this.tuesday);
+        columnTypes.add(this.wednesday);
+        columnTypes.add(this.thursday);
+        columnTypes.add(this.friday);
+        columnTypes.add(this.saturday);
+        columnTypes.add(this.sunday);
+        columnTypes.add(this.start_date);
+        columnTypes.add(this.end_date);
 
         return columnTypes;
     }

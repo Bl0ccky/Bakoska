@@ -3,42 +3,36 @@ package GUI.TableModels;
 import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
 import TextFiles.IGTFSObject;
-import TextFiles.Stop;
-import TextFiles.StopTime;
+import TextFiles.TripDetail.SpecialStop;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class TripDetailTableModel extends MyTableItemModel{
-    private final Hashtable<String, IGTFSObject> stopTimeHashTable;
-    private final ArrayList<String> stopTimeKeys;
-    public TripDetailTableModel(Hashtable<String, IGTFSObject> stopHashtable, Hashtable<String, IGTFSObject> stopTimeHashTable, ArrayList<String> keys, String[] columnNames) {
-        super(stopHashtable, keys, columnNames);
-        this.stopTimeHashTable = stopTimeHashTable;
-        this.stopTimeKeys = new ArrayList<>(stopTimeHashTable.keySet());
+    public TripDetailTableModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
+        super(hashtable, keys, columnNames);
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex)
     {
         Object value = "";
-        Stop stop = (Stop)super.hashtable.get(super.keys.get(rowIndex));
-        StopTime stopTime = (StopTime)this.stopTimeHashTable.get(this.stopTimeKeys.get(rowIndex));
+        SpecialStop specialStop = (SpecialStop)this.hashtable.get(this.keys.get(rowIndex));
         switch (columnIndex)
         {
-            case 0 -> value = stop.getStop_id();
-            case 1 -> value = stop.getStop_code();
-            case 2 -> value = stop.getStop_name();
-            case 3 -> value = stop.getStop_desc();
-            case 4 -> value = stopTime.getArrival_time();
-            case 5 -> value = stopTime.getDeparture_time();
-            case 6 -> value = stopTime.getStop_sequence();
-            case 7 -> value = stop.getStop_lat();
-            case 8 -> value = stop.getStop_lon();
-            case 9 -> value = stop.getLocation_type();
-            case 10 -> value = stop.getStop_timezone();
-            case 11 -> value = stop.getWheelchair_boarding();
+            case 0 -> value = specialStop.getStop_id();
+            case 1 -> value = specialStop.getStop_code();
+            case 2 -> value = specialStop.getStop_name();
+            case 3 -> value = specialStop.getStop_desc();
+            case 4 -> value = specialStop.getArrival_time();
+            case 5 -> value = specialStop.getDeparture_time();
+            case 6 -> value = specialStop.getStop_sequence();
+            case 7 -> value = specialStop.getStop_lat();
+            case 8 -> value = specialStop.getStop_lon();
+            case 9 -> value = specialStop.getLocation_type();
+            case 10 -> value = specialStop.getStop_timezone();
+            case 11 -> value = specialStop.getWheelchair_boarding();
         }
 
         return value;

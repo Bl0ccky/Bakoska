@@ -3,6 +3,8 @@ package TextFiles;
 import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
 
+import java.util.ArrayList;
+
 public class Stop implements IGTFSObject {
     private String stop_id;
     private String stop_code;
@@ -17,7 +19,20 @@ public class Stop implements IGTFSObject {
     private String stop_timezone;
     private StopWheelchairBoarding wheelchair_boarding;
 
-    public Stop() {}
+    public Stop() {
+        this.stop_id = "";
+        this.stop_code = "";
+        this.stop_name = "";
+        this.stop_desc = "";
+        this.stop_lat = 0;
+        this.stop_lon = 0;
+        this.zone_id = "";
+        this.stop_url = "";
+        this.location_type = StopLocationType.STOP;
+        this.parent_station = "";
+        this.stop_timezone = "";
+        this.wheelchair_boarding = StopWheelchairBoarding.NO_INFO;
+    }
 
     @Override
     public void loadData(String[] attributes)
@@ -65,40 +80,21 @@ public class Stop implements IGTFSObject {
     }
 
     @Override
-    public void getAllData()
-    {
-        System.out.printf(
-                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
-                this.stop_id,
-                this.stop_code,
-                this.stop_name,
-                this.stop_desc,
-                this.stop_lat,
-                this.stop_lon,
-                this.zone_id,
-                this.stop_url,
-                this.location_type,
-                this.parent_station,
-                this.stop_timezone,
-                this.wheelchair_boarding);
+    public ArrayList<Object> getColumnTypes() {
+        ArrayList<Object> columnTypes = new ArrayList<>();
+        columnTypes.add(this.stop_id);
+        columnTypes.add(this.stop_code);
+        columnTypes.add(this.stop_name);
+        columnTypes.add(this.stop_desc);
+        columnTypes.add(this.stop_lat);
+        columnTypes.add(this.stop_lon);
+        columnTypes.add(this.zone_id);
+        columnTypes.add(this.stop_url);
+        columnTypes.add(this.location_type);
+        columnTypes.add(this.parent_station);
+        columnTypes.add(this.stop_timezone);
+        columnTypes.add(this.wheelchair_boarding);
 
-    }
-
-    @Override
-    public Object[] getColumnTypes(String[] attributes) {
-        Object[] columnTypes = new Object[attributes.length];
-        columnTypes[0] = this.stop_id;
-        columnTypes[1] = this.stop_code;
-        columnTypes[2] = this.stop_name;
-        columnTypes[3] = this.stop_desc;
-        columnTypes[4] = this.stop_lat;
-        columnTypes[5] = this.stop_lon;
-        columnTypes[6] = this.zone_id;
-        columnTypes[7] = this.stop_url;
-        columnTypes[8] = this.location_type;
-        columnTypes[9] = this.parent_station;
-        columnTypes[10] = this.stop_timezone;
-        columnTypes[11] = this.wheelchair_boarding;
         return columnTypes;
     }
 

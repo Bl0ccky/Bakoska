@@ -1,17 +1,24 @@
 package GUI;
 
 import App.DataLoader;
+import TextFiles.GTFSObjectType;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.Objects;
 
 
 public class MenuPanel extends JPanel implements ActionListener{
     private final JPanel contentPanel;
-    private final JButton btnSelectFile;
+    private final JButton btnImportFile;
+    private final JButton btnCreateNewFile;
     private final JButton btnExit;
     private final MainFrame mainFrame;
 
@@ -19,12 +26,16 @@ public class MenuPanel extends JPanel implements ActionListener{
 
         this.contentPanel = panel;
         this.mainFrame = mainFrame;
-        JLabel lblSelectFile = new JLabel("Vyber cestu k GTFS súborom");
+        JLabel lblSelectFile = new JLabel("Choose your action");
         lblSelectFile.setFont(new Font("Sans Sheriff", Font.PLAIN,20));
 
-        this.btnSelectFile = new JButton("Vyber cestu");
-        this.btnSelectFile.setFocusable(false);
-        this.btnSelectFile.addActionListener(this);
+        this.btnImportFile = new JButton("Import gtfs file");
+        this.btnImportFile.setFocusable(false);
+        this.btnImportFile.addActionListener(this);
+
+        this.btnCreateNewFile = new JButton("Create new gtfs file");
+        this.btnCreateNewFile.setFocusable(false);
+        this.btnCreateNewFile.addActionListener(this);
 
         this.btnExit = new JButton("Exit");
         this.btnExit.setFocusable(false);
@@ -42,7 +53,8 @@ public class MenuPanel extends JPanel implements ActionListener{
         gbc.insets = new Insets(10,0,10,0);
 
         JPanel buttons = new JPanel(new GridBagLayout());
-        buttons.add(this.btnSelectFile, gbc);
+        buttons.add(this.btnCreateNewFile, gbc);
+        buttons.add(this.btnImportFile, gbc);
         buttons.add(this.btnExit, gbc);
 
         gbc.weighty = 1;
@@ -72,22 +84,107 @@ public class MenuPanel extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        if (e.getSource() == this.btnSelectFile) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            fileChooser.setAcceptAllFileFilterUsed(false);
-            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                DataLoader dataLoader = new DataLoader(filePath);
-                dataLoader.loadAllData();
-                this.mainFrame.setDataLoader(dataLoader);
-                this.mainFrame.createAdminPanel();
-                CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
-                cardLayout.show(this.contentPanel, "adminPanel");
+        if (e.getSource() == this.btnImportFile)
+        {
+            String filePath = this.mainFrame.getGTFSFilePath(2);
+            if(filePath != null)
+            {
+                String[] fileNames = {"agency.txt", "calendar.txt", "calendar_dates.txt", "routes.txt", "stops.txt", "stop_times.txt", "trips.txt"};
+                boolean allFilesExist = true;
+                for (String filename: fileNames)
+                {
+                    if(!new File(filePath+"\\"+filename).exists())
+                    {
+                        allFilesExist = false;
+                        break;
+                    }
+                }
+                if(allFilesExist)
+                {
+                    DataLoader dataLoader = new DataLoader(filePath);
+                    dataLoader.loadAllData();
+                    this.mainFrame.changeToAdminPanel(dataLoader);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "This folder doesnt contains all required files of GTFS", "Missing files", JOptionPane.ERROR_MESSAGE);
+                    CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
+                    cardLayout.show(this.contentPanel, "menuPanel");
 
-            } else {
-                JLabel wrongPath = new JLabel();
-                wrongPath.setText("Vybral si zlý priečinok!");
+                }
+            }
+
+        }
+        else if(e.getSource() == this.btnCreateNewFile)
+        {
+            String filePath = this.mainFrame.getGTFSFilePath(1);
+            if(filePath != null)
+            {
+                int fileCounter = 1;
+                try {
+                    if(!this.mainFrame.isDirectoryEmpty(Path.of(filePath)))
+                    {
+                        Files.createDirectory(Path.of(filePath + "\\newGTFSDirectory_"+fileCounter));
+                    }
+                } catch (IOException ex) {
+                    if(ex instanceof FileAlreadyExistsException)
+                    {
+
+                        File fileDirectory = new File(filePath);
+                        String[] directories = fileDirectory.list((dir, name) -> new File(dir, name).isDirectory());
+                        for (String directory : Objects.requireNonNull(directories))
+                        {
+                            String[] foundedFileName = directory.split("_");
+                            if (Integer.parseInt(foundedFileName[1]) > fileCounter) {
+                                fileCounter = Integer.parseInt(foundedFileName[1]);
+                            }
+                        }
+                        fileCounter++;
+                        try {
+                            Files.createDirectory(Path.of(filePath + "\\newGTFSDirectory_"+fileCounter));
+                        } catch (IOException exc) {
+                            exc.printStackTrace();
+                        }
+                    }
+                    else if(ex instanceof NoSuchFileException)
+                    {
+                        JOptionPane.showMessageDialog(null, "This folder path doesnt exist!", "Wrong file path", JOptionPane.ERROR_MESSAGE);
+                        CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
+                        cardLayout.show(this.contentPanel, "menuPanel");
+                        return;
+                    }
+                }
+                filePath += "\\newGTFSDirectory_"+fileCounter;
+                String[] fileNames = {"agency.txt", "calendar.txt", "calendar_dates.txt", "routes.txt", "stops.txt", "stop_times.txt", "trips.txt"};
+                DataLoader dataLoader = new DataLoader(filePath);
+                int counter = 0;
+                for (GTFSObjectType gtfsObjectType : GTFSObjectType.values())
+                {
+                    String[] columnNames = dataLoader.createColumnNamesForNewFile(gtfsObjectType);
+                    dataLoader.createColumnTypesForNewFile(gtfsObjectType);
+                    Path path = Path.of(filePath +"\\"+fileNames[counter]);
+                    try {
+                        Files.createFile(path);
+                        FileWriter myWriter = new FileWriter(filePath +"\\"+fileNames[counter]);
+                        for (int i = 0; i < columnNames.length; i++)
+                        {
+                            myWriter.write(columnNames[i]);
+                            if(i != columnNames.length-1)
+                            {
+                                myWriter.write(",");
+                            }
+
+                        }
+                        myWriter.close();
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    counter++;
+                }
+
+                this.mainFrame.changeToAdminPanel(dataLoader);
+
             }
 
         }
@@ -97,4 +194,6 @@ public class MenuPanel extends JPanel implements ActionListener{
         }
 
     }
+
+
 }

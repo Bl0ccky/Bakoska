@@ -11,6 +11,7 @@ import Enums.StopTime.TimePoint;
 import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
 import GUI.AdminPanel;
+import GUI.DetailPanels.DetailPanel;
 import GUI.MainFrame;
 import GUI.TableModels.*;
 import TextFiles.*;
@@ -37,7 +38,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
     protected final MainFrame mainFrame;
     protected final Hashtable<String, IGTFSObject> hashtable;
     protected final String[] columnNames;
-    protected final Object[] columnTypes;
+    protected final ArrayList<Object> columnTypes;
     protected final ArrayList<String> keys;
     protected final MyTableItemModel myTableItemModel;
     private final GTFSObjectType gtfsObjectType;
@@ -130,38 +131,10 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
 
         } else if (e.getSource() == this.detailButton) {
             Hashtable<String, IGTFSObject> detailPanelHashTable = new Hashtable<>();
-            Hashtable<String, IGTFSObject> filteredStopTimeHashTable = new Hashtable<>();
             IGTFSObject igtfsObject = this.hashtable.get(this.keys.get(this.table.convertRowIndexToModel(this.table.getSelectedRow())));
 
             switch (this.gtfsObjectType) {
-                case TRIP -> {
-                    Hashtable<String, IGTFSObject> stopTimeHashTable = this.mainFrame.getDataLoader().getAllStopTimes();
-                    ArrayList<String> stopTimeKeys = new ArrayList<>(stopTimeHashTable.keySet());
-
-                    Hashtable<String, IGTFSObject> stopHashTable = this.mainFrame.getDataLoader().getAllStops();
-                    ArrayList<String> stopKeys = new ArrayList<>(stopHashTable.keySet());
-
-                    String trip_tripId = ((Trip)igtfsObject).getTrip_id();
-
-                    for (String stopTimeKey : stopTimeKeys) {
-                        StopTime stopTime = (StopTime) stopTimeHashTable.get(stopTimeKey);
-                        String stopTime_tripId = stopTime.getTrip_id();
-
-                        if (stopTime_tripId.equals(trip_tripId)) {
-                            for (String stopKey : stopKeys) {
-                                Stop stop = (Stop) stopHashTable.get(stopKey);
-                                String stop_stopId = stop.getStop_id();
-                                if (stop_stopId.equals(stopTime.getStop_id())) {
-                                    detailPanelHashTable.put(stop.getKey(), stop);
-                                    filteredStopTimeHashTable.put(stopTime.getKey(), stopTime);
-                                }
-
-                            }
-
-                        }
-
-                    }
-                }
+                case TRIP -> DetailPanel.createTripDetail(detailPanelHashTable, (Trip) igtfsObject, this.mainFrame);
                 case ROUTE -> {
                     Hashtable<String, IGTFSObject> tripHashTable = this.mainFrame.getDataLoader().getAllTrips();
                     ArrayList<String> tripKeys = new ArrayList<>(tripHashTable.keySet());
@@ -208,8 +181,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                 }
             }
 
-
-            this.mainFrame.createDetailPanel(detailPanelHashTable, filteredStopTimeHashTable, this.gtfsObjectType, igtfsObject);
+            this.mainFrame.createDetailPanel(detailPanelHashTable, this.gtfsObjectType, igtfsObject);
             CardLayout cardLayout = (CardLayout) this.contentPanel.getContentPanel().getLayout();
             cardLayout.show(this.contentPanel.getContentPanel(), "detailPanel");
         }
@@ -221,7 +193,6 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         if (this instanceof TripTablePanel || this instanceof StopTablePanel || this instanceof RouteTablePanel) {
             this.detailButton.setVisible(true);
         }
-        //this.editButton.setVisible(true);
         this.removeButton.setVisible(true);
     }
 
@@ -315,19 +286,19 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         int y2 = 350;
         JLabel[] addLabels = new JLabel[this.columnNames.length];
 
-        for (int i = 0; i < this.columnNames.length; i++) {
+        for (int i = 0; i < this.columnTypes.size(); i++) {
             TableColumn column = this.table.getColumnModel().getColumn(i);
-            if (this.columnTypes[i] instanceof String || this.columnTypes[i] instanceof Integer || this.columnTypes[i] instanceof Double || this.columnTypes[i] instanceof Float) {
+            if (this.columnTypes.get(i) instanceof String || this.columnTypes.get(i) instanceof Integer || this.columnTypes.get(i) instanceof Double || this.columnTypes.get(i) instanceof Float) {
                 this.addFormObjects.add(new JTextField());
                 column.setCellEditor(new DefaultCellEditor(new JTextField()));
-            } else if (this.columnTypes[i] instanceof LocalDate) {
+            } else if (this.columnTypes.get(i) instanceof LocalDate) {
                 this.addFormObjects.add(new DatePicker());
                 DateTableEditor dateTableEditor = new DateTableEditor(false, true, true);
                 dateTableEditor.clickCountToEdit = 2;
                 dateTableEditor.getDatePicker().getComponentToggleCalendarButton().setPreferredSize(new Dimension(20, 15));
                 dateTableEditor.getDatePicker().getComponentDateTextField().setPreferredSize(new Dimension(2, 15));
                 column.setCellEditor(dateTableEditor);
-            } else if (this.columnTypes[i] instanceof LocalTime) {
+            } else if (this.columnTypes.get(i) instanceof LocalTime) {
                 this.addFormObjects.add(new TimePicker());
                 TimeTableEditor timeTableEditor = new TimeTableEditor(false, true, true);
                 timeTableEditor.clickCountToEdit = 2;
@@ -335,52 +306,52 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                 timeTableEditor.getTimePicker().getComponentTimeTextField().setPreferredSize(new Dimension(2, 15));
                 column.setCellEditor(timeTableEditor);
             } else {
-                if (this.columnTypes[i] instanceof DayServiceAvailability) {
+                if (this.columnTypes.get(i) instanceof DayServiceAvailability) {
                     this.addFormObjects.add(new JComboBox<>(DayServiceAvailability.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(DayServiceAvailability.values()));
                     defaultCellEditor.setClickCountToStart(2);
                     column.setCellEditor(defaultCellEditor);
-                } else if (this.columnTypes[i] instanceof ExceptionType) {
+                } else if (this.columnTypes.get(i) instanceof ExceptionType) {
                     this.addFormObjects.add(new JComboBox<>(ExceptionType.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(ExceptionType.values()));
                     defaultCellEditor.setClickCountToStart(2);
                     column.setCellEditor(defaultCellEditor);
-                } else if (this.columnTypes[i] instanceof RouteType) {
+                } else if (this.columnTypes.get(i) instanceof RouteType) {
                     this.addFormObjects.add(new JComboBox<>(RouteType.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(RouteType.values()));
                     defaultCellEditor.setClickCountToStart(2);
                     column.setCellEditor(defaultCellEditor);
-                } else if (this.columnTypes[i] instanceof StopLocationType) {
+                } else if (this.columnTypes.get(i) instanceof StopLocationType) {
                     this.addFormObjects.add(new JComboBox<>(StopLocationType.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(StopLocationType.values()));
                     defaultCellEditor.setClickCountToStart(2);
                     column.setCellEditor(defaultCellEditor);
-                } else if (this.columnTypes[i] instanceof StopWheelchairBoarding) {
+                } else if (this.columnTypes.get(i) instanceof StopWheelchairBoarding) {
                     this.addFormObjects.add(new JComboBox<>(StopWheelchairBoarding.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(StopWheelchairBoarding.values()));
                     defaultCellEditor.setClickCountToStart(2);
                     column.setCellEditor(defaultCellEditor);
-                } else if (this.columnTypes[i] instanceof DropOffType) {
+                } else if (this.columnTypes.get(i) instanceof DropOffType) {
                     this.addFormObjects.add(new JComboBox<>(DropOffType.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(DropOffType.values()));
                     defaultCellEditor.setClickCountToStart(2);
                     column.setCellEditor(defaultCellEditor);
-                } else if (this.columnTypes[i] instanceof PickupType) {
+                } else if (this.columnTypes.get(i) instanceof PickupType) {
                     this.addFormObjects.add(new JComboBox<>(PickupType.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(PickupType.values()));
                     defaultCellEditor.setClickCountToStart(2);
                     column.setCellEditor(defaultCellEditor);
-                } else if (this.columnTypes[i] instanceof TimePoint) {
+                } else if (this.columnTypes.get(i) instanceof TimePoint) {
                     this.addFormObjects.add(new JComboBox<>(TimePoint.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(TimePoint.values()));
                     defaultCellEditor.setClickCountToStart(2);
                     column.setCellEditor(defaultCellEditor);
-                } else if (this.columnTypes[i] instanceof TripDirectionID) {
+                } else if (this.columnTypes.get(i) instanceof TripDirectionID) {
                     this.addFormObjects.add(new JComboBox<>(TripDirectionID.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(TripDirectionID.values()));
                     defaultCellEditor.setClickCountToStart(2);
                     column.setCellEditor(defaultCellEditor);
-                } else if (this.columnTypes[i] instanceof TripWheelchairAccessible) {
+                } else if (this.columnTypes.get(i) instanceof TripWheelchairAccessible) {
                     this.addFormObjects.add(new JComboBox<>(TripWheelchairAccessible.values()));
                     DefaultCellEditor defaultCellEditor = new DefaultCellEditor(new JComboBox<>(TripWheelchairAccessible.values()));
                     defaultCellEditor.setClickCountToStart(2);

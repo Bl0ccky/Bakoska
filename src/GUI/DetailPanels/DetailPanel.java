@@ -4,15 +4,12 @@ import App.MyTileSource;
 import GUI.MainFrame;
 import GUI.TableModels.*;
 import GUI.TablePanels.TablePanel;
-import TextFiles.GTFSObjectType;
-import TextFiles.IGTFSObject;
+import TextFiles.*;
 
-import TextFiles.Stop;
+import TextFiles.TripDetail.SpecialStop;
 import org.openstreetmap.gui.jmapviewer.*;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,20 +18,19 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public abstract class DetailPanel extends JPanel implements ActionListener, ListSelectionListener {
-    private final TablePanel contentPanel;
-    private final MainFrame mainFrame;
+public abstract class DetailPanel extends JPanel implements ActionListener{
+    protected final TablePanel contentPanel;
+    protected final MainFrame mainFrame;
     private final GTFSObjectType gtfsObjectType;
     protected MyTableItemModel myTableItemModel;
-    private JTable table;
-    private final Hashtable<String, IGTFSObject> hashtable;
+    protected JTable table;
+    protected final Hashtable<String, IGTFSObject> hashtable;
     protected String[] columnNames;
     protected IGTFSObject igtfsObject;
     protected final ArrayList<String> keys;
-    private JButton detailButton;
-    private JButton backButton;
+    protected JButton backButton;
 
-    public DetailPanel(TablePanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, Hashtable<String, IGTFSObject> secondHashtable, GTFSObjectType gtfsObjectType, IGTFSObject igtfsObject) {
+    public DetailPanel(TablePanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSObjectType gtfsObjectType, IGTFSObject igtfsObject) {
         this.contentPanel = panel;
         this.mainFrame = mainFrame;
         this.hashtable = hashtable;
@@ -64,7 +60,7 @@ public abstract class DetailPanel extends JPanel implements ActionListener, List
                     "stop_timezone",
                     "wheelchair_boarding"
             };
-            this.myTableItemModel = new TripDetailTableModel(this.hashtable, secondHashtable, this.keys, this.columnNames);
+            this.myTableItemModel = new TripDetailTableModel(this.hashtable, this.keys, this.columnNames);
 
 
         }
@@ -75,50 +71,72 @@ public abstract class DetailPanel extends JPanel implements ActionListener, List
         this.createButtonSection();
         this.createLabelNames();
         this.createTableSection();
-        this.createMapSection();
-
-
+        if(this instanceof StopDetailPanel || this instanceof TripDetailPanel)
+        {
+            this.createMapMarkers();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        /*
-        if (e.getSource() == this.detailButton)
+
+        if (e.getSource() == this.backButton)
         {
-
-            switch (this.gtfsObjectType)
-            {
-                case TRIP -> this.mainFrame.createDetailPanel(GTFSObjectType.STOP);
-
-                case ROUTE -> this.mainFrame.createDetailPanel(GTFSObjectType.TRIP);
-
-                default -> this.mainFrame.createDetailPanel(GTFSObjectType.ROUTE);
-            }
-
-            CardLayout cardLayout = (CardLayout) this.contentPanel.getContentPanel().getLayout();
-            cardLayout.show(this.contentPanel.getContentPanel(), "detailPanel");
-        }
-
-         */
-        if (e.getSource() == this.backButton) {
             CardLayout cardLayout = (CardLayout) this.contentPanel.getContentPanel().getContentPanel().getLayout();
             cardLayout.show(this.contentPanel.getContentPanel().getContentPanel(), "adminPanel");
         }
 
     }
 
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        this.detailButton.setVisible(true);
+    public static void createTripDetail(Hashtable<String, IGTFSObject> detailPanelHashTable, Trip igtfsObject, MainFrame mainFrame) {
+        Hashtable<String, IGTFSObject> stopTimeHashTable = mainFrame.getDataLoader().getAllStopTimes();
+        ArrayList<String> stopTimeKeys = new ArrayList<>(stopTimeHashTable.keySet());
+
+        Hashtable<String, IGTFSObject> stopHashTable = mainFrame.getDataLoader().getAllStops();
+        ArrayList<String> stopKeys = new ArrayList<>(stopHashTable.keySet());
+
+        String trip_tripId = igtfsObject.getTrip_id();
+
+        for (String stopTimeKey : stopTimeKeys) {
+            StopTime stopTime = (StopTime) stopTimeHashTable.get(stopTimeKey);
+            String stopTime_tripId = stopTime.getTrip_id();
+
+            if (stopTime_tripId.equals(trip_tripId)) {
+                for (String stopKey : stopKeys) {
+                    Stop stop = (Stop) stopHashTable.get(stopKey);
+                    String stop_stopId = stop.getStop_id();
+                    if (stop_stopId.equals(stopTime.getStop_id())) {
+                        detailPanelHashTable.put(stop.getKey(), new SpecialStop(
+                                stop.getStop_id(),
+                                stop.getStop_code(),
+                                stop.getStop_name(),
+                                stop.getStop_desc(),
+                                stopTime.getArrival_time(),
+                                stopTime.getDeparture_time(),
+                                stopTime.getStop_sequence(),
+                                stop.getStop_lat(),
+                                stop.getStop_lon(),
+                                stop.getLocation_type(),
+                                stop.getStop_timezone(),
+                                stop.getWheelchair_boarding()));
+                    }
+
+                }
+
+            }
+
+        }
     }
+
+
 
     abstract void createLabelNames();
     protected void createLabelSection(String detailHeadText, String[] labelNames, Object[] labelValues)
     {
 
         JLabel detailHeadLabel = new JLabel(detailHeadText);
-        detailHeadLabel.setBounds(150,30, 150, 30);
-        detailHeadLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+        detailHeadLabel.setBounds(150,30, 250, 30);
+        detailHeadLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         this.add(detailHeadLabel);
 
         int x = 75;
@@ -132,7 +150,7 @@ public abstract class DetailPanel extends JPanel implements ActionListener, List
             attributesValues[i] = new JLabel(String.valueOf(labelValues[i]));
 
             if (i >= labelNames.length / 2) {
-                x = 275;
+                x = 350;
                 attributesNames[i].setBounds(x, y2, 160, 30);
                 y2 += 40;
                 attributesValues[i].setBounds(x, y2, 160, 30);
@@ -156,7 +174,6 @@ public abstract class DetailPanel extends JPanel implements ActionListener, List
     private void createTableSection() {
         this.table = new JTable(this.myTableItemModel);
         this.table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        this.table.getSelectionModel().addListSelectionListener(this);
         this.table.setRowSorter(new TableRowSorter<>(this.myTableItemModel));
         JScrollPane scrollPane = new JScrollPane(table);
         //TABULKA NALAVO
@@ -167,14 +184,6 @@ public abstract class DetailPanel extends JPanel implements ActionListener, List
     }
 
     private void createButtonSection() {
-        this.detailButton = new JButton("Detail");
-        //this.detailButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
-        this.detailButton.setFocusable(false);
-        this.detailButton.setVisible(false);
-        this.detailButton.addActionListener(this);
-        this.detailButton.setBounds(50, 430, 100, 30);
-        this.add(detailButton);
-
         this.backButton = new JButton("<<");
         this.backButton.setFocusable(false);
         this.backButton.addActionListener(this);
@@ -182,23 +191,30 @@ public abstract class DetailPanel extends JPanel implements ActionListener, List
         this.add(backButton);
     }
 
-    private void createMapSection() {
+    protected void createMapSection(MapMarkerDot[] mapMarkerDots) {
         JMapViewer map = new JMapViewer();
-        map.setDisplayPosition(new Coordinate(((Stop)igtfsObject).getStop_lat(), ((Stop)igtfsObject).getStop_lon()), 12);
-        MapMarkerDot mapMarkerDot = new MapMarkerDot(new Coordinate(((Stop)igtfsObject).getStop_lat(), ((Stop)igtfsObject).getStop_lon()));
-        mapMarkerDot.setColor(Color.RED);
-        mapMarkerDot.setBackColor(Color.RED);
-        map.addMapMarker(mapMarkerDot);
         map.setTileLoader(new OsmTileLoader(map));
         map.setTileSource(new MyTileSource.Mapnik1());
-        DefaultMapController mapController = new DefaultMapController(map);
-        mapController.setMovementMouseButton(MouseEvent.BUTTON1);
         //MAPA NAPRAVO
         map.setBounds(600, 30, 800, 420);
         //MAPA NALAVO
         //map.setBounds(30, 300, 600, 550);
+        map.removeAllMapMarkers();
+        for (MapMarkerDot mapMarkerDot: mapMarkerDots)
+        {
+            mapMarkerDot.setColor(Color.RED);
+            mapMarkerDot.setBackColor(Color.RED);
+            map.addMapMarker(mapMarkerDot);
+        }
+        DefaultMapController mapController = new DefaultMapController(map);
+        mapController.setMovementMouseButton(MouseEvent.BUTTON1);
+        //map.setDisplayPosition(new Coordinate(mapMarkerDots[0].getLat(), mapMarkerDots[0].getLon()), 12);
+        map.setDisplayToFitMapMarkers();
+
         this.add(map);
     }
+
+    abstract void createMapMarkers();
 
 
 }

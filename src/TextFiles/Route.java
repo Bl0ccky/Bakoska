@@ -2,6 +2,8 @@ package TextFiles;
 
 import Enums.Route.RouteType;
 
+import java.util.ArrayList;
+
 public class Route implements IGTFSObject
 {
     private String route_id;
@@ -14,7 +16,17 @@ public class Route implements IGTFSObject
     private String route_color;
     private String route_text_color;
 
-    public Route() {}
+    public Route() {
+        this.route_id = "";
+        this.agency_id = "";
+        this.route_short_name = "";
+        this.route_long_name = "";
+        this.route_desc = "";
+        this.route_type = RouteType.NO_INFO;
+        this.route_url = "";
+        this.route_color = "";
+        this.route_text_color = "";
+    }
 
     @Override
     public void loadData(String[] attributes)
@@ -41,35 +53,19 @@ public class Route implements IGTFSObject
     }
 
     @Override
-    public void getAllData()
+    public ArrayList<Object> getColumnTypes()
     {
-        System.out.printf(
-                "%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\t%5s\n",
-                this.route_id,
-                this.agency_id,
-                this.route_short_name,
-                this.route_long_name,
-                this.route_desc,
-                this.route_type,
-                this.route_url,
-                this.route_color,
-                this.route_text_color);
+        ArrayList<Object> columnTypes = new ArrayList<>();
+        columnTypes.add(this.route_id);
+        columnTypes.add(this.agency_id);
+        columnTypes.add(this.route_short_name);
+        columnTypes.add(this.route_long_name);
+        columnTypes.add(this.route_desc);
+        columnTypes.add(this.route_type);
+        columnTypes.add(this.route_url);
+        columnTypes.add(this.route_color);
+        columnTypes.add(this.route_text_color);
 
-    }
-
-    @Override
-    public Object[] getColumnTypes(String[] attributes)
-    {
-        Object[] columnTypes = new Object[attributes.length];
-        columnTypes[0] = this.route_id;
-        columnTypes[1] = this.agency_id;
-        columnTypes[2] = this.route_short_name;
-        columnTypes[3] = this.route_long_name;
-        columnTypes[4] = this.route_desc;
-        columnTypes[5] = this.route_type;
-        columnTypes[6] = this.route_url;
-        columnTypes[7] = this.route_color;
-        columnTypes[8] = this.route_text_color;
         return columnTypes;
     }
 
