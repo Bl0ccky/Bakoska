@@ -14,4 +14,13 @@ public enum DayServiceAvailability
             default -> NO_INFO;
         };
     }
+
+    public static Object getValueForExport(DayServiceAvailability dayServiceAvailability)
+    {
+        return switch (dayServiceAvailability) {
+            case NOT_AVAILABLE -> 0;
+            case AVAILABLE -> 1;
+            default -> "";
+        };
+    }
 }

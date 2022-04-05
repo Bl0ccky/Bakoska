@@ -1,6 +1,6 @@
 package GUI;
 import GUI.TablePanels.*;
-import TextFiles.*;
+import GTFSFiles.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

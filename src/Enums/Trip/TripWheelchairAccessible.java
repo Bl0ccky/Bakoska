@@ -14,4 +14,13 @@ public enum TripWheelchairAccessible
             default -> NO_INFO;
         };
     }
+
+    public static Object getValueForExport(TripWheelchairAccessible tripWheelchairAccessible)
+    {
+        return switch (tripWheelchairAccessible) {
+            case AT_LEAST_ONE_WHEELCHAIR_RIDER -> 1;
+            case NO_WHEELCHAIR_RIDERS -> 2;
+            default -> 0;
+        };
+    }
 }

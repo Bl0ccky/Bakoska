@@ -5,15 +5,15 @@ import Enums.StopTime.PickupType;
 import Enums.StopTime.TimePoint;
 import GUI.AdminPanel;
 import GUI.MainFrame;
-import TextFiles.IGTFSObject;
-import TextFiles.StopTime;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.StopTime;
 import com.github.lgooddatepicker.components.TimePicker;
 
 import javax.swing.*;
 import java.util.Hashtable;
 
 public class StopTimeTablePanel extends TablePanel {
-    public StopTimeTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, TextFiles.GTFSObjectType gtfsObjectType) {
+    public StopTimeTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSFiles.GTFSObjectType gtfsObjectType) {
         super(panel, mainFrame, hashtable, gtfsObjectType);
     }
 
@@ -55,7 +55,7 @@ public class StopTimeTablePanel extends TablePanel {
             newStopTime.setTimepoint((TimePoint) ((JComboBox<?>) this.addFormObjects.get(9)).getSelectedItem());
             this.hashtable.put(newStopTime.getKey(), newStopTime);
             this.keys.add(newStopTime.getKey());
-            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.STOP_TIME);
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.STOP_TIME);
         }
 
     }
@@ -63,7 +63,7 @@ public class StopTimeTablePanel extends TablePanel {
     @Override
     void updateTable()
     {
-        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.STOP_TIME);
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.STOP_TIME);
     }
 
 }

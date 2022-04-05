@@ -11,10 +11,9 @@ import Enums.StopTime.TimePoint;
 import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
 import GUI.AdminPanel;
-import GUI.DetailPanels.DetailPanel;
 import GUI.MainFrame;
 import GUI.TableModels.*;
-import TextFiles.*;
+import GTFSFiles.*;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.tableeditors.DateTableEditor;
@@ -134,7 +133,12 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
             IGTFSObject igtfsObject = this.hashtable.get(this.keys.get(this.table.convertRowIndexToModel(this.table.getSelectedRow())));
 
             switch (this.gtfsObjectType) {
-                case TRIP -> DetailPanel.createTripDetail(detailPanelHashTable, (Trip) igtfsObject, this.mainFrame);
+                case TRIP -> {
+                    Hashtable<String, IGTFSObject> stopTimesHashTable = this.mainFrame.getDataLoader().getAllStopTimes();
+                    Hashtable<String, IGTFSObject> stopHashTable = this.mainFrame.getDataLoader().getAllStops();
+                    ((Trip)igtfsObject).createSpecialStopHashTable(stopTimesHashTable, stopHashTable);
+                    detailPanelHashTable = ((Trip)igtfsObject).getSpecialStopHashTable();
+                }
                 case ROUTE -> {
                     Hashtable<String, IGTFSObject> tripHashTable = this.mainFrame.getDataLoader().getAllTrips();
                     ArrayList<String> tripKeys = new ArrayList<>(tripHashTable.keySet());

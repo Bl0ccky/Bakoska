@@ -3,20 +3,20 @@ package GUI.TablePanels;
 import Enums.Route.RouteType;
 import GUI.AdminPanel;
 import GUI.MainFrame;
-import TextFiles.IGTFSObject;
-import TextFiles.Route;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.Route;
 import javax.swing.*;
 import java.util.Hashtable;
 
 public class RouteTablePanel extends TablePanel{
-    public RouteTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, TextFiles.GTFSObjectType gtfsObjectType) {
+    public RouteTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSFiles.GTFSObjectType gtfsObjectType) {
         super(panel, mainFrame, hashtable, gtfsObjectType);
     }
 
     @Override
     boolean checkRemoveAction(int keyIndex) {
         String findingIDValue = ((Route)this.hashtable.get(this.keys.get(keyIndex))).getRoute_id();
-        return !this.contentPanel.getTablePanel(TextFiles.GTFSObjectType.TRIP).tableContainsValueAt(findingIDValue, 1);
+        return !this.contentPanel.getTablePanel(GTFSFiles.GTFSObjectType.TRIP).tableContainsValueAt(findingIDValue, 1);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class RouteTablePanel extends TablePanel{
             newRoute.setRoute_text_color(((JTextField) this.addFormObjects.get(8)).getText());
             this.hashtable.put(newRoute.getKey(), newRoute);
             this.keys.add(newRoute.getKey());
-            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.ROUTE);
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.ROUTE);
         }
 
     }
@@ -55,7 +55,7 @@ public class RouteTablePanel extends TablePanel{
     @Override
     void updateTable()
     {
-        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.ROUTE);
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.ROUTE);
     }
 
 }

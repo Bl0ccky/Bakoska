@@ -1,4 +1,4 @@
-package TextFiles;
+package GTFSFiles;
 
 import Enums.Route.RouteType;
 
@@ -67,6 +67,14 @@ public class Route implements IGTFSObject
         columnTypes.add(this.route_text_color);
 
         return columnTypes;
+    }
+
+    @Override
+    public ArrayList<Object> getAttributesForExportGTFS()
+    {
+        ArrayList<Object> attributesForExport = this.getColumnTypes();
+        attributesForExport.set(5, RouteType.getValueForExport(this.route_type));
+        return attributesForExport;
     }
 
     @Override

@@ -16,4 +16,16 @@ public enum TimePoint
             return EXACT_TIMES;
         }
     }
+
+    public static Object getValueForExport(TimePoint timePoint)
+    {
+        if(timePoint == APPROXIMATE_TIMES)
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
 }

@@ -14,4 +14,13 @@ public enum TripDirectionID
             default -> NO_INFO;
         };
     }
+
+    public static Object getValueForExport(TripDirectionID tripDirectionID)
+    {
+        return switch (tripDirectionID) {
+            case ONE_DIRECTION -> 0;
+            case OPPOSITE_DIRECTION -> 1;
+            default -> "";
+        };
+    }
 }

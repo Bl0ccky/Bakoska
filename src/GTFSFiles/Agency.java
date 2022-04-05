@@ -1,4 +1,4 @@
-package TextFiles;
+package GTFSFiles;
 
 import java.util.ArrayList;
 
@@ -46,6 +46,11 @@ public class Agency implements IGTFSObject
         columnTypes.add(this.agency_phone);
         columnTypes.add(this.agency_fare_url);
         return columnTypes;
+    }
+
+    @Override
+    public ArrayList<Object> getAttributesForExportGTFS() {
+        return this.getColumnTypes();
     }
 
     @Override

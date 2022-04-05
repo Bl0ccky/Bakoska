@@ -1,4 +1,4 @@
-package TextFiles;
+package GTFSFiles;
 
 import Enums.StopTime.DropOffType;
 import Enums.StopTime.PickupType;
@@ -135,6 +135,19 @@ public class StopTime implements IGTFSObject
         columnTypes.add(this.timepoint);
 
         return columnTypes;
+    }
+
+    @Override
+    public ArrayList<Object> getAttributesForExportGTFS()
+    {
+        ArrayList<Object> attributesForExport = this.getColumnTypes();
+        attributesForExport.set(1, this.arrival_time.format(DateTimeFormatter.ofPattern(GTFSObjectFactory.TimePattern)));
+        attributesForExport.set(2, this.departure_time.format(DateTimeFormatter.ofPattern(GTFSObjectFactory.TimePattern)));
+        attributesForExport.set(6, PickupType.getValueForExport(this.pickup_type));
+        attributesForExport.set(7, DropOffType.getValueForExport(this.drop_off_type));
+        attributesForExport.set(9, TimePoint.getValueForExport(this.timepoint));
+        return attributesForExport;
+
     }
 
     @Override

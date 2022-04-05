@@ -1,8 +1,8 @@
-package TextFiles.TripDetail;
+package GTFSFiles.TripDetail;
 
 import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
-import TextFiles.IGTFSObject;
+import GTFSFiles.IGTFSObject;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -45,6 +45,11 @@ public class SpecialStop implements IGTFSObject
 
     @Override
     public ArrayList<Object> getColumnTypes() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public ArrayList<Object> getAttributesForExportGTFS() {
         return new ArrayList<>();
     }
 

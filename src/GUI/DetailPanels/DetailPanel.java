@@ -4,9 +4,9 @@ import App.MyTileSource;
 import GUI.MainFrame;
 import GUI.TableModels.*;
 import GUI.TablePanels.TablePanel;
-import TextFiles.*;
+import GTFSFiles.*;
 
-import TextFiles.TripDetail.SpecialStop;
+import GTFSFiles.TripDetail.SpecialStop;
 import org.openstreetmap.gui.jmapviewer.*;
 
 import javax.swing.*;
@@ -29,6 +29,7 @@ public abstract class DetailPanel extends JPanel implements ActionListener{
     protected IGTFSObject igtfsObject;
     protected final ArrayList<String> keys;
     protected JButton backButton;
+    protected JMapViewer map;
 
     public DetailPanel(TablePanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSObjectType gtfsObjectType, IGTFSObject igtfsObject) {
         this.contentPanel = panel;
@@ -37,6 +38,13 @@ public abstract class DetailPanel extends JPanel implements ActionListener{
         this.keys = new ArrayList<>(hashtable.keySet());
         this.gtfsObjectType = gtfsObjectType;
         this.igtfsObject = igtfsObject;
+        this.map = new JMapViewer();
+        this.map.setTileLoader(new OsmTileLoader(this.map));
+        this.map.setTileSource(new MyTileSource.Mapnik1());
+        DefaultMapController mapController = new DefaultMapController(this.map);
+        mapController.setMovementMouseButton(MouseEvent.BUTTON1);
+        this.add(this.map);
+
 
 
         if (this.gtfsObjectType == GTFSObjectType.ROUTE || this.gtfsObjectType == GTFSObjectType.STOP)
@@ -192,26 +200,23 @@ public abstract class DetailPanel extends JPanel implements ActionListener{
     }
 
     protected void createMapSection(MapMarkerDot[] mapMarkerDots) {
-        JMapViewer map = new JMapViewer();
-        map.setTileLoader(new OsmTileLoader(map));
-        map.setTileSource(new MyTileSource.Mapnik1());
         //MAPA NAPRAVO
-        map.setBounds(600, 30, 800, 420);
+        this.map.setBounds(600, 30, 800, 420);
         //MAPA NALAVO
         //map.setBounds(30, 300, 600, 550);
-        map.removeAllMapMarkers();
+        map.setDisplayPosition(new Coordinate(mapMarkerDots[0].getLat(), mapMarkerDots[0].getLon()), 12);
+        this.map.removeAllMapMarkers();
         for (MapMarkerDot mapMarkerDot: mapMarkerDots)
         {
             mapMarkerDot.setColor(Color.RED);
             mapMarkerDot.setBackColor(Color.RED);
             map.addMapMarker(mapMarkerDot);
         }
-        DefaultMapController mapController = new DefaultMapController(map);
-        mapController.setMovementMouseButton(MouseEvent.BUTTON1);
-        //map.setDisplayPosition(new Coordinate(mapMarkerDots[0].getLat(), mapMarkerDots[0].getLon()), 12);
+
+
         map.setDisplayToFitMapMarkers();
 
-        this.add(map);
+
     }
 
     abstract void createMapMarkers();

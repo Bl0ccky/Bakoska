@@ -1,11 +1,11 @@
-package TextFiles;
+package GTFSFiles;
 
 import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
 
 import java.util.ArrayList;
 
-public class Stop implements IGTFSObject {
+public class Stop implements IGTFSObject{
     private String stop_id;
     private String stop_code;
     private String stop_name;
@@ -96,6 +96,20 @@ public class Stop implements IGTFSObject {
         columnTypes.add(this.wheelchair_boarding);
 
         return columnTypes;
+    }
+
+    @Override
+    public ArrayList<Object> getAttributesForExportGTFS()
+    {
+        ArrayList<Object> attributesForExport = this.getColumnTypes();
+        attributesForExport.set(8, StopLocationType.getValueForExport(this.location_type));
+        attributesForExport.set(11, StopWheelchairBoarding.getValueForExport(this.wheelchair_boarding));
+        return attributesForExport;
+    }
+
+    public Object[] getDetailedAttributes()
+    {
+        return new Object[]{this.stop_id, this.stop_name, this.stop_lat, this.stop_lon};
     }
 
     @Override

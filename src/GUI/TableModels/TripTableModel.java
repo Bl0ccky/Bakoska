@@ -2,8 +2,8 @@ package GUI.TableModels;
 
 import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
-import TextFiles.IGTFSObject;
-import TextFiles.Trip;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.Trip;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

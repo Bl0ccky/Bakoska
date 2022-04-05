@@ -5,15 +5,14 @@ import GUI.DetailPanels.DetailPanel;
 import GUI.DetailPanels.RouteDetailPanel;
 import GUI.DetailPanels.StopDetailPanel;
 import GUI.DetailPanels.TripDetailPanel;
-import TextFiles.GTFSObjectType;
-import TextFiles.IGTFSObject;
+import GTFSFiles.GTFSObjectType;
+import GTFSFiles.IGTFSObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Hashtable;
@@ -25,8 +24,10 @@ public class MainFrame extends JFrame implements ActionListener
     private final JPanel contentPanel;
     private AdminPanel adminPanel;
     private final JMenuItem importItem;
-    private final JMenuItem exportItem;
+    private final JMenu exportMenu;
     private final JMenuItem exitItem;
+    private final JMenuItem exportGTFSItem;
+    private final JMenuItem exportCSVItem;
 
     public MainFrame()
     {
@@ -50,14 +51,20 @@ public class MainFrame extends JFrame implements ActionListener
 
         this.importItem = new JMenuItem("Import GTFS");
         this.importItem.addActionListener(this);
-        this.exportItem = new JMenuItem("Export");
-        this.exportItem.addActionListener(this);
-        this.exportItem.setVisible(false);
+        this.exportGTFSItem = new JMenuItem("GTFS export");
+        this.exportGTFSItem.addActionListener(this);
+        this.exportCSVItem = new JMenuItem("CSV export");
+        this.exportCSVItem.addActionListener(this);
+        this.exportMenu = new JMenu("Export");
+        //this.exportItem.addActionListener(this);
+        this.exportMenu.setVisible(false);
+        this.exportMenu.add(exportGTFSItem);
+        this.exportMenu.add(exportCSVItem);
         this.exitItem = new JMenuItem("Exit");
         this.exitItem.addActionListener(this);
 
         fileMenu.add(importItem);
-        fileMenu.add(exportItem);
+        fileMenu.add(exportMenu);
         fileMenu.add(exitItem);
 
         menuBar.add(fileMenu);
@@ -112,10 +119,10 @@ public class MainFrame extends JFrame implements ActionListener
                 DataLoader dataLoader = new DataLoader(filePath);
                 dataLoader.loadAllData();
                 this.changeToAdminPanel(dataLoader);
-                this.exportItem.setVisible(true);
+                this.exportMenu.setVisible(true);
             }
         }
-        else if(e.getSource() == this.exportItem)
+        else if(e.getSource() == this.exportGTFSItem)
         {
             String filePath = this.getGTFSFilePath(1);
             if(filePath != null)
@@ -130,16 +137,7 @@ public class MainFrame extends JFrame implements ActionListener
                     if(ex instanceof FileAlreadyExistsException)
                     {
 
-                        File fileDirectory = new File(filePath);
-                        String[] directories = fileDirectory.list((dir, name) -> new File(dir, name).isDirectory());
-                        for (String directory : Objects.requireNonNull(directories))
-                        {
-                            String[] foundedFileName = directory.split("_");
-                            if (Integer.parseInt(foundedFileName[1]) > fileCounter) {
-                                fileCounter = Integer.parseInt(foundedFileName[1]);
-                            }
-                        }
-                        fileCounter++;
+                        fileCounter = getFileCounter(filePath,"exportedGTFSDirectory_", fileCounter);
                         try {
                             Files.createDirectory(Path.of(filePath + "\\exportedGTFSDirectory_"+fileCounter));
                         } catch (IOException exc) {
@@ -170,11 +168,72 @@ public class MainFrame extends JFrame implements ActionListener
 
             }
         }
+        else if(e.getSource() == this.exportCSVItem)
+        {
+            String filePath = this.getGTFSFilePath(1);
+            if(filePath != null)
+            {
+                int fileCounter = 1;
+                try {
+                    if(!this.isDirectoryEmpty(Path.of(filePath)))
+                    {
+                        Files.createDirectory(Path.of(filePath + "\\exportedCSVDirectory_"+fileCounter));
+                    }
+                } catch (IOException ex) {
+                    if(ex instanceof FileAlreadyExistsException)
+                    {
+
+                        fileCounter = getFileCounter(filePath,"exportedCSVDirectory_", fileCounter);
+                        try {
+                            Files.createDirectory(Path.of(filePath + "\\exportedCSVDirectory_"+fileCounter));
+                        } catch (IOException exc) {
+                            exc.printStackTrace();
+                        }
+                    }
+                    else if(ex instanceof NoSuchFileException)
+                    {
+                        JOptionPane.showMessageDialog(null, "This folder path doesnt exist!", "Wrong file path", JOptionPane.ERROR_MESSAGE);
+                        CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
+                        cardLayout.show(this.contentPanel, "menuPanel");
+                        return;
+                    }
+                }
+                filePath += "\\exportedCSVDirectory_"+fileCounter;
+
+                this.dataLoader.setFilePath(filePath);
+
+                this.dataLoader.writeStopsCSV();
+                this.dataLoader.writeTripCSV();
+                this.changeToAdminPanel(dataLoader);
+
+            }
+
+        }
         else if(e.getSource() == this.exitItem)
         {
             System.exit(0);
         }
 
+    }
+
+    static int getFileCounter(String filePath, String subString, int fileCounter) {
+        File fileDirectory = new File(filePath);
+
+        String[] directories = fileDirectory.list((dir, name) -> new File(dir, name).isDirectory());
+        for (String directory : Objects.requireNonNull(directories))
+        {
+            if(directory.contains(subString))
+            {
+                String[] foundedFileName = directory.split("_");
+                if (Integer.parseInt(foundedFileName[1]) > fileCounter)
+                {
+                    fileCounter = Integer.parseInt(foundedFileName[1]);
+                }
+            }
+
+        }
+        fileCounter++;
+        return fileCounter;
     }
 
     public String getGTFSFilePath(int option)
@@ -213,7 +272,7 @@ public class MainFrame extends JFrame implements ActionListener
         this.createAdminPanel();
         CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
         cardLayout.show(this.contentPanel, "adminPanel");
-        this.exportItem.setVisible(true);
+        this.exportMenu.setVisible(true);
     }
 
     public boolean isDirectoryEmpty(Path path) throws IOException {

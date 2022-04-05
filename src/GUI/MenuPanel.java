@@ -1,7 +1,7 @@
 package GUI;
 
 import App.DataLoader;
-import TextFiles.GTFSObjectType;
+import GTFSFiles.GTFSObjectType;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.Objects;
 
 
 public class MenuPanel extends JPanel implements ActionListener{
@@ -121,30 +120,23 @@ public class MenuPanel extends JPanel implements ActionListener{
             if(filePath != null)
             {
                 int fileCounter = 1;
-                try {
+                try
+                {
                     if(!this.mainFrame.isDirectoryEmpty(Path.of(filePath)))
                     {
                         Files.createDirectory(Path.of(filePath + "\\newGTFSDirectory_"+fileCounter));
                     }
+
                 } catch (IOException ex) {
                     if(ex instanceof FileAlreadyExistsException)
                     {
-
-                        File fileDirectory = new File(filePath);
-                        String[] directories = fileDirectory.list((dir, name) -> new File(dir, name).isDirectory());
-                        for (String directory : Objects.requireNonNull(directories))
-                        {
-                            String[] foundedFileName = directory.split("_");
-                            if (Integer.parseInt(foundedFileName[1]) > fileCounter) {
-                                fileCounter = Integer.parseInt(foundedFileName[1]);
-                            }
-                        }
-                        fileCounter++;
+                        fileCounter = MainFrame.getFileCounter(filePath, "newGTFSDirectory_", fileCounter);
                         try {
                             Files.createDirectory(Path.of(filePath + "\\newGTFSDirectory_"+fileCounter));
                         } catch (IOException exc) {
                             exc.printStackTrace();
                         }
+                        filePath += "\\newGTFSDirectory_"+fileCounter;
                     }
                     else if(ex instanceof NoSuchFileException)
                     {
@@ -154,7 +146,7 @@ public class MenuPanel extends JPanel implements ActionListener{
                         return;
                     }
                 }
-                filePath += "\\newGTFSDirectory_"+fileCounter;
+
                 String[] fileNames = {"agency.txt", "calendar.txt", "calendar_dates.txt", "routes.txt", "stops.txt", "stop_times.txt", "trips.txt"};
                 DataLoader dataLoader = new DataLoader(filePath);
                 int counter = 0;

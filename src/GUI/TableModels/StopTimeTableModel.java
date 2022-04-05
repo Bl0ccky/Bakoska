@@ -3,8 +3,8 @@ package GUI.TableModels;
 import Enums.StopTime.DropOffType;
 import Enums.StopTime.PickupType;
 import Enums.StopTime.TimePoint;
-import TextFiles.IGTFSObject;
-import TextFiles.StopTime;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.StopTime;
 
 import java.time.LocalTime;
 import java.util.ArrayList;

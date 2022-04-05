@@ -1,8 +1,8 @@
 package GUI.TableModels;
 
 import Enums.Route.RouteType;
-import TextFiles.IGTFSObject;
-import TextFiles.Route;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.Route;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

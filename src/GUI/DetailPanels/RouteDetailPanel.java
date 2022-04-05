@@ -2,11 +2,11 @@ package GUI.DetailPanels;
 
 import GUI.MainFrame;
 import GUI.TablePanels.TablePanel;
-import TextFiles.GTFSObjectType;
-import TextFiles.IGTFSObject;
-import TextFiles.Route;
-import TextFiles.Trip;
-import TextFiles.TripDetail.SpecialStop;
+import GTFSFiles.GTFSObjectType;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.Route;
+import GTFSFiles.Trip;
+import GTFSFiles.TripDetail.SpecialStop;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 
@@ -79,7 +79,10 @@ public class RouteDetailPanel extends DetailPanel implements ListSelectionListen
         {
             this.tripDetailHashTable = new Hashtable<>();
             this.selectedTrip = (Trip)this.hashtable.get(this.keys.get(this.table.convertRowIndexToModel(this.table.getSelectedRow())));
-            createTripDetail(this.tripDetailHashTable, this.selectedTrip, this.mainFrame);
+            Hashtable<String, IGTFSObject> stopTimesHashTable = this.mainFrame.getDataLoader().getAllStopTimes();
+            Hashtable<String, IGTFSObject> stopHashTable = this.mainFrame.getDataLoader().getAllStops();
+            this.selectedTrip.createSpecialStopHashTable(stopTimesHashTable, stopHashTable);
+            tripDetailHashTable = this.selectedTrip.getSpecialStopHashTable();
 
             this.detailButton.setVisible(true);
             this.createMapMarkers();

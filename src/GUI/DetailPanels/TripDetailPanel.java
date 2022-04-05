@@ -2,12 +2,11 @@ package GUI.DetailPanels;
 
 import GUI.MainFrame;
 import GUI.TablePanels.TablePanel;
-import TextFiles.*;
-import TextFiles.TripDetail.SpecialStop;
+import GTFSFiles.*;
+import GTFSFiles.TripDetail.SpecialStop;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -23,6 +22,7 @@ public class TripDetailPanel extends DetailPanel{
     void createLabelNames()
     {
         String[]labelNames = {"Trip id", "Trip head sign", "1st arr-time", "Last dep-time", "First stop", "Last stop"};
+        /*
         ArrayList<String> specialStopKeys = new ArrayList<>(this.hashtable.keySet());
 
         int minStopSequence = Integer.MAX_VALUE;
@@ -56,7 +56,9 @@ public class TripDetailPanel extends DetailPanel{
                 last_stop_departure_time,
                 first_stop_name,
                 last_stop_name};
-        this.createLabelSection("Trip Detail", labelNames, labelValues);
+         */
+        ((Trip)igtfsObject).createDetailedAttributes();
+        this.createLabelSection("Trip Detail", labelNames, ((Trip)igtfsObject).getDetailedAttributes());
 
     }
 

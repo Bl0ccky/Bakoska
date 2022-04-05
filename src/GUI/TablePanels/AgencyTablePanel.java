@@ -2,15 +2,15 @@ package GUI.TablePanels;
 
 import GUI.AdminPanel;
 import GUI.MainFrame;
-import TextFiles.Agency;
-import TextFiles.IGTFSObject;
+import GTFSFiles.Agency;
+import GTFSFiles.IGTFSObject;
 
 import javax.swing.*;
 import java.util.Hashtable;
 
 public class AgencyTablePanel extends TablePanel
 {
-    public AgencyTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, TextFiles.GTFSObjectType gtfsObjectType)
+    public AgencyTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSFiles.GTFSObjectType gtfsObjectType)
     {
         super(panel, mainFrame, hashtable, gtfsObjectType);
     }
@@ -19,7 +19,7 @@ public class AgencyTablePanel extends TablePanel
     boolean checkRemoveAction(int keyIndex)
     {
         String findingIDValue = ((Agency)this.hashtable.get(this.keys.get(keyIndex))).getAgency_id();
-        return !this.contentPanel.getTablePanel(TextFiles.GTFSObjectType.ROUTE).tableContainsValueAt(findingIDValue, 1);
+        return !this.contentPanel.getTablePanel(GTFSFiles.GTFSObjectType.ROUTE).tableContainsValueAt(findingIDValue, 1);
     }
 
     @Override
@@ -47,13 +47,13 @@ public class AgencyTablePanel extends TablePanel
             newAgency.setAgency_fare_url(((JTextField)this.addFormObjects.get(6)).getText());
             this.hashtable.put(newAgency.getKey(), newAgency);
             this.keys.add(newAgency.getKey());
-            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.AGENCY);
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.AGENCY);
         }
     }
 
     @Override
     void updateTable()
     {
-        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.AGENCY);
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.AGENCY);
     }
 }

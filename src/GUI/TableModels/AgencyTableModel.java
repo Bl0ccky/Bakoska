@@ -1,7 +1,7 @@
 package GUI.TableModels;
 
-import TextFiles.Agency;
-import TextFiles.IGTFSObject;
+import GTFSFiles.Agency;
+import GTFSFiles.IGTFSObject;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

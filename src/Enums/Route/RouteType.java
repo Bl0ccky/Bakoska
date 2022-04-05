@@ -1,5 +1,6 @@
 package Enums.Route;
 
+
 public enum RouteType
 {
     TRAM_OR_STREETCAR_OR_LIGHT_RAIL,
@@ -28,6 +29,23 @@ public enum RouteType
             case 11 -> TROLLEYBUS;
             case 12 -> MONORAIL;
             default -> NO_INFO;
+        };
+    }
+
+    public static Object getValueForExport(RouteType routeType)
+    {
+        return switch (routeType) {
+            case TRAM_OR_STREETCAR_OR_LIGHT_RAIL -> 0;
+            case SUBWAY_OR_METRO -> 1;
+            case RAIL -> 2;
+            case BUS -> 3;
+            case FERRY -> 4;
+            case CABLE_TRAM -> 5;
+            case AERIAL_LIFT -> 6;
+            case FUNICULAR -> 7;
+            case TROLLEYBUS -> 8;
+            case MONORAIL -> 9;
+            default -> "";
         };
     }
 }

@@ -1,5 +1,6 @@
 package Enums.StopTime;
 
+
 public enum DropOffType
 {
     REGULARLY_SCHEDULED_DROP_OFF,
@@ -14,6 +15,16 @@ public enum DropOffType
             case 2 -> MUST_PHONE_AGENCY_TO_ARRANGE_DROP_OFF;
             case 3 -> MUST_COORDINATE_WITH_DRIVER_TO_ARRANGE_DROP_OFF;
             default -> REGULARLY_SCHEDULED_DROP_OFF;
+        };
+    }
+
+    public static Object getValueForExport(DropOffType dropOffType)
+    {
+        return switch (dropOffType) {
+            case NO_DROP_OFF_AVAILABLE -> 1;
+            case MUST_PHONE_AGENCY_TO_ARRANGE_DROP_OFF -> 2;
+            case MUST_COORDINATE_WITH_DRIVER_TO_ARRANGE_DROP_OFF -> 3;
+            default -> 0;
         };
     }
 }

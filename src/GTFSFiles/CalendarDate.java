@@ -1,4 +1,4 @@
-package TextFiles;
+package GTFSFiles;
 
 import Enums.CalendarDate.ExceptionType;
 import java.time.LocalDate;
@@ -49,6 +49,16 @@ public class CalendarDate implements IGTFSObject
         columnTypes.add(this.exception_type);
 
         return columnTypes;
+    }
+
+    @Override
+    public ArrayList<Object> getAttributesForExportGTFS()
+    {
+        ArrayList<Object> attributesForExport = new ArrayList<>();
+        attributesForExport.add(this.service_id);
+        attributesForExport.add(this.date.format(DateTimeFormatter.ofPattern(GTFSObjectFactory.DatePattern)));
+        attributesForExport.add(ExceptionType.getValueForExport(this.exception_type));
+        return attributesForExport;
     }
 
     @Override

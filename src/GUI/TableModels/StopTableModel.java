@@ -2,8 +2,8 @@ package GUI.TableModels;
 
 import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
-import TextFiles.IGTFSObject;
-import TextFiles.Stop;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.Stop;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

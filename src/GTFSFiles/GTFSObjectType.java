@@ -1,4 +1,4 @@
-package TextFiles;
+package GTFSFiles;
 
 public enum GTFSObjectType
 {

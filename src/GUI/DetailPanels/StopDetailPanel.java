@@ -2,9 +2,9 @@ package GUI.DetailPanels;
 
 import GUI.MainFrame;
 import GUI.TablePanels.TablePanel;
-import TextFiles.GTFSObjectType;
-import TextFiles.IGTFSObject;
-import TextFiles.Stop;
+import GTFSFiles.GTFSObjectType;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.Stop;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 

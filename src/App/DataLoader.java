@@ -1,6 +1,6 @@
 package App;
 
-import TextFiles.*;
+import GTFSFiles.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -161,22 +161,13 @@ public class DataLoader
         String[] columnNames = this.getHashTableColumnNames(gtfsObjectType);
         try
         {
-            fileWriter = new FileWriter(this.filePath+ "\\"+fileName);
-            for (int i = 0; i < columnNames.length; i++)
-            {
-                fileWriter.write(columnNames[i]);
-                if(i != columnNames.length-1)
-                {
-                    fileWriter.write(",");
-                }
-            }
-            fileWriter.write("\n");
+            fileWriter = getFileWriter(fileName, columnNames);
             if(!hashtable.isEmpty())
             {
                 ArrayList<String> keys = new ArrayList<>(hashtable.keySet());
                 for (String key : keys)
                 {
-                    ArrayList<Object> attributes = hashtable.get(key).getColumnTypes();
+                    ArrayList<Object> attributes = hashtable.get(key).getAttributesForExportGTFS();
                     for (int i = 0; i < attributes.size(); i++)
                     {
                         fileWriter.write(String.valueOf(attributes.get(i)));
@@ -195,6 +186,88 @@ public class DataLoader
             e.printStackTrace();
         }
 
+    }
+
+    public void writeStopsCSV()
+    {
+        this.writeCSV("detailed_stops.csv", GTFSObjectType.STOP, this.stops);
+    }
+
+    public void writeTripCSV()
+    {
+        this.writeCSV("detailed_trips.csv", GTFSObjectType.TRIP, this.trips);
+
+    }
+
+    private void writeCSV(String fileName,GTFSObjectType gtfsObjectType, Hashtable<String, IGTFSObject> hashtable)
+    {
+        FileWriter fileWriter;
+        String[] columnNames = this.getDetailedColumnNames(gtfsObjectType);
+        if(gtfsObjectType == GTFSObjectType.TRIP)
+        {
+            this.createTripDetails();
+        }
+        try
+        {
+            fileWriter = getFileWriter(fileName, columnNames);
+            if(!hashtable.isEmpty())
+            {
+                ArrayList<String> keys = new ArrayList<>(hashtable.keySet());
+                for (String key : keys)
+                {
+                    Object[] attributes;
+                    if(gtfsObjectType == GTFSObjectType.TRIP)
+                    {
+                        attributes = ((Trip)hashtable.get(key)).getDetailedAttributes();
+                    }
+                    else
+                    {
+                        attributes = ((Stop)hashtable.get(key)).getDetailedAttributes();
+                    }
+
+                    for (int i = 0; i < attributes.length; i++)
+                    {
+                        fileWriter.write(String.valueOf(attributes[i]));
+                        if(i != attributes.length-1)
+                        {
+                            fileWriter.write(",");
+                        }
+                    }
+                    fileWriter.write("\n");
+                }
+            }
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private FileWriter getFileWriter(String fileName, String[] columnNames) throws IOException {
+        FileWriter fileWriter;
+        fileWriter = new FileWriter(this.filePath+ "\\"+fileName);
+        for (int i = 0; i < columnNames.length; i++)
+        {
+            fileWriter.write(columnNames[i]);
+            if(i != columnNames.length-1)
+            {
+                fileWriter.write(",");
+            }
+        }
+        fileWriter.write("\n");
+        return fileWriter;
+    }
+
+
+    public void createTripDetails()
+    {
+        ArrayList<String> tripKeys = new ArrayList<>(this.trips.keySet());
+        for (String tripKey : tripKeys)
+        {
+            ((Trip)this.trips.get(tripKey)).createSpecialStopHashTable(this.stopTimes, this.stops);
+            ((Trip)this.trips.get(tripKey)).createDetailedAttributes();
+        }
     }
 
     public String[] createColumnNamesForNewFile(GTFSObjectType gtfsObjectType)
@@ -281,6 +354,18 @@ public class DataLoader
         return this.hashTableColumnTypes.get(gtfsObjectType);
     }
 
+    public String[] getDetailedColumnNames(GTFSObjectType gtfsObjectType)
+    {
+        if(gtfsObjectType == GTFSObjectType.TRIP)
+        {
+            return new String[]{"trip_id", "trip_headsign", "first_stop_arrival_time", "last_stop_departure_time", "first_stop", "last_stop"};
+        }
+        else
+        {
+            return new String[]{"stop_id", "stop_name", "stop_lat", "stop_lon"};
+        }
+    }
+
     public void updateHashTable(Hashtable<String, IGTFSObject> hashtable, GTFSObjectType gtfsObjectType)
     {
         switch (gtfsObjectType)
@@ -293,6 +378,11 @@ public class DataLoader
             case STOP_TIME -> this.stopTimes = hashtable;
             case TRIP -> this.trips = hashtable;
         }
+    }
+
+    public void updateTripDetail(Hashtable<String, IGTFSObject> updatedHashTable)
+    {
+
     }
 
 }

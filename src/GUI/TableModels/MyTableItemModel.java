@@ -1,6 +1,6 @@
 package GUI.TableModels;
 
-import TextFiles.IGTFSObject;
+import GTFSFiles.IGTFSObject;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

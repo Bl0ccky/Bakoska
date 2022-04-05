@@ -14,4 +14,13 @@ public enum ExceptionType
             default -> NO_INFO;
         };
     }
+
+    public static Object getValueForExport(ExceptionType exceptionType)
+    {
+        return switch (exceptionType) {
+            case ADDED -> 1;
+            case REMOVED -> 2;
+            default -> "";
+        };
+    }
 }

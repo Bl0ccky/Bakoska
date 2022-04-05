@@ -1,4 +1,4 @@
-package TextFiles;
+package GTFSFiles;
 
 import Enums.Calendar.DayServiceAvailability;
 
@@ -132,6 +132,23 @@ public class Calendar implements IGTFSObject
         columnTypes.add(this.end_date);
 
         return columnTypes;
+    }
+
+    @Override
+    public ArrayList<Object> getAttributesForExportGTFS()
+    {
+        ArrayList<Object> attributesForExport = new ArrayList<>();
+        attributesForExport.add(this.service_id);
+        attributesForExport.add(DayServiceAvailability.getValueForExport(this.monday));
+        attributesForExport.add(DayServiceAvailability.getValueForExport(this.tuesday));
+        attributesForExport.add(DayServiceAvailability.getValueForExport(this.wednesday));
+        attributesForExport.add(DayServiceAvailability.getValueForExport(this.thursday));
+        attributesForExport.add(DayServiceAvailability.getValueForExport(this.friday));
+        attributesForExport.add(DayServiceAvailability.getValueForExport(this.saturday));
+        attributesForExport.add(DayServiceAvailability.getValueForExport(this.sunday));
+        attributesForExport.add(this.start_date.format(DateTimeFormatter.ofPattern(GTFSObjectFactory.DatePattern)));
+        attributesForExport.add(this.end_date.format(DateTimeFormatter.ofPattern(GTFSObjectFactory.DatePattern)));
+        return attributesForExport;
     }
 
     @Override

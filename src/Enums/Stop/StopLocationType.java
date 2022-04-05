@@ -18,4 +18,15 @@ public enum StopLocationType
             default -> STOP;
         };
     }
+
+    public static Object getValueForExport(StopLocationType stopLocationType)
+    {
+        return switch (stopLocationType) {
+            case STATION -> 1;
+            case ENTRANCE_OR_EXIT -> 2;
+            case GENERIC_NODE -> 3;
+            case BOARDING_AREA -> 4;
+            default -> 0;
+        };
+    }
 }

@@ -1,8 +1,8 @@
 package GUI.TableModels;
 
 import Enums.CalendarDate.ExceptionType;
-import TextFiles.CalendarDate;
-import TextFiles.IGTFSObject;
+import GTFSFiles.CalendarDate;
+import GTFSFiles.IGTFSObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

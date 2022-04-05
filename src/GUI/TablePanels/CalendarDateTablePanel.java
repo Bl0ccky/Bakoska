@@ -3,15 +3,15 @@ package GUI.TablePanels;
 import Enums.CalendarDate.ExceptionType;
 import GUI.AdminPanel;
 import GUI.MainFrame;
-import TextFiles.CalendarDate;
-import TextFiles.IGTFSObject;
+import GTFSFiles.CalendarDate;
+import GTFSFiles.IGTFSObject;
 import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
 import java.util.Hashtable;
 
 public class CalendarDateTablePanel extends TablePanel{
-    public CalendarDateTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, TextFiles.GTFSObjectType gtfsObjectType) {
+    public CalendarDateTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSFiles.GTFSObjectType gtfsObjectType) {
         super(panel, mainFrame, hashtable, gtfsObjectType);
     }
 
@@ -43,7 +43,7 @@ public class CalendarDateTablePanel extends TablePanel{
             newCalendarDate.setException_type((ExceptionType) ((JComboBox<?>) this.addFormObjects.get(2)).getSelectedItem());
             this.hashtable.put(newCalendarDate.getKey(), newCalendarDate);
             this.keys.add(newCalendarDate.getKey());
-            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.CALENDAR_DATE);
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.CALENDAR_DATE);
         }
 
     }
@@ -51,7 +51,7 @@ public class CalendarDateTablePanel extends TablePanel{
     @Override
     void updateTable()
     {
-        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.CALENDAR_DATE);
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.CALENDAR_DATE);
     }
 
 }

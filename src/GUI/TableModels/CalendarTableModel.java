@@ -1,8 +1,8 @@
 package GUI.TableModels;
 
 import Enums.Calendar.DayServiceAvailability;
-import TextFiles.Calendar;
-import TextFiles.IGTFSObject;
+import GTFSFiles.Calendar;
+import GTFSFiles.IGTFSObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

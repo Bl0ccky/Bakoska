@@ -14,4 +14,13 @@ public enum StopWheelchairBoarding
             default -> NO_INFO;
         };
     }
+
+    public static Object getValueForExport(StopWheelchairBoarding stopWheelchairBoarding)
+    {
+        return switch (stopWheelchairBoarding) {
+            case POSSIBLE_WHEELCHAIR -> 1;
+            case NOT_POSSIBLE_WHEELCHAIR -> 2;
+            default -> 0;
+        };
+    }
 }

@@ -4,21 +4,21 @@ import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
 import GUI.AdminPanel;
 import GUI.MainFrame;
-import TextFiles.IGTFSObject;
-import TextFiles.Stop;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.Stop;
 
 import javax.swing.*;
 import java.util.Hashtable;
 
 public class StopTablePanel extends TablePanel{
-    public StopTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, TextFiles.GTFSObjectType gtfsObjectType) {
+    public StopTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSFiles.GTFSObjectType gtfsObjectType) {
         super(panel, mainFrame, hashtable, gtfsObjectType);
     }
 
     @Override
     boolean checkRemoveAction(int keyIndex) {
         String findingIDValue = ((Stop)this.hashtable.get(this.keys.get(keyIndex))).getStop_id();
-        return !this.contentPanel.getTablePanel(TextFiles.GTFSObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 3);
+        return !this.contentPanel.getTablePanel(GTFSFiles.GTFSObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 3);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class StopTablePanel extends TablePanel{
             newStop.setWheelchair_boarding((StopWheelchairBoarding) ((JComboBox<?>) this.addFormObjects.get(11)).getSelectedItem());
             this.hashtable.put(newStop.getKey(), newStop);
             this.keys.add(newStop.getKey());
-            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.STOP);
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.STOP);
         }
 
     }
@@ -61,7 +61,7 @@ public class StopTablePanel extends TablePanel{
     @Override
     void updateTable()
     {
-        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, TextFiles.GTFSObjectType.STOP);
+        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.STOP);
     }
 
 }

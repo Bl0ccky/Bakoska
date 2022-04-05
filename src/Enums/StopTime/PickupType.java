@@ -16,4 +16,14 @@ public enum PickupType
             default -> REGULARLY_SCHEDULED_PICKUP;
         };
     }
+
+    public static Object getValueForExport(PickupType pickupType)
+    {
+        return switch (pickupType) {
+            case NO_PICKUP_AVAILABLE -> 1;
+            case MUST_PHONE_AGENCY_TO_ARRANGE_PICKUP -> 2;
+            case MUST_COORDINATE_WITH_DRIVER_TO_ARRANGE_PICKUP -> 3;
+            default -> 0;
+        };
+    }
 }
