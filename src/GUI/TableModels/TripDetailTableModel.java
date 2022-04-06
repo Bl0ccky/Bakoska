@@ -4,14 +4,16 @@ import Enums.Stop.StopLocationType;
 import Enums.Stop.StopWheelchairBoarding;
 import GTFSFiles.IGTFSObject;
 import GTFSFiles.TripDetail.SpecialStop;
+import GUI.MainFrame;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class TripDetailTableModel extends MyTableItemModel{
-    public TripDetailTableModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
-        super(hashtable, keys, columnNames);
+
+    public TripDetailTableModel(MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
+        super(mainFrame, hashtable, keys, columnNames);
     }
 
     @Override

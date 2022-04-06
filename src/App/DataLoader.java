@@ -1,6 +1,7 @@
 package App;
 
 import GTFSFiles.*;
+import GUI.MainFrame;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -263,10 +264,15 @@ public class DataLoader
     public void createTripDetails()
     {
         ArrayList<String> tripKeys = new ArrayList<>(this.trips.keySet());
+        //int counter = 0;
+        //int allTrips = tripKeys.size();
         for (String tripKey : tripKeys)
         {
             ((Trip)this.trips.get(tripKey)).createSpecialStopHashTable(this.stopTimes, this.stops);
             ((Trip)this.trips.get(tripKey)).createDetailedAttributes();
+
+            //counter++;
+            //System.out.println(counter++ + "/" + allTrips);
         }
     }
 

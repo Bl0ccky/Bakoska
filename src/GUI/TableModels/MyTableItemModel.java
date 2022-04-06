@@ -1,6 +1,7 @@
 package GUI.TableModels;
 
 import GTFSFiles.IGTFSObject;
+import GUI.MainFrame;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -11,9 +12,11 @@ public abstract class MyTableItemModel extends AbstractTableModel {
     protected final Hashtable<String, IGTFSObject> hashtable;
     protected final ArrayList<String> keys;
     protected final String[] columnNames;
+    protected final MainFrame mainFrame;
 
-    public MyTableItemModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames)
+    public MyTableItemModel(MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames)
     {
+        this.mainFrame = mainFrame;
         this.hashtable = hashtable;
         this.keys = keys;
         this.columnNames = columnNames;
@@ -38,6 +41,21 @@ public abstract class MyTableItemModel extends AbstractTableModel {
     public boolean isCellEditable(int rowIndex, int columnIndex)
     {
         return true;
+    }
+
+    protected boolean isNumeric(Object obj)
+    {
+        if(obj == null)
+        {
+            return false;
+        }
+        try {
+            Double.parseDouble(String.valueOf(obj));
+            return true;
+        }catch (NumberFormatException ex)
+        {
+            return false;
+        }
     }
 
 }

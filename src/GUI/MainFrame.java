@@ -128,8 +128,10 @@ public class MainFrame extends JFrame implements ActionListener
             if(filePath != null)
             {
                 int fileCounter = 1;
+                boolean isDirectoryEmtpy = false;
                 try {
-                    if(!this.isDirectoryEmpty(Path.of(filePath)))
+                    isDirectoryEmtpy = this.isDirectoryEmpty(Path.of(filePath));
+                    if(!isDirectoryEmtpy)
                     {
                         Files.createDirectory(Path.of(filePath + "\\exportedGTFSDirectory_"+fileCounter));
                     }
@@ -152,7 +154,10 @@ public class MainFrame extends JFrame implements ActionListener
                         return;
                     }
                 }
-                filePath += "\\exportedGTFSDirectory_"+fileCounter;
+                if(!isDirectoryEmtpy)
+                {
+                    filePath += "\\exportedGTFSDirectory_"+fileCounter;
+                }
 
                 this.dataLoader.setFilePath(filePath);
 
@@ -201,9 +206,9 @@ public class MainFrame extends JFrame implements ActionListener
                 filePath += "\\exportedCSVDirectory_"+fileCounter;
 
                 this.dataLoader.setFilePath(filePath);
-
                 this.dataLoader.writeStopsCSV();
                 this.dataLoader.writeTripCSV();
+
                 this.changeToAdminPanel(dataLoader);
 
             }
@@ -283,5 +288,10 @@ public class MainFrame extends JFrame implements ActionListener
         }
 
         return false;
+    }
+
+    public AdminPanel getAdminPanel()
+    {
+        return this.adminPanel;
     }
 }

@@ -50,7 +50,7 @@ public abstract class DetailPanel extends JPanel implements ActionListener{
         if (this.gtfsObjectType == GTFSObjectType.ROUTE || this.gtfsObjectType == GTFSObjectType.STOP)
         {
             this.columnNames = mainFrame.getDataLoader().getHashTableColumnNames(GTFSObjectType.TRIP);
-            this.myTableItemModel = new TripTableModel(this.hashtable, this.keys, this.columnNames);
+            this.myTableItemModel = new TripTableModel(this.mainFrame, this.hashtable, this.keys, this.columnNames);
         }
         else
         {
@@ -68,7 +68,7 @@ public abstract class DetailPanel extends JPanel implements ActionListener{
                     "stop_timezone",
                     "wheelchair_boarding"
             };
-            this.myTableItemModel = new TripDetailTableModel(this.hashtable, this.keys, this.columnNames);
+            this.myTableItemModel = new TripDetailTableModel(this.mainFrame, this.hashtable, this.keys, this.columnNames);
 
 
         }

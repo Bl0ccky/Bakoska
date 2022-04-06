@@ -1,15 +1,18 @@
 package GUI.TableModels;
 
 import Enums.Route.RouteType;
+import GTFSFiles.GTFSObjectType;
 import GTFSFiles.IGTFSObject;
 import GTFSFiles.Route;
+import GUI.MainFrame;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class RouteTableModel extends MyTableItemModel{
-    public RouteTableModel(Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
-        super(hashtable, keys, columnNames);
+
+    public RouteTableModel(MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, ArrayList<String> keys, String[] columnNames) {
+        super(mainFrame, hashtable, keys, columnNames);
     }
 
     @Override
@@ -43,5 +46,34 @@ public class RouteTableModel extends MyTableItemModel{
         {
             return String.class;
         }
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex)
+    {
+        Route route = (Route)this.hashtable.get(this.keys.get(rowIndex));
+        String findingIDValue = route.getRoute_id();
+        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.TRIP).tableContainsValueAt(findingIDValue, 1) && columnIndex == 0))
+        {
+            this.hashtable.remove(this.keys.get(rowIndex));
+            switch (columnIndex)
+            {
+                case 0 -> route.setRoute_id((String) aValue);
+                case 1 -> route.setAgency_id((String) aValue);
+                case 2 -> route.setRoute_short_name((String) aValue);
+                case 3 -> route.setRoute_long_name((String) aValue);
+                case 4 -> route.setRoute_desc((String) aValue);
+                case 5 -> route.setRoute_type((RouteType) aValue);
+                case 6 -> route.setRoute_url((String) aValue);
+                case 7 -> route.setRoute_color((String) aValue);
+                case 8 -> route.setRoute_text_color((String) aValue);
+            }
+
+            this.hashtable.put(route.getKey(), route);
+            this.keys.set(rowIndex, route.getKey());
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSObjectType.ROUTE);
+            this.fireTableDataChanged();
+        }
+
     }
 }

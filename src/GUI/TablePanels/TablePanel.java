@@ -61,13 +61,13 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         this.columnNames = mainFrame.getDataLoader().getHashTableColumnNames(this.gtfsObjectType);
         this.columnTypes = mainFrame.getDataLoader().getHashTableColumnTypes(this.gtfsObjectType);
         switch (this.gtfsObjectType) {
-            case CALENDAR -> this.myTableItemModel = new CalendarTableModel(this.hashtable, this.keys, this.columnNames);
-            case CALENDAR_DATE -> this.myTableItemModel = new CalendarDateTableModel(this.hashtable, this.keys, this.columnNames);
-            case ROUTE -> this.myTableItemModel = new RouteTableModel(this.hashtable, this.keys, this.columnNames);
-            case STOP -> this.myTableItemModel = new StopTableModel(this.hashtable, this.keys, this.columnNames);
-            case STOP_TIME -> this.myTableItemModel = new StopTimeTableModel(this.hashtable, this.keys, this.columnNames);
-            case TRIP -> this.myTableItemModel = new TripTableModel(this.hashtable, this.keys, this.columnNames);
-            default -> this.myTableItemModel = new AgencyTableModel(this.hashtable, this.keys, this.columnNames);
+            case CALENDAR -> this.myTableItemModel = new CalendarTableModel(this.mainFrame, this.hashtable, this.keys, this.columnNames);
+            case CALENDAR_DATE -> this.myTableItemModel = new CalendarDateTableModel(this.mainFrame, this.hashtable, this.keys, this.columnNames);
+            case ROUTE -> this.myTableItemModel = new RouteTableModel(this.mainFrame, this.hashtable, this.keys, this.columnNames);
+            case STOP -> this.myTableItemModel = new StopTableModel(this.mainFrame, this.hashtable, this.keys, this.columnNames);
+            case STOP_TIME -> this.myTableItemModel = new StopTimeTableModel(this.mainFrame, this.hashtable, this.keys, this.columnNames);
+            case TRIP -> this.myTableItemModel = new TripTableModel(this.mainFrame, this.hashtable, this.keys, this.columnNames);
+            default -> this.myTableItemModel = new AgencyTableModel(this.mainFrame, this.hashtable, this.keys, this.columnNames);
         }
 
         this.setLayout(null);
@@ -75,7 +75,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         this.createTableSection();
         this.createSearchSection();
         this.createButtonsSection();
-        this.createAddSection();
+        this.createAddSectionAndEditCells();
 
     }
 
@@ -280,7 +280,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
 
     }
 
-    private void createAddSection() {
+    private void createAddSectionAndEditCells() {
 
 
         this.addFormObjects = new ArrayList<>();
@@ -395,7 +395,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         return this.contentPanel;
     }
 
-    protected boolean tableContainsValueAt(String findingIdValue, int columnIndex) {
+    public boolean tableContainsValueAt(String findingIdValue, int columnIndex) {
         for (int i = 0; i < this.table.getModel().getRowCount(); i++) {
             if (this.table.getModel().getValueAt(i, columnIndex).equals(findingIdValue)) {
                 return true;
