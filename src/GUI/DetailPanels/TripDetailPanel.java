@@ -21,45 +21,9 @@ public class TripDetailPanel extends DetailPanel{
     @Override
     void createLabelNames()
     {
-        String[]labelNames = {"Trip id", "Trip head sign", "1st arr-time", "Last dep-time", "First stop", "Last stop"};
-        /*
-        ArrayList<String> specialStopKeys = new ArrayList<>(this.hashtable.keySet());
-
-        int minStopSequence = Integer.MAX_VALUE;
-        String first_stop_name = "";
-        LocalTime first_stop_arrival_time = null;
-
-        int maxStopSequence = 0;
-        String last_stop_name = "";
-        LocalTime last_stop_departure_time = null;
-
-        for (String specialStopTimeKey : specialStopKeys)
-        {
-            if(((SpecialStop)this.hashtable.get(specialStopTimeKey)).getStop_sequence() < minStopSequence)
-            {
-                minStopSequence = ((SpecialStop)this.hashtable.get(specialStopTimeKey)).getStop_sequence();
-                first_stop_name = ((SpecialStop)this.hashtable.get(specialStopTimeKey)).getStop_name();
-                first_stop_arrival_time = ((SpecialStop)this.hashtable.get(specialStopTimeKey)).getArrival_time();
-            }
-            else if(((SpecialStop)this.hashtable.get(specialStopTimeKey)).getStop_sequence() > maxStopSequence)
-            {
-                maxStopSequence = ((SpecialStop)this.hashtable.get(specialStopTimeKey)).getStop_sequence();
-                last_stop_name = ((SpecialStop)this.hashtable.get(specialStopTimeKey)).getStop_name();
-                last_stop_departure_time = ((SpecialStop)this.hashtable.get(specialStopTimeKey)).getDeparture_time();
-            }
-        }
-
-        Object[]labelValues = {
-                ((Trip)this.igtfsObject).getTrip_id(),
-                ((Trip)this.igtfsObject).getTrip_headsign(),
-                first_stop_arrival_time,
-                last_stop_departure_time,
-                first_stop_name,
-                last_stop_name};
-         */
+        String[]labelNames = {"Trip id", "Trip head sign", "1st arr-time", "Last dep-time", "First stop id", "First stop name", "Last stop id", "Last stop name"};
         ((Trip)igtfsObject).createDetailedAttributes();
         this.createLabelSection("Trip Detail", labelNames, ((Trip)igtfsObject).getDetailedAttributes());
-
     }
 
     @Override

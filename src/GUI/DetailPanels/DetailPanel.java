@@ -150,6 +150,11 @@ public abstract class DetailPanel extends JPanel implements ActionListener{
         int x = 75;
         int y1 = 100;
         int y2 = 100;
+        if(this instanceof TripDetailPanel)
+        {
+            y1 = 75;
+            y2 = 75;
+        }
         JLabel[] attributesNames = new JLabel[labelNames.length];
         JLabel[] attributesValues = new JLabel[labelValues.length];
 
@@ -162,13 +167,28 @@ public abstract class DetailPanel extends JPanel implements ActionListener{
                 attributesNames[i].setBounds(x, y2, 160, 30);
                 y2 += 40;
                 attributesValues[i].setBounds(x, y2, 160, 30);
-                y2 += 80;
+                if(this instanceof TripDetailPanel)
+                {
+                    y2 += 50;
+                }
+                else
+                {
+                    y2 += 80;
+                }
+
 
             } else {
                 attributesNames[i].setBounds(x, y1, 160, 30);
                 y1 += 40;
                 attributesValues[i].setBounds(x, y1, 160, 30);
-                y1 += 80;
+                if(this instanceof TripDetailPanel)
+                {
+                    y1 += 50;
+                }
+                else
+                {
+                    y1 += 80;
+                }
             }
 
             attributesNames[i].setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
@@ -185,7 +205,7 @@ public abstract class DetailPanel extends JPanel implements ActionListener{
         this.table.setRowSorter(new TableRowSorter<>(this.myTableItemModel));
         JScrollPane scrollPane = new JScrollPane(table);
         //TABULKA NALAVO
-        scrollPane.setBounds(50, 470, 1350, 350);
+        scrollPane.setBounds(50, 470, 1350, 250);
         //TABULKA NAPRAVO
         //scrollPane.setBounds(700, 50, 900, 800);
         this.add(scrollPane);

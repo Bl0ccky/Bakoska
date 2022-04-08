@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Hashtable;
@@ -23,6 +24,7 @@ public class MainFrame extends JFrame implements ActionListener
     private DataLoader dataLoader;
     private final JPanel contentPanel;
     private AdminPanel adminPanel;
+    private final JMenuItem createNewFileItem;
     private final JMenuItem importItem;
     private final JMenu exportMenu;
     private final JMenuItem exitItem;
@@ -49,6 +51,8 @@ public class MainFrame extends JFrame implements ActionListener
 
         JMenu fileMenu = new JMenu("File");
 
+        this.createNewFileItem = new JMenuItem("New GTFS file");
+        this.createNewFileItem.addActionListener(this);
         this.importItem = new JMenuItem("Import GTFS");
         this.importItem.addActionListener(this);
         this.exportGTFSItem = new JMenuItem("GTFS export");
@@ -63,9 +67,10 @@ public class MainFrame extends JFrame implements ActionListener
         this.exitItem = new JMenuItem("Exit");
         this.exitItem.addActionListener(this);
 
-        fileMenu.add(importItem);
-        fileMenu.add(exportMenu);
-        fileMenu.add(exitItem);
+        fileMenu.add(this.createNewFileItem);
+        fileMenu.add(this.importItem);
+        fileMenu.add(this.exportMenu);
+        fileMenu.add(this.exitItem);
 
         menuBar.add(fileMenu);
 
@@ -111,7 +116,74 @@ public class MainFrame extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        if(e.getSource() == this.importItem)
+        if(e.getSource() == this.createNewFileItem)
+        {
+            //TODO odstranit duplicitu s menu panelom!!
+            String filePath = this.getGTFSFilePath(1);
+            if(filePath != null)
+            {
+                int fileCounter = 1;
+                try
+                {
+                    if(!this.isDirectoryEmpty(Path.of(filePath)))
+                    {
+                        Files.createDirectory(Path.of(filePath + "\\newGTFSDirectory_"+fileCounter));
+                    }
+
+                } catch (IOException ex) {
+                    if(ex instanceof FileAlreadyExistsException)
+                    {
+                        fileCounter = MainFrame.getFileCounter(filePath, "newGTFSDirectory_", fileCounter);
+                        try {
+                            Files.createDirectory(Path.of(filePath + "\\newGTFSDirectory_"+fileCounter));
+                        } catch (IOException exc) {
+                            exc.printStackTrace();
+                        }
+                        filePath += "\\newGTFSDirectory_"+fileCounter;
+                    }
+                    else if(ex instanceof NoSuchFileException)
+                    {
+                        JOptionPane.showMessageDialog(null, "This folder path doesnt exist!", "Wrong file path", JOptionPane.ERROR_MESSAGE);
+                        CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
+                        cardLayout.show(this.contentPanel, "menuPanel");
+                        return;
+                    }
+                }
+
+                String[] fileNames = {"agency.txt", "calendar.txt", "calendar_dates.txt", "routes.txt", "stops.txt", "stop_times.txt", "trips.txt"};
+                DataLoader dataLoader = new DataLoader(filePath);
+                int counter = 0;
+                for (GTFSObjectType gtfsObjectType : GTFSObjectType.values())
+                {
+                    String[] columnNames = dataLoader.createColumnNamesForNewFile(gtfsObjectType);
+                    dataLoader.createColumnTypesForNewFile(gtfsObjectType);
+                    Path path = Path.of(filePath +"\\"+fileNames[counter]);
+                    try {
+                        Files.createFile(path);
+                        FileWriter myWriter = new FileWriter(filePath +"\\"+fileNames[counter]);
+                        for (int i = 0; i < columnNames.length; i++)
+                        {
+                            myWriter.write(columnNames[i]);
+                            if(i != columnNames.length-1)
+                            {
+                                myWriter.write(",");
+                            }
+
+                        }
+                        myWriter.close();
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    counter++;
+                }
+
+                this.changeToAdminPanel(dataLoader);
+
+            }
+
+        }
+        else if(e.getSource() == this.importItem)
         {
             String filePath = this.getGTFSFilePath(2);
             if(filePath != null)
@@ -179,8 +251,10 @@ public class MainFrame extends JFrame implements ActionListener
             if(filePath != null)
             {
                 int fileCounter = 1;
+                boolean isDirectoryEmtpy = false;
                 try {
-                    if(!this.isDirectoryEmpty(Path.of(filePath)))
+                    isDirectoryEmtpy = this.isDirectoryEmpty(Path.of(filePath));
+                    if(!isDirectoryEmtpy)
                     {
                         Files.createDirectory(Path.of(filePath + "\\exportedCSVDirectory_"+fileCounter));
                     }
@@ -203,7 +277,11 @@ public class MainFrame extends JFrame implements ActionListener
                         return;
                     }
                 }
-                filePath += "\\exportedCSVDirectory_"+fileCounter;
+
+                if(!isDirectoryEmtpy)
+                {
+                    filePath += "\\exportedCSVDirectory_"+fileCounter;
+                }
 
                 this.dataLoader.setFilePath(filePath);
                 this.dataLoader.writeStopsCSV();

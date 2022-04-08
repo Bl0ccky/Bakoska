@@ -364,7 +364,7 @@ public class DataLoader
     {
         if(gtfsObjectType == GTFSObjectType.TRIP)
         {
-            return new String[]{"trip_id", "trip_headsign", "first_stop_arrival_time", "last_stop_departure_time", "first_stop", "last_stop"};
+            return new String[]{"trip_id", "trip_headsign", "first_stop_arrival_time", "last_stop_departure_time", "first_stop_id", "first_stop_name", "last_stop_id", "last_stop_name"};
         }
         else
         {

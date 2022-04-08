@@ -41,7 +41,7 @@ public class AdminPanel extends JPanel implements ActionListener
         tablePanels.add("Stop Time", this.stopTimeTablePanel);
         tablePanels.add("Trip", this.tripTablePanel);
 
-        tablePanels.setBounds(50,25,1450,850);
+        tablePanels.setBounds(50,25,1450,700);
         this.add(tablePanels);
     }
 

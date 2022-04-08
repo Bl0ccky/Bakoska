@@ -208,7 +208,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         this.table.setRowHeight(20);
         this.table.getSelectionModel().addListSelectionListener(this);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 900, 800);
+        scrollPane.setBounds(10, 10, 900, 650);
 
         this.add(scrollPane);
 
@@ -286,8 +286,8 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         this.addFormObjects = new ArrayList<>();
 
         int x = 1110;
-        int y1 = 350;
-        int y2 = 350;
+        int y1 = 270;
+        int y2 = 270;
         JLabel[] addLabels = new JLabel[this.columnNames.length];
 
         for (int i = 0; i < this.columnTypes.size(); i++) {
@@ -386,7 +386,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         this.addButton = new JButton("Add");
         this.addButton.setFocusable(false);
         this.addButton.addActionListener(this);
-        this.addButton.setBounds(1000, 380, 100, 30);
+        this.addButton.setBounds(1000, 300, 100, 30);
         this.add(addButton);
 
     }
