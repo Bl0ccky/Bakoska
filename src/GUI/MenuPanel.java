@@ -147,35 +147,7 @@ public class MenuPanel extends JPanel implements ActionListener{
                     }
                 }
 
-                String[] fileNames = {"agency.txt", "calendar.txt", "calendar_dates.txt", "routes.txt", "stops.txt", "stop_times.txt", "trips.txt"};
-                DataLoader dataLoader = new DataLoader(filePath);
-                int counter = 0;
-                for (GTFSObjectType gtfsObjectType : GTFSObjectType.values())
-                {
-                    String[] columnNames = dataLoader.createColumnNamesForNewFile(gtfsObjectType);
-                    dataLoader.createColumnTypesForNewFile(gtfsObjectType);
-                    Path path = Path.of(filePath +"\\"+fileNames[counter]);
-                    try {
-                        Files.createFile(path);
-                        FileWriter myWriter = new FileWriter(filePath +"\\"+fileNames[counter]);
-                        for (int i = 0; i < columnNames.length; i++)
-                        {
-                            myWriter.write(columnNames[i]);
-                            if(i != columnNames.length-1)
-                            {
-                                myWriter.write(",");
-                            }
-
-                        }
-                        myWriter.close();
-
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                    counter++;
-                }
-
-                this.mainFrame.changeToAdminPanel(dataLoader);
+                this.mainFrame.changeToAdminPanel(MainFrame.createNewGTFSFiles(filePath));
 
             }
 
