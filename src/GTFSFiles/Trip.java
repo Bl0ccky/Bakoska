@@ -8,8 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class Trip implements IGTFSObject
-{
+public class Trip implements IGTFSObject {
     private String trip_id;
     private String route_id;
     private String service_id;
@@ -35,36 +34,48 @@ public class Trip implements IGTFSObject
     }
 
     @Override
-    public void loadData(String[] attributes)
-    {
-        this.trip_id = attributes[0];
-        this.route_id = attributes[1];
-        this.service_id = attributes[2];
-        this.trip_headsign = attributes[3];
-        this.trip_short_name = attributes[4];
-
-        if(attributes[5] != null && !attributes[5].equals(""))
-        {
-            this.direction_id = TripDirectionID.getTripDirectionID(Integer.parseInt(attributes[5]));
+    public void loadData(String[] attributes, String[] columnNames) {
+        for (int i = 0; i < columnNames.length; i++) {
+            switch (columnNames[i]) {
+                case "trip_id":
+                    this.trip_id = attributes[i];
+                    break;
+                case "route_id":
+                    this.route_id = attributes[i];
+                    break;
+                case "service_id":
+                    this.service_id = attributes[i];
+                    break;
+                case "trip_headsign":
+                    this.trip_headsign = attributes[i];
+                    break;
+                case "trip_short_name":
+                    this.trip_short_name = attributes[i];
+                    break;
+                case "direction_id":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.direction_id = TripDirectionID.getTripDirectionID(Integer.parseInt(attributes[i]));
+                    }
+                    break;
+                case "block_id":
+                    this.block_id = attributes[i];
+                    break;
+                case "shape_id":
+                    this.shape_id = attributes[i];
+                    break;
+                case "wheelchair_accessible":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.wheelchair_accessible = TripWheelchairAccessible.getTripWheelchairAccessible(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.wheelchair_accessible = TripWheelchairAccessible.NO_INFO;
+                    }
+                    break;
+            }
         }
-
-        this.block_id = attributes[6];
-        this.shape_id = attributes[7];
-
-        if(attributes[8] != null && !attributes[8].equals(""))
-        {
-            this.wheelchair_accessible = TripWheelchairAccessible.getTripWheelchairAccessible(Integer.parseInt(attributes[8]));
-        }
-        else
-        {
-            this.wheelchair_accessible = TripWheelchairAccessible.NO_INFO;
-        }
-
     }
 
     @Override
-    public ArrayList<Object> getColumnTypes()
-    {
+    public ArrayList<Object> getColumnTypes() {
         ArrayList<Object> columnTypes = new ArrayList<>();
         columnTypes.add(this.trip_id);
         columnTypes.add(this.route_id);
@@ -79,8 +90,7 @@ public class Trip implements IGTFSObject
         return columnTypes;
     }
 
-    public void createSpecialStopHashTable(Hashtable<String, IGTFSObject> stopTimeHashTable, Hashtable<String, IGTFSObject> stopHashTable)
-    {
+    public void createSpecialStopHashTable(Hashtable<String, IGTFSObject> stopTimeHashTable, Hashtable<String, IGTFSObject> stopHashTable) {
         this.specialStopHashTable = new Hashtable<>();
 
         ArrayList<String> stopTimeKeys = new ArrayList<>(stopTimeHashTable.keySet());
@@ -118,8 +128,7 @@ public class Trip implements IGTFSObject
 
     }
 
-    public void createDetailedAttributes()
-    {
+    public void createDetailedAttributes() {
         ArrayList<String> specialStopKeys = new ArrayList<>(this.specialStopHashTable.keySet());
 
         int minStopSequence = Integer.MAX_VALUE;
@@ -132,21 +141,18 @@ public class Trip implements IGTFSObject
         String last_stop_name = "";
         LocalTime last_stop_departure_time = null;
 
-        for (String specialStopKey : specialStopKeys)
-        {
-            if(((SpecialStop)this.specialStopHashTable.get(specialStopKey)).getStop_sequence() < minStopSequence)
-            {
-                minStopSequence = ((SpecialStop)this.specialStopHashTable.get(specialStopKey)).getStop_sequence();
+        for (String specialStopKey : specialStopKeys) {
+            if (((SpecialStop) this.specialStopHashTable.get(specialStopKey)).getStop_sequence() < minStopSequence) {
+                minStopSequence = ((SpecialStop) this.specialStopHashTable.get(specialStopKey)).getStop_sequence();
                 first_stop_id = specialStopKey;
-                first_stop_name = ((SpecialStop)this.specialStopHashTable.get(specialStopKey)).getStop_name();
-                first_stop_arrival_time = ((SpecialStop)this.specialStopHashTable.get(specialStopKey)).getArrival_time();
+                first_stop_name = ((SpecialStop) this.specialStopHashTable.get(specialStopKey)).getStop_name();
+                first_stop_arrival_time = ((SpecialStop) this.specialStopHashTable.get(specialStopKey)).getArrival_time();
             }
-            if(((SpecialStop)this.specialStopHashTable.get(specialStopKey)).getStop_sequence() > maxStopSequence)
-            {
-                maxStopSequence = ((SpecialStop)this.specialStopHashTable.get(specialStopKey)).getStop_sequence();
+            if (((SpecialStop) this.specialStopHashTable.get(specialStopKey)).getStop_sequence() > maxStopSequence) {
+                maxStopSequence = ((SpecialStop) this.specialStopHashTable.get(specialStopKey)).getStop_sequence();
                 last_stop_id = specialStopKey;
-                last_stop_name = ((SpecialStop)this.specialStopHashTable.get(specialStopKey)).getStop_name();
-                last_stop_departure_time = ((SpecialStop)this.specialStopHashTable.get(specialStopKey)).getDeparture_time();
+                last_stop_name = ((SpecialStop) this.specialStopHashTable.get(specialStopKey)).getStop_name();
+                last_stop_departure_time = ((SpecialStop) this.specialStopHashTable.get(specialStopKey)).getDeparture_time();
             }
         }
 
@@ -161,8 +167,7 @@ public class Trip implements IGTFSObject
                 last_stop_name};
     }
 
-    public Object[] getDetailedAttributes()
-    {
+    public Object[] getDetailedAttributes() {
         return this.detailedAttributes;
     }
 

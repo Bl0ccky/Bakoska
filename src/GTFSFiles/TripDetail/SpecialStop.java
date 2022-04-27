@@ -38,7 +38,7 @@ public class SpecialStop implements IGTFSObject
     }
 
     @Override
-    public void loadData(String[] attributes)
+    public void loadData(String[] attributes, String[] columnNames)
     {
 
     }

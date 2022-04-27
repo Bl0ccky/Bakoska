@@ -20,24 +20,32 @@ public class CalendarDate implements IGTFSObject
     }
 
     @Override
-    public void loadData(String[] attributes)
+    public void loadData(String[] attributes, String[] columnNames)
     {
         DateTimeFormatter dateFormat = new DateTimeFormatterBuilder().appendPattern(GTFSObjectFactory.DatePattern).toFormatter();
-        this.service_id = attributes[0];
-        if(attributes[1] != null && !attributes[1].equals(""))
-        {
-            this.date = LocalDate.parse(attributes[1], dateFormat);
-        }
 
-        if(attributes[2] != null && !attributes[2].equals(""))
-        {
-            this.exception_type = ExceptionType.getExceptionType(Integer.parseInt(attributes[2]));
+        for (int i = 0; i < columnNames.length; i++) {
+            switch (columnNames[i]) {
+                case "service_id":
+                    this.service_id = attributes[i];
+                    break;
+                case "exception_type":
+                    if(attributes[i] != null && !attributes[i].equals(""))
+                    {
+                        this.exception_type = ExceptionType.getExceptionType(Integer.parseInt(attributes[i]));
+                    }
+                    else
+                    {
+                        this.exception_type = ExceptionType.NO_INFO;
+                    }
+                    break;
+                case "date":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.date = LocalDate.parse(attributes[i], dateFormat);
+                    }
+                    break;
+            }
         }
-        else
-        {
-            this.exception_type = ExceptionType.NO_INFO;
-        }
-
     }
 
     @Override

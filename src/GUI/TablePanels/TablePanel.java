@@ -12,8 +12,15 @@ import Enums.Trip.TripDirectionID;
 import Enums.Trip.TripWheelchairAccessible;
 import GUI.AdminPanel;
 import GUI.MainFrame;
-import GUI.TableModels.*;
 import GTFSFiles.*;
+import GUI.TableModels.AgencyTableModel;
+import GUI.TableModels.CalendarDateTableModel;
+import GUI.TableModels.CalendarTableModel;
+import GUI.TableModels.MyTableItemModel;
+import GUI.TableModels.RouteTableModel;
+import GUI.TableModels.StopTableModel;
+import GUI.TableModels.StopTimeTableModel;
+import GUI.TableModels.TripTableModel;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.tableeditors.DateTableEditor;
@@ -194,6 +201,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
+        //TODO ked nie ziadny riadok zobrazeny zneviditelnit Detail button!!! Chyba sa objavuje pri edite
         if (this instanceof TripTablePanel || this instanceof StopTablePanel || this instanceof RouteTablePanel) {
             this.detailButton.setVisible(true);
         }

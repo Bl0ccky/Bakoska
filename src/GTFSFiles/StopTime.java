@@ -10,8 +10,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 
 
-public class StopTime implements IGTFSObject
-{
+public class StopTime implements IGTFSObject {
     private String trip_id;
     private LocalTime arrival_time;
     private LocalTime departure_time;
@@ -37,91 +36,84 @@ public class StopTime implements IGTFSObject
     }
 
     @Override
-    public void loadData(String[] attributes)
-    {
-        this.trip_id = attributes[0];
+    public void loadData(String[] attributes, String[] columnNames) {
         DateTimeFormatter timeFormat = new DateTimeFormatterBuilder().appendPattern(GTFSObjectFactory.TimePattern).toFormatter();
-        if(attributes[1] != null && !attributes[1].equals(""))
-        {
-            String[] time = attributes[1].split(":",3);
-            int hours = Integer.parseInt(time[0]);
-            if(hours > 23)
-            {
-                hours -= 24;
-                String newTime = hours+":"+time[1]+":"+time[2];
-                this.arrival_time = LocalTime.parse(newTime, timeFormat);
+        for (int i = 0; i < columnNames.length; i++) {
+            switch (columnNames[i]) {
+                case "trip_id":
+                    this.trip_id = attributes[i];
+                    break;
+                case "arrival_time":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        String[] time = attributes[i].split(":", 3);
+                        int hours = Integer.parseInt(time[0]);
+                        if (hours > 23) {
+                            hours -= 24;
+                            String newTime = hours + ":" + time[1] + ":" + time[2];
+                            this.arrival_time = LocalTime.parse(newTime, timeFormat);
+                        } else {
+                            this.arrival_time = LocalTime.parse(attributes[i], timeFormat);
+                        }
+                    }
+                    break;
+                case "departure_time":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        String[] time = attributes[i].split(":", 3);
+                        int hours = Integer.parseInt(time[0]);
+                        if (hours > 23) {
+                            hours -= 24;
+                            String newTime = hours + ":" + time[1] + ":" + time[2];
+                            this.departure_time = LocalTime.parse(newTime, timeFormat);
+                        } else {
+                            this.departure_time = LocalTime.parse(attributes[i], timeFormat);
+                        }
+
+                    }
+                    break;
+                case "stop_id":
+                    this.stop_id = attributes[i];
+                    break;
+                case "stop_sequence":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.stop_sequence = Integer.parseInt(attributes[i]);
+                    }
+                    break;
+                case "stop_headsign":
+                    this.stop_headsign = attributes[i];
+                    break;
+                case "pickup_type":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.pickup_type = PickupType.getPickupType(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.pickup_type = PickupType.REGULARLY_SCHEDULED_PICKUP;
+                    }
+                    break;
+                case "drop_off_type":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.drop_off_type = DropOffType.getDropOffType(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.drop_off_type = DropOffType.REGULARLY_SCHEDULED_DROP_OFF;
+                    }
+                    break;
+                case "shape_dist_traveled":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.shape_dist_traveled = Float.parseFloat(attributes[i]);
+                    }
+                    break;
+                case "timepoint":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.timepoint = TimePoint.getTimePoint(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.timepoint = TimePoint.EXACT_TIMES;
+                    }
+                    break;
             }
-            else
-            {
-                this.arrival_time = LocalTime.parse(attributes[2], timeFormat);
-            }
-
         }
-
-        if(attributes[2] != null && !attributes[2].equals(""))
-        {
-            String[] time = attributes[2].split(":",3);
-            int hours = Integer.parseInt(time[0]);
-            if(hours > 23)
-            {
-                hours -= 24;
-                String newTime = hours+":"+time[1]+":"+time[2];
-                this.departure_time = LocalTime.parse(newTime, timeFormat);
-            }
-            else
-            {
-                this.departure_time = LocalTime.parse(attributes[2], timeFormat);
-            }
-
-        }
-
-        this.stop_id = attributes[3];
-
-        if(attributes[4] != null && !attributes[4].equals(""))
-        {
-            this.stop_sequence = Integer.parseInt(attributes[4]);
-        }
-
-        this.stop_headsign = attributes[5];
-
-        if(attributes[6] != null && !attributes[6].equals(""))
-        {
-            this.pickup_type = PickupType.getPickupType(Integer.parseInt(attributes[6]));
-        }
-        else
-        {
-            this.pickup_type = PickupType.REGULARLY_SCHEDULED_PICKUP;
-        }
-
-        if(attributes[7] != null && !attributes[7].equals(""))
-        {
-            this.drop_off_type = DropOffType.getDropOffType(Integer.parseInt(attributes[7]));
-        }
-        else
-        {
-            this.drop_off_type = DropOffType.REGULARLY_SCHEDULED_DROP_OFF;
-        }
-
-        if(attributes[8] != null && !attributes[8].equals(""))
-        {
-            this.shape_dist_traveled = Float.parseFloat(attributes[8]);
-        }
-
-        if(attributes[9] != null && !attributes[9].equals(""))
-        {
-            this.timepoint = TimePoint.getTimePoint(Integer.parseInt(attributes[9]));
-        }
-        else
-        {
-            this.timepoint = TimePoint.EXACT_TIMES;
-        }
-
     }
 
 
     @Override
-    public ArrayList<Object> getColumnTypes()
-    {
+    public ArrayList<Object> getColumnTypes() {
         ArrayList<Object> columnTypes = new ArrayList<>();
         columnTypes.add(this.trip_id);
         columnTypes.add(this.arrival_time);
@@ -138,8 +130,7 @@ public class StopTime implements IGTFSObject
     }
 
     @Override
-    public ArrayList<Object> getAttributesForExportGTFS()
-    {
+    public ArrayList<Object> getAttributesForExportGTFS() {
         ArrayList<Object> attributesForExport = this.getColumnTypes();
         attributesForExport.set(1, this.arrival_time.format(DateTimeFormatter.ofPattern(GTFSObjectFactory.TimePattern)));
         attributesForExport.set(2, this.departure_time.format(DateTimeFormatter.ofPattern(GTFSObjectFactory.TimePattern)));

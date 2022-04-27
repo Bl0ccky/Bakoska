@@ -7,8 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 
-public class Calendar implements IGTFSObject
-{
+public class Calendar implements IGTFSObject {
     private String service_id;
     private DayServiceAvailability monday;
     private DayServiceAvailability tuesday;
@@ -34,91 +33,81 @@ public class Calendar implements IGTFSObject
     }
 
     @Override
-    public void loadData(String[] attributes)
+    public void loadData(String[] attributes, String[] columnNames)
     {
         DateTimeFormatter dateFormat = new DateTimeFormatterBuilder().appendPattern(GTFSObjectFactory.DatePattern).toFormatter();
-        this.service_id = attributes[0];
-        if(attributes[1] != null && !attributes[1].equals(""))
-        {
-            this.monday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[1]));
-        }
-        else
-        {
-            this.monday = DayServiceAvailability.NO_INFO;
-        }
-
-        if(attributes[2] != null && !attributes[2].equals(""))
-        {
-            this.tuesday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[2]));
-        }
-        else
-        {
-            this.tuesday = DayServiceAvailability.NO_INFO;
-        }
-
-        if(attributes[3] != null && !attributes[3].equals(""))
-        {
-            this.wednesday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[3]));
-        }
-        else
-        {
-            this.wednesday = DayServiceAvailability.NO_INFO;
-        }
-
-        if(attributes[4] != null && !attributes[4].equals(""))
-        {
-            this.thursday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[4]));
-        }
-        else
-        {
-            this.thursday = DayServiceAvailability.NO_INFO;
-        }
-
-        if(attributes[5] != null && !attributes[5].equals(""))
-        {
-            this.friday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[5]));
-        }
-        else
-        {
-            this.friday = DayServiceAvailability.NO_INFO;
-        }
-
-        if(attributes[6] != null && !attributes[6].equals(""))
-        {
-            this.saturday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[6]));
-        }
-        else
-        {
-            this.saturday = DayServiceAvailability.NO_INFO;
-        }
-
-
-        if(attributes[7] != null && !attributes[7].equals(""))
-        {
-            this.sunday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[7]));
-        }
-        else
-        {
-            this.sunday = DayServiceAvailability.NO_INFO;
-        }
-
-        if(attributes[8] != null && !attributes[8].equals(""))
-        {
-            this.start_date = LocalDate.parse(attributes[8], dateFormat);
-        }
-
-        if(attributes[9] != null && !attributes[9].equals(""))
-        {
-            this.end_date = LocalDate.parse(attributes[9], dateFormat);
+        for (int i = 0; i < columnNames.length; i++) {
+            switch (columnNames[i]) {
+                case "service_id":
+                    this.service_id = attributes[i];
+                    break;
+                case "monday":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.monday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.monday = DayServiceAvailability.NO_INFO;
+                    }
+                    break;
+                case "tuesday":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.tuesday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.tuesday = DayServiceAvailability.NO_INFO;
+                    }
+                    break;
+                case "wednesday":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.wednesday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.wednesday = DayServiceAvailability.NO_INFO;
+                    }
+                    break;
+                case "thursday":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.thursday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.thursday = DayServiceAvailability.NO_INFO;
+                    }
+                    break;
+                case "friday":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.friday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.friday = DayServiceAvailability.NO_INFO;
+                    }
+                    break;
+                case "saturday":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.saturday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.saturday = DayServiceAvailability.NO_INFO;
+                    }
+                    break;
+                case "sunday":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.sunday = DayServiceAvailability.getDayServiceAvailability(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.sunday = DayServiceAvailability.NO_INFO;
+                    }
+                    break;
+                case "start_date":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.start_date = LocalDate.parse(attributes[i], dateFormat);
+                    }
+                    break;
+                case "end_date":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.end_date = LocalDate.parse(attributes[i], dateFormat);
+                    }
+                    break;
+            }
         }
 
     }
 
 
-
     @Override
-    public ArrayList<Object> getColumnTypes()
-    {
+    public ArrayList<Object> getColumnTypes() {
         ArrayList<Object> columnTypes = new ArrayList<>();
         columnTypes.add(this.service_id);
         columnTypes.add(this.monday);
@@ -135,8 +124,7 @@ public class Calendar implements IGTFSObject
     }
 
     @Override
-    public ArrayList<Object> getAttributesForExportGTFS()
-    {
+    public ArrayList<Object> getAttributesForExportGTFS() {
         ArrayList<Object> attributesForExport = new ArrayList<>();
         attributesForExport.add(this.service_id);
         attributesForExport.add(DayServiceAvailability.getValueForExport(this.monday));

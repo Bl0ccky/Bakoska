@@ -4,8 +4,7 @@ import Enums.Route.RouteType;
 
 import java.util.ArrayList;
 
-public class Route implements IGTFSObject
-{
+public class Route implements IGTFSObject {
     private String route_id;
     private String agency_id;
     private String route_short_name;
@@ -29,32 +28,46 @@ public class Route implements IGTFSObject
     }
 
     @Override
-    public void loadData(String[] attributes)
-    {
-        this.route_id = attributes[0];
-        this.agency_id = attributes[1];
-        this.route_short_name = attributes[2];
-        this.route_long_name = attributes[3];
-        this.route_desc = attributes[4];
-
-        if(attributes[5] != null && !attributes[5].equals(""))
-        {
-            this.route_type = RouteType.getRouteType(Integer.parseInt(attributes[5]));
+    public void loadData(String[] attributes, String[] columnNames) {
+        for (int i = 0; i < columnNames.length; i++) {
+            switch (columnNames[i]) {
+                case "route_id":
+                    this.route_id = attributes[i];
+                    break;
+                case "agency_id":
+                    this.agency_id = attributes[i];
+                    break;
+                case "route_short_name":
+                    this.route_short_name = attributes[i];
+                    break;
+                case "route_long_name":
+                    this.route_long_name = attributes[i];
+                    break;
+                case "route_desc":
+                    this.route_desc = attributes[i];
+                    break;
+                case "route_type":
+                    if (attributes[i] != null && !attributes[i].equals("")) {
+                        this.route_type = RouteType.getRouteType(Integer.parseInt(attributes[i]));
+                    } else {
+                        this.route_type = RouteType.NO_INFO;
+                    }
+                    break;
+                case "route_url":
+                    this.route_url = attributes[i];
+                    break;
+                case "route_color":
+                    this.route_color = attributes[i];
+                    break;
+                case "route_text_color":
+                    this.route_text_color = attributes[i];
+                    break;
+            }
         }
-        else
-        {
-            this.route_type = RouteType.NO_INFO;
-        }
-
-        this.route_url = attributes[6];
-        this.route_color = attributes[7];
-        this.route_text_color = attributes[8];
-
     }
 
     @Override
-    public ArrayList<Object> getColumnTypes()
-    {
+    public ArrayList<Object> getColumnTypes() {
         ArrayList<Object> columnTypes = new ArrayList<>();
         columnTypes.add(this.route_id);
         columnTypes.add(this.agency_id);
@@ -70,8 +83,7 @@ public class Route implements IGTFSObject
     }
 
     @Override
-    public ArrayList<Object> getAttributesForExportGTFS()
-    {
+    public ArrayList<Object> getAttributesForExportGTFS() {
         ArrayList<Object> attributesForExport = this.getColumnTypes();
         attributesForExport.set(5, RouteType.getValueForExport(this.route_type));
         return attributesForExport;

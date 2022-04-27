@@ -1,13 +1,23 @@
 package App;
 
-import GTFSFiles.*;
-import GUI.MainFrame;
+
+import GTFSFiles.Agency;
+import GTFSFiles.Calendar;
+import GTFSFiles.CalendarDate;
+import GTFSFiles.GTFSObjectFactory;
+import GTFSFiles.GTFSObjectType;
+import GTFSFiles.IGTFSObject;
+import GTFSFiles.Route;
+import GTFSFiles.Stop;
+import GTFSFiles.StopTime;
+import GTFSFiles.Trip;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Scanner;
 
@@ -52,41 +62,42 @@ public class DataLoader
 
     private void loadAgency()
     {
-        this.loadGTFS("agency.txt", 7, GTFSObjectType.AGENCY, this.agency);
+        this.loadGTFS("agency.txt", GTFSObjectType.AGENCY, this.agency);
     }
 
     private void loadStops()
     {
-        this.loadGTFS("stops.txt", 12, GTFSObjectType.STOP, this.stops);
+        this.loadGTFS("stops.txt", GTFSObjectType.STOP, this.stops);
     }
 
     private void loadRoutes()
     {
-        this.loadGTFS("routes.txt", 9, GTFSObjectType.ROUTE, this.routes);
+        this.loadGTFS("routes.txt", GTFSObjectType.ROUTE, this.routes);
     }
 
     private void loadTrips()
     {
-        this.loadGTFS("trips.txt", 9, GTFSObjectType.TRIP, this.trips);
+        this.loadGTFS("trips.txt", GTFSObjectType.TRIP, this.trips);
     }
 
     private void loadStopTimes()
     {
-        this.loadGTFS("stop_times.txt", 10, GTFSObjectType.STOP_TIME, this.stopTimes);
+        this.loadGTFS("stop_times.txt", GTFSObjectType.STOP_TIME, this.stopTimes);
     }
 
     private void loadCalendars()
     {
-        this.loadGTFS("calendar.txt", 10, GTFSObjectType.CALENDAR, this.calendars);
+        this.loadGTFS("calendar.txt", GTFSObjectType.CALENDAR, this.calendars);
     }
 
     private void loadCalendarDates()
     {
-        this.loadGTFS("calendar_dates.txt", 3, GTFSObjectType.CALENDAR_DATE, this.calendarDates);
+        this.loadGTFS("calendar_dates.txt", GTFSObjectType.CALENDAR_DATE, this.calendarDates);
     }
 
-    private void loadGTFS(String fileName, int delimiterLimit, GTFSObjectType gtfsObjectType, Hashtable<String, IGTFSObject> hashtable)
+    private void loadGTFS(String fileName, GTFSObjectType gtfsObjectType, Hashtable<String, IGTFSObject> hashtable)
     {
+
         Scanner scanner;
         int columnTypesCounter = 0;
         try
@@ -102,9 +113,9 @@ public class DataLoader
             while (scanner.hasNextLine())
             {
                 line = scanner.nextLine();
-                String[] attributes = line.split(",",delimiterLimit);
+                String[] attributes = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)",-1);
                 IGTFSObject object = GTFSObjectFactory.getGtfsObject(gtfsObjectType);
-                object.loadData(attributes);
+                object.loadData(attributes, this.hashTableColumnNames.get(gtfsObjectType));
                 if(columnTypesCounter == 0)
                 {
                     this.hashTableColumnTypes.put(gtfsObjectType, object.getColumnTypes());
@@ -114,6 +125,7 @@ public class DataLoader
 
             }
             scanner.close();
+            this.createColumnNamesForNewFile(gtfsObjectType);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -264,15 +276,14 @@ public class DataLoader
     public void createTripDetails()
     {
         ArrayList<String> tripKeys = new ArrayList<>(this.trips.keySet());
-        //int counter = 0;
-        //int allTrips = tripKeys.size();
+        int counter = 0;
+        int allTrips = tripKeys.size();
         for (String tripKey : tripKeys)
         {
             ((Trip)this.trips.get(tripKey)).createSpecialStopHashTable(this.stopTimes, this.stops);
             ((Trip)this.trips.get(tripKey)).createDetailedAttributes();
 
-            //counter++;
-            //System.out.println(counter++ + "/" + allTrips);
+            System.out.println(counter++ + "/" + allTrips);
         }
     }
 

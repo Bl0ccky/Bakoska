@@ -35,46 +35,67 @@ public class Stop implements IGTFSObject{
     }
 
     @Override
-    public void loadData(String[] attributes)
+    public void loadData(String[] attributes, String[] columnNames)
     {
-        this.stop_id = attributes[0];
-        this.stop_code = attributes[1];
-        this.stop_name = attributes[2];
-        this.stop_desc = attributes[3];
-
-        if(attributes[4] != null && !attributes[4].equals(""))
-        {
-            this.stop_lat = Double.parseDouble(attributes[4]);
-        }
-
-        stop_lon = 0;
-        if(attributes[5] != null && !attributes[5].equals(""))
-        {
-            this.stop_lon = Double.parseDouble(attributes[5]);
-        }
-
-        this.zone_id = attributes[6];
-        this.stop_url = attributes[7];
-
-        if(attributes[8] != null && !attributes[8].equals(""))
-        {
-            this.location_type = StopLocationType.getStopLocationType(Integer.parseInt(attributes[8]));
-        }
-        else
-        {
-            this.location_type = StopLocationType.STOP;
-        }
-
-        this.parent_station = attributes[9];
-        this.stop_timezone = attributes[10];
-
-        if(attributes[11] != null && !attributes[11].equals(""))
-        {
-            this.wheelchair_boarding = StopWheelchairBoarding.getStopWheelchairBoarding(Integer.parseInt(attributes[11]));
-        }
-        else
-        {
-            this.wheelchair_boarding = StopWheelchairBoarding.NO_INFO;
+        for (int i = 0; i < columnNames.length; i++) {
+            switch (columnNames[i]) {
+                case "stop_id":
+                    this.stop_id = attributes[i];
+                    break;
+                case "stop_code":
+                    this.stop_code = attributes[i];
+                    break;
+                case "stop_name":
+                    this.stop_name = attributes[i];
+                    break;
+                case "stop_desc":
+                    this.stop_desc = attributes[i];
+                    break;
+                case "stop_lat":
+                    if(attributes[i] != null && !attributes[i].equals(""))
+                    {
+                        this.stop_lat = Double.parseDouble(attributes[i]);
+                    }
+                    break;
+                case "stop_lon":
+                    if(attributes[i] != null && !attributes[i].equals(""))
+                    {
+                        this.stop_lon = Double.parseDouble(attributes[i]);
+                    }
+                    break;
+                case "zone_id":
+                    this.zone_id = attributes[i];
+                    break;
+                case "stop_url":
+                    this.stop_url = attributes[i];
+                    break;
+                case "location_type":
+                    if(attributes[i] != null && !attributes[i].equals(""))
+                    {
+                        this.location_type = StopLocationType.getStopLocationType(Integer.parseInt(attributes[i]));
+                    }
+                    else
+                    {
+                        this.location_type = StopLocationType.STOP;
+                    }
+                    break;
+                case "parent_station":
+                    this.parent_station = attributes[i];
+                    break;
+                case "stop_timezone":
+                    this.stop_timezone = attributes[i];
+                    break;
+                case "wheelchair_boarding":
+                    if(attributes[i] != null && !attributes[i].equals(""))
+                    {
+                        this.wheelchair_boarding = StopWheelchairBoarding.getStopWheelchairBoarding(Integer.parseInt(attributes[i]));
+                    }
+                    else
+                    {
+                        this.wheelchair_boarding = StopWheelchairBoarding.NO_INFO;
+                    }
+                    break;
+            }
         }
 
     }
