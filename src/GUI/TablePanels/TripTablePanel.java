@@ -16,6 +16,10 @@ public class TripTablePanel extends TablePanel
 
     public TripTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSFiles.GTFSObjectType gtfsObjectType) {
         super(panel, mainFrame, hashtable, gtfsObjectType);
+        for (int i = 0; i < 3; i++)
+        {
+            this.addLabels[i].setText(this.addLabels[i].getText()+" *");
+        }
     }
 
     @Override
@@ -27,6 +31,36 @@ public class TripTablePanel extends TablePanel
     @Override
     boolean checkAddInputs()
     {
+        for (int i = 0; i < 3; i++)
+        {
+            if(((JTextField)this.addFormObjects.get(i)).getText().equals(""))
+            {
+                this.setRedBorder(this.addFormObjects.get(i));
+            }
+            else
+            {
+                this.setDefaultBorder(this.addFormObjects.get(i));
+            }
+        }
+
+        if (((JTextField) this.addFormObjects.get(0)).getText().equals("")
+                || ((JTextField)this.addFormObjects.get(1)).getText().equals("")
+                || ((JTextField)this.addFormObjects.get(2)).getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Some required fields are empty!", "Empty required fields", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            if(this.hashtable.containsKey(((JTextField)this.addFormObjects.get(0)).getText()))
+            {
+                this.setRedBorder(this.addFormObjects.get(0));
+                JOptionPane.showMessageDialog(null, "Trip with this id already exists!", "Existing trip", JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            {
+                this.setDefaultBorder(this.addFormObjects.get(0));
+            }
+        }
+
         return !((JTextField)this.addFormObjects.get(0)).getText().equals("")
                 && !((JTextField)this.addFormObjects.get(1)).getText().equals("")
                 && !((JTextField) this.addFormObjects.get(2)).getText().equals("")
@@ -51,6 +85,12 @@ public class TripTablePanel extends TablePanel
             this.hashtable.put(newTrip.getKey(), newTrip);
             this.keys.add(newTrip.getKey());
             this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.TRIP);
+
+            for (int i = 0; i < 3; i++)
+            {
+                this.setDefaultBorder(this.addFormObjects.get(i));
+            }
+            JOptionPane.showMessageDialog(null, "New trip has been successfully created", "New trip created", JOptionPane.INFORMATION_MESSAGE);
         }
 
     }

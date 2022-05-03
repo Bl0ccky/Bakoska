@@ -61,13 +61,21 @@ public class StopTimeTableModel extends MyTableItemModel {
             case 1 -> stopTime.setArrival_time((LocalTime) aValue);
             case 2 -> stopTime.setDeparture_time((LocalTime) aValue);
             case 3 -> stopTime.setStop_id((String) aValue);
-            //TODO osetrenie na cisla
-            case 4 -> stopTime.setStop_sequence(Integer.parseInt((String) aValue));
+            case 4 -> {
+                if(this.isNumeric(aValue))
+                {
+                    stopTime.setStop_sequence(Integer.parseInt((String) aValue));
+                }
+            }
             case 5 -> stopTime.setStop_headsign((String) aValue);
             case 6 -> stopTime.setPickup_type((PickupType) aValue);
             case 7 -> stopTime.setDrop_off_type((DropOffType) aValue);
-            //TODO osetrenie na cisla
-            case 8 -> stopTime.setShape_dist_traveled(Float.parseFloat((String) aValue));
+            case 8 -> {
+                if(this.isNumeric(aValue))
+                {
+                    stopTime.setShape_dist_traveled(Float.parseFloat((String) aValue));
+                }
+            }
             case 9 -> stopTime.setTimepoint((TimePoint) aValue);
         }
 

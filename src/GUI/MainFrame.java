@@ -111,7 +111,6 @@ public class MainFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.createNewFileItem) {
-            //TODO odstranit duplicitu s menu panelom!!
             String filePath = this.getGTFSFilePath(1);
             if (filePath != null) {
                 int fileCounter = 1;

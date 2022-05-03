@@ -58,6 +58,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
     private JButton detailButton;
     private JCheckBox[] searchCheckBoxes;
     protected ArrayList<JComponent> addFormObjects;
+    protected JLabel[] addLabels;
 
     public TablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSObjectType gtfsObjectType) {
         this.keys = new ArrayList<>(hashtable.keySet());
@@ -129,9 +130,9 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                     }
                     this.updateTable();
                     this.myTableItemModel.fireTableDataChanged();
-                    System.out.println("Úspešné vymazanie všetkých označených záznamov");
+                    JOptionPane.showMessageDialog(null, "Successful removal", "Successful removal", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    System.out.println("Označené záznamy nemožno kvôli contrainom odstrániť, skontroluj najskôr tie!");
+                    JOptionPane.showMessageDialog(null, "Selected records can not be removed because of constrains. Check them first!", "Error with removal", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
@@ -201,7 +202,6 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        //TODO ked nie ziadny riadok zobrazeny zneviditelnit Detail button!!! Chyba sa objavuje pri edite
         if (this instanceof TripTablePanel || this instanceof StopTablePanel || this instanceof RouteTablePanel) {
             this.detailButton.setVisible(true);
         }
@@ -276,16 +276,6 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
             this.add(detailButton);
         }
 
-        //this.editButton = new JButton("Edit");
-        //this.editButton.setFocusable(false);
-        //this.editButton.setVisible(false);
-        //this.editButton.addActionListener(this);
-        //this.editButton.setBounds(1000,190,100,30);
-
-
-        //this.add(editButton);
-
-
     }
 
     private void createAddSectionAndEditCells() {
@@ -296,7 +286,7 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
         int x = 1110;
         int y1 = 270;
         int y2 = 270;
-        JLabel[] addLabels = new JLabel[this.columnNames.length];
+        this.addLabels = new JLabel[this.columnNames.length];
 
         for (int i = 0; i < this.columnTypes.size(); i++) {
             TableColumn column = this.table.getColumnModel().getColumn(i);
@@ -371,23 +361,23 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
                 }
             }
 
-            addLabels[i] = new JLabel(this.columnNames[i]);
+            this.addLabels[i] = new JLabel(this.columnNames[i]);
 
             if (i >= this.columnNames.length / 2) {
                 x = 1280;
-                addLabels[i].setBounds(x, y2, 160, 30);
+                this.addLabels[i].setBounds(x, y2, 160, 30);
                 y2 += 30;
                 this.addFormObjects.get(i).setBounds(x, y2, 160, 30);
                 y2 += 30;
             } else {
-                addLabels[i].setBounds(x, y1, 160, 30);
+                this.addLabels[i].setBounds(x, y1, 160, 30);
                 y1 += 30;
                 this.addFormObjects.get(i).setBounds(x, y1, 160, 30);
 
                 y1 += 30;
             }
 
-            this.add(addLabels[i]);
+            this.add(this.addLabels[i]);
             this.add(this.addFormObjects.get(i));
         }
 
@@ -426,4 +416,29 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
     abstract void addNewObject();
 
     abstract void updateTable();
+
+    protected void setRedBorder(JComponent jComponent)
+    {
+        jComponent.setBorder(BorderFactory.createEtchedBorder(Color.red,Color.RED));
+    }
+
+    protected void setDefaultBorder(JComponent jComponent)
+    {
+        jComponent.setBorder(UIManager.getBorder("TextField.border"));
+    }
+
+    protected boolean isNumeric(Object obj)
+    {
+        if(obj == null)
+        {
+            return false;
+        }
+        try {
+            Double.parseDouble(String.valueOf(obj));
+            return true;
+        }catch (NumberFormatException ex)
+        {
+            return false;
+        }
+    }
 }

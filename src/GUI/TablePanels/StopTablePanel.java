@@ -13,6 +13,12 @@ import java.util.Hashtable;
 public class StopTablePanel extends TablePanel{
     public StopTablePanel(AdminPanel panel, MainFrame mainFrame, Hashtable<String, IGTFSObject> hashtable, GTFSFiles.GTFSObjectType gtfsObjectType) {
         super(panel, mainFrame, hashtable, gtfsObjectType);
+        this.addLabels[0].setText(this.addLabels[0].getText()+" *");
+        this.addLabels[2].setText(this.addLabels[2].getText()+" *");
+        for (int i = 4; i < 6; i++)
+        {
+            this.addLabels[i].setText(this.addLabels[i].getText()+" *");
+        }
     }
 
     @Override
@@ -24,12 +30,65 @@ public class StopTablePanel extends TablePanel{
     @Override
     boolean checkAddInputs()
     {
+        if (((JTextField) this.addFormObjects.get(0)).getText().equals("")) {
+            this.setRedBorder(addFormObjects.get(0));
+        } else {
+            this.setDefaultBorder(this.addFormObjects.get(0));
+        }
+
+        if (((JTextField) this.addFormObjects.get(2)).getText().equals("")) {
+            this.setRedBorder(addFormObjects.get(2));
+        } else {
+            this.setDefaultBorder(this.addFormObjects.get(2));
+        }
+
+        for (int i = 4; i < 6; i++)
+        {
+            if(((JTextField)this.addFormObjects.get(i)).getText().equals(""))
+            {
+                this.setRedBorder(this.addFormObjects.get(i));
+            }
+            else
+            {
+                this.setDefaultBorder(this.addFormObjects.get(i));
+            }
+        }
+
+        if (((JTextField) this.addFormObjects.get(0)).getText().equals("")
+                || ((JTextField)this.addFormObjects.get(2)).getText().equals("")
+                || ((JTextField) this.addFormObjects.get(4)).getText().equals("")
+                || ((JTextField)this.addFormObjects.get(5)).getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Some required fields are empty!", "Empty required fields", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            if(this.hashtable.containsKey(((JTextField)this.addFormObjects.get(0)).getText()))
+            {
+                this.setRedBorder(this.addFormObjects.get(0));
+                JOptionPane.showMessageDialog(null, "Route with this id already exists!", "Existing route", JOptionPane.ERROR_MESSAGE);
+            }
+            else if(!this.isNumeric(((JTextField)this.addFormObjects.get(4)).getText()))
+            {
+                this.setRedBorder(this.addFormObjects.get(4));
+                JOptionPane.showMessageDialog(null, "Enter a numeric value!", "Incorrect input", JOptionPane.ERROR_MESSAGE);
+            }
+            else if(!this.isNumeric(((JTextField)this.addFormObjects.get(5)).getText()))
+            {
+                this.setRedBorder(this.addFormObjects.get(5));
+                JOptionPane.showMessageDialog(null, "Enter a numeric value!", "Incorrect input", JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            {
+                this.setDefaultBorder(this.addFormObjects.get(0));
+                this.setDefaultBorder(this.addFormObjects.get(4));
+                this.setDefaultBorder(this.addFormObjects.get(5));
+            }
+        }
+
         return !((JTextField)this.addFormObjects.get(0)).getText().equals("")
                 && !((JTextField)this.addFormObjects.get(2)).getText().equals("")
-                && !((JTextField) this.addFormObjects.get(4)).getText().equals("")
-                && !((JTextField)this.addFormObjects.get(5)).getText().equals("")
-                && !((JTextField)this.addFormObjects.get(6)).getText().equals("")
-                && !((JTextField)this.addFormObjects.get(9)).getText().equals("")
+                && this.isNumeric(((JTextField) this.addFormObjects.get(4)).getText())
+                && this.isNumeric(((JTextField)this.addFormObjects.get(5)).getText())
                 && !this.hashtable.containsKey(((JTextField)this.addFormObjects.get(0)).getText());
     }
 
@@ -54,6 +113,14 @@ public class StopTablePanel extends TablePanel{
             this.hashtable.put(newStop.getKey(), newStop);
             this.keys.add(newStop.getKey());
             this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSFiles.GTFSObjectType.STOP);
+
+            this.setDefaultBorder(this.addFormObjects.get(0));
+            this.setDefaultBorder(this.addFormObjects.get(2));
+            for (int i = 4; i < 6; i++)
+            {
+                this.setDefaultBorder(this.addFormObjects.get(i));
+            }
+            JOptionPane.showMessageDialog(null, "New stop has been successfully created", "New stop created", JOptionPane.INFORMATION_MESSAGE);
         }
 
     }
