@@ -13,11 +13,10 @@ import GTFSFiles.StopTime;
 import GTFSFiles.Trip;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Scanner;
 
@@ -102,7 +101,7 @@ public class DataLoader
         int columnTypesCounter = 0;
         try
         {
-            scanner = new Scanner(new File(this.filePath+ "\\"+fileName));
+            scanner = new Scanner(new File(this.filePath+ "\\"+fileName), StandardCharsets.UTF_8);
             String columnNames = scanner.nextLine();
             this.createColumnNames(columnNames, gtfsObjectType);
             String line;
@@ -127,7 +126,7 @@ public class DataLoader
             scanner.close();
             this.createColumnNamesForNewFile(gtfsObjectType);
 
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -397,9 +396,5 @@ public class DataLoader
         }
     }
 
-    public void updateTripDetail(Hashtable<String, IGTFSObject> updatedHashTable)
-    {
-
-    }
 
 }
