@@ -53,7 +53,6 @@ public abstract class TablePanel extends JPanel implements ActionListener, ListS
     private JButton searchButton;
     private TableRowSorter<MyTableItemModel> tableRowSorter;
     private JButton addButton;
-    //private JButton editButton;
     private JButton removeButton;
     private JButton detailButton;
     private JCheckBox[] searchCheckBoxes;

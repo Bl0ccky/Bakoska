@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class AdminPanel extends JPanel implements ActionListener
+public class AdminPanel extends JPanel
 {
     private final JPanel contentPanel;
     private final TablePanel agencyTablePanel;
@@ -43,15 +43,6 @@ public class AdminPanel extends JPanel implements ActionListener
 
         tablePanels.setBounds(50,25,1450,700);
         this.add(tablePanels);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        //String changeToPanel = "adminPanel";
-        //CardLayout cardLayout = (CardLayout) this.contentPanel.getLayout();
-        //cardLayout.show(this.contentPanel, changeToPanel);
-
     }
 
     public TablePanel getTablePanel(GTFSObjectType gtfsObjectType)

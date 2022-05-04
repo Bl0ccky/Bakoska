@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Bakoška:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Bakoka_jar</output-path>
+    <root id="archive" name="Bakoška.jar">
+      <element id="module-output" name="Bakoška" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/LGoodDatePicker-11.2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/JMapViewer.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -8,7 +8,6 @@ import GTFSFiles.IGTFSObject;
 import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Hashtable;
 
 public class CalendarDateTablePanel extends TablePanel {
