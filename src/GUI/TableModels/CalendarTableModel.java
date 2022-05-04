@@ -52,9 +52,9 @@ public class CalendarTableModel extends MyTableItemModel{
     public void setValueAt(Object aValue, int rowIndex, int columnIndex)
     {
         Calendar calendar = (Calendar)this.hashtable.get(this.keys.get(rowIndex));
-
         String findingIDValue = calendar.getService_id();
-        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.CALENDAR_DATE).tableContainsValueAt(findingIDValue, 0) && columnIndex == 0))
+        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.CALENDAR_DATE).tableContainsValueAt(findingIDValue, 0) && columnIndex == 0) &&
+                !(this.hashtable.containsKey(String.valueOf(aValue)) && columnIndex == 0))
         {
             this.hashtable.remove(this.keys.get(rowIndex));
             switch (columnIndex)

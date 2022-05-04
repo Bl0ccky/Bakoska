@@ -53,7 +53,8 @@ public class RouteTableModel extends MyTableItemModel{
     {
         Route route = (Route)this.hashtable.get(this.keys.get(rowIndex));
         String findingIDValue = route.getRoute_id();
-        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.TRIP).tableContainsValueAt(findingIDValue, 1) && columnIndex == 0))
+        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.TRIP).tableContainsValueAt(findingIDValue, 1) && columnIndex == 0) &&
+                !(this.hashtable.containsKey(String.valueOf(aValue)) && columnIndex == 0))
         {
             this.hashtable.remove(this.keys.get(rowIndex));
             switch (columnIndex)

@@ -18,6 +18,7 @@ public class StopTablePanel extends TablePanel{
         for (int i = 4; i < 6; i++)
         {
             this.addLabels[i].setText(this.addLabels[i].getText()+" *");
+            this.addFormObjects.get(i).setToolTipText("Number input type ex.(50, 42.3 ...)");
         }
     }
 

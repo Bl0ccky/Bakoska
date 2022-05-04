@@ -41,17 +41,34 @@ public class CalendarDateTableModel extends MyTableItemModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 
         CalendarDate calendarDate = (CalendarDate) this.hashtable.get(this.keys.get(rowIndex));
-        this.hashtable.remove(this.keys.get(rowIndex));
-        switch (columnIndex) {
-            case 0 -> calendarDate.setService_id((String) aValue);
-            case 1 -> calendarDate.setDate((LocalDate) aValue);
-            case 2 -> calendarDate.setException_type((ExceptionType)aValue);
+        String findingKeyValue;
+        if(columnIndex == 0)
+        {
+            findingKeyValue = aValue + "-" + this.getValueAt(rowIndex, 1) + "-" + this.getValueAt(rowIndex, 2);
+        }
+        else if(columnIndex == 1)
+        {
+            findingKeyValue = this.getValueAt(rowIndex, 0) + "-" + aValue + "-" + this.getValueAt(rowIndex, 2);
+        }
+        else
+        {
+            findingKeyValue = this.getValueAt(rowIndex, 0) + "-" + this.getValueAt(rowIndex, 1) + "-" + aValue;
         }
 
-        this.hashtable.put(calendarDate.getKey(), calendarDate);
-        this.keys.set(rowIndex, calendarDate.getKey());
-        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSObjectType.CALENDAR_DATE);
-        this.fireTableDataChanged();
+        if(!this.hashtable.containsKey(findingKeyValue))
+        {
+            this.hashtable.remove(this.keys.get(rowIndex));
+            switch (columnIndex) {
+                case 0 -> calendarDate.setService_id((String) aValue);
+                case 1 -> calendarDate.setDate((LocalDate) aValue);
+                case 2 -> calendarDate.setException_type((ExceptionType)aValue);
+            }
+
+            this.hashtable.put(calendarDate.getKey(), calendarDate);
+            this.keys.set(rowIndex, calendarDate.getKey());
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSObjectType.CALENDAR_DATE);
+            this.fireTableDataChanged();
+        }
 
     }
 }

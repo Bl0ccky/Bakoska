@@ -55,7 +55,8 @@ public class StopTableModel extends MyTableItemModel{
     {
         Stop stop = (Stop)this.hashtable.get(this.keys.get(rowIndex));
         String findingIDValue = stop.getStop_id();
-        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 3) && columnIndex == 0))
+        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 3) && columnIndex == 0)&&
+                !(this.hashtable.containsKey(String.valueOf(aValue)) && columnIndex == 0))
         {
             this.hashtable.remove(this.keys.get(rowIndex));
             switch (columnIndex)

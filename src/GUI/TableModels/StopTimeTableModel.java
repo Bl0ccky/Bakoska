@@ -55,35 +55,47 @@ public class StopTimeTableModel extends MyTableItemModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 
         StopTime stopTime = (StopTime) this.hashtable.get(this.keys.get(rowIndex));
-        this.hashtable.remove(this.keys.get(rowIndex));
-        switch (columnIndex) {
-            case 0 -> stopTime.setTrip_id((String) aValue);
-            case 1 -> stopTime.setArrival_time((LocalTime) aValue);
-            case 2 -> stopTime.setDeparture_time((LocalTime) aValue);
-            case 3 -> stopTime.setStop_id((String) aValue);
-            case 4 -> {
-                if(this.isNumeric(aValue))
-                {
-                    stopTime.setStop_sequence(Integer.parseInt((String) aValue));
-                }
-            }
-            case 5 -> stopTime.setStop_headsign((String) aValue);
-            case 6 -> stopTime.setPickup_type((PickupType) aValue);
-            case 7 -> stopTime.setDrop_off_type((DropOffType) aValue);
-            case 8 -> {
-                if(this.isNumeric(aValue))
-                {
-                    stopTime.setShape_dist_traveled(Float.parseFloat((String) aValue));
-                }
-            }
-            case 9 -> stopTime.setTimepoint((TimePoint) aValue);
+        String findingKeyValue = null;
+        if(columnIndex == 0)
+        {
+            findingKeyValue = aValue + "-" + this.getValueAt(rowIndex, 3);
+        }
+        else if(columnIndex == 3)
+        {
+            findingKeyValue = this.getValueAt(rowIndex, 0) + "-" + aValue;
         }
 
-        this.hashtable.put(stopTime.getKey(), stopTime);
-        this.keys.set(rowIndex, stopTime.getKey());
-        this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSObjectType.STOP_TIME);
-        this.fireTableDataChanged();
+        if(!(this.hashtable.containsKey(findingKeyValue) && (columnIndex == 0|| columnIndex == 3)))
+        {
+            this.hashtable.remove(this.keys.get(rowIndex));
+            switch (columnIndex) {
+                case 0 -> stopTime.setTrip_id((String) aValue);
+                case 1 -> stopTime.setArrival_time((LocalTime) aValue);
+                case 2 -> stopTime.setDeparture_time((LocalTime) aValue);
+                case 3 -> stopTime.setStop_id((String) aValue);
+                case 4 -> {
+                    if(this.isNumeric(aValue))
+                    {
+                        stopTime.setStop_sequence(Integer.parseInt((String) aValue));
+                    }
+                }
+                case 5 -> stopTime.setStop_headsign((String) aValue);
+                case 6 -> stopTime.setPickup_type((PickupType) aValue);
+                case 7 -> stopTime.setDrop_off_type((DropOffType) aValue);
+                case 8 -> {
+                    if(this.isNumeric(aValue))
+                    {
+                        stopTime.setShape_dist_traveled(Float.parseFloat((String) aValue));
+                    }
+                }
+                case 9 -> stopTime.setTimepoint((TimePoint) aValue);
+            }
 
+            this.hashtable.put(stopTime.getKey(), stopTime);
+            this.keys.set(rowIndex, stopTime.getKey());
+            this.mainFrame.getDataLoader().updateHashTable(this.hashtable, GTFSObjectType.STOP_TIME);
+            this.fireTableDataChanged();
+        }
 
     }
 }

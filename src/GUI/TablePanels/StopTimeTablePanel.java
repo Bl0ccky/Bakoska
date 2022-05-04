@@ -19,6 +19,8 @@ public class StopTimeTablePanel extends TablePanel {
         {
             this.addLabels[i].setText(this.addLabels[i].getText()+" *");
         }
+        this.addFormObjects.get(4).setToolTipText("Number input type ex.(50, 42.3 ...)");
+        this.addFormObjects.get(8).setToolTipText("Number input type ex.(50, 42.3 ...)");
     }
 
     @Override

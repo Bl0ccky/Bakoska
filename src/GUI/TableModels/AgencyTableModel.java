@@ -1,6 +1,7 @@
 package GUI.TableModels;
 
 import GTFSFiles.Agency;
+import GTFSFiles.GTFSObjectType;
 import GTFSFiles.IGTFSObject;
 import GUI.MainFrame;
 
@@ -44,7 +45,8 @@ public class AgencyTableModel extends MyTableItemModel {
         Agency agency = (Agency)this.hashtable.get(this.keys.get(rowIndex));
 
         String findingIDValue = agency.getAgency_id();
-        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSFiles.GTFSObjectType.ROUTE).tableContainsValueAt(findingIDValue, 1) && columnIndex == 0))
+        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.ROUTE).tableContainsValueAt(findingIDValue, 1) && columnIndex == 0) &&
+                !(this.hashtable.containsKey(String.valueOf(aValue)) && columnIndex == 0))
         {
             this.hashtable.remove(this.keys.get(rowIndex));
             switch (columnIndex)

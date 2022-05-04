@@ -49,7 +49,8 @@ public class TripTableModel extends MyTableItemModel{
     {
         Trip trip = (Trip)this.hashtable.get(this.keys.get(rowIndex));
         String findingIDValue = trip.getRoute_id();
-        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 0) && columnIndex == 0))
+        if(!(this.mainFrame.getAdminPanel().getTablePanel(GTFSObjectType.STOP_TIME).tableContainsValueAt(findingIDValue, 0) && columnIndex == 0) &&
+                !(this.hashtable.containsKey(String.valueOf(aValue)) && columnIndex == 0))
         {
             this.hashtable.remove(this.keys.get(rowIndex));
             switch (columnIndex)
